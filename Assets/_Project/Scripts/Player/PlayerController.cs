@@ -19,12 +19,31 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        moveX = Input.GetAxisRaw("Horizontal");
+        moveX = ReadHorizontalInput();
 
         if (Input.GetButtonDown("Jump"))
         {
             jumpPressed = true;
         }
+    }
+
+    private float ReadHorizontalInput()
+    {
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        bool movingLeft = Input.GetKey(KeyCode.LeftArrow);
+        bool movingRight = Input.GetKey(KeyCode.RightArrow);
+
+        if (movingLeft == movingRight)
+        {
+            return horizontal;
+        }
+
+        if (movingLeft)
+        {
+            return -1f;
+        }
+
+        return 1f;
     }
 
     private void FixedUpdate()
