@@ -13,11 +13,13 @@ public class PlayerHealth : MonoBehaviour
 
     private void Awake()
     {
+        // Khi Player duoc tao, mau hien tai bat dau bang mau toi da.
         currentHealth = maxHealth;
     }
 
     public void TakeDamage(int damage)
     {
+        // Bo qua damage khong hop le, hoac khi Player da chet.
         if (damage <= 0 || currentHealth <= 0)
         {
             return;
@@ -35,11 +37,13 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
+        // Cho nay hien chi log, sau nay co the them restart, game over, hoac animation chet.
         Debug.Log("Player died.");
     }
 
     private void ShowDamagePopup(int damage)
     {
+        // Tao text damage tai vi tri Player cong offset de hien len tren dau.
         GameObject popupObject = new GameObject("Damage Popup");
         popupObject.transform.position = transform.position + damagePopupOffset;
 

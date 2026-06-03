@@ -145,8 +145,8 @@ Transform:
   m_GameObject: {fileID: 421456021}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.1462, y: -0.391, z: -0.34681642}
-  m_LocalScale: {x: 0.75999844, y: 1.0084, z: 1}
+  m_LocalPosition: {x: 0.1381, y: -0.391, z: -0.3468164}
+  m_LocalScale: {x: 0.7210526, y: 0.9914792, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 956085401}
@@ -630,6 +630,7 @@ MonoBehaviour:
   projectileScale: 0.35
   projectileSpawnOffset: {x: 0.45, y: 0.1}
   projectileSprite: {fileID: 6344236997622909882, guid: 7bb8fa80d31daa245b8b2bea445dc42b, type: 3}
+  projectileFacesRightByDefault: 1
   rangeAttackTriggerName: rangeAttack
   rangeAttackStateName: rangeAttack
   startMovingRight: 1
@@ -921,7 +922,7 @@ Transform:
   m_GameObject: {fileID: 1481163814}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0952, y: -0.109, z: -0.43999743}
+  m_LocalPosition: {x: 0.0952, y: -0.109, z: -0.4399974}
   m_LocalScale: {x: 0.9416, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1044,8 +1045,8 @@ Transform:
   m_GameObject: {fileID: 1676606902}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.11, y: 0.2672, z: 0}
-  m_LocalScale: {x: 2.3973467, y: 3.3682745, z: 2.2179968}
+  m_LocalPosition: {x: 0.11, y: 0.2663, z: 0}
+  m_LocalScale: {x: 2.3973467, y: 3.3716428, z: 2.2179968}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 956085401}
