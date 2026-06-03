@@ -7,6 +7,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
+    [SerializeField] private KeyCode attackKey = KeyCode.J;
+    [SerializeField] private float attackCooldown = 0.35f;
+    [SerializeField] private int projectileDamage = 1;
+    [SerializeField] private float projectileSpeed = 8f;
+    [SerializeField] private float projectileLifetime = 2f;
+    [SerializeField] private float projectileScale = 1.2f;
+    [SerializeField] private Vector2 projectileSpawnOffset = new Vector2(0.6f, 0.15f);
+    [SerializeField] private Sprite projectileSprite;
+    [SerializeField] private bool projectileFacesRightByDefault = true;
+    [SerializeField] private string projectileSortingLayerName = "Default";
+    [SerializeField] private int projectileSortingOrder = 100;
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -14,6 +25,8 @@ public class PlayerController : MonoBehaviour
     private bool jumpPressed;
     private bool isGrounded;
     private bool hasIsGroundedParameter;
+    private bool hasAttackParameter;
+    private float nextAttackTime;
 
     private void Awake()
     {
@@ -27,6 +40,7 @@ public class PlayerController : MonoBehaviour
         }
 
         hasIsGroundedParameter = HasAnimatorParameter("IsGrounded", AnimatorControllerParameterType.Bool);
+        hasAttackParameter = HasAnimatorParameter("Attack", AnimatorControllerParameterType.Trigger);
     }
 
     private void Update()
@@ -37,6 +51,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             jumpPressed = true;
+        }
+
+        // Bam attackKey de kich hoat animation chuong cua body.
+        if (Input.GetKeyDown(attackKey) && Time.time >= nextAttackTime && animator != null && hasAttackParameter)
+        {
+            animator.SetTrigger("Attack");
+            nextAttackTime = Time.time + attackCooldown;
         }
 
         // Speed = 0 thi idle, Speed > 0.1 thi chuyen sang walk trong Animator.
@@ -124,5 +145,34 @@ public class PlayerController : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void ShootProjectile()
+    {
+        if (projectileSprite == null)
+        {
+            Debug.LogWarning("Player projectile sprite is missing. Assign 491_0 to Projectile Sprite on PlayerController.", this);
+        }
+
+        float facingDirection = transform.localScale.x >= 0f ? 1f : -1f;
+        Vector3 spawnOffset = new Vector3(projectileSpawnOffset.x * facingDirection, projectileSpawnOffset.y, 0f);
+        Vector3 spawnPosition = transform.position + spawnOffset;
+        Vector2 projectileDirection = new Vector2(facingDirection, 0f);
+
+        GameObject projectileObject = new GameObject("Player Projectile");
+        projectileObject.transform.position = spawnPosition;
+
+        PlayerProjectile projectile = projectileObject.AddComponent<PlayerProjectile>();
+        projectile.Initialize(
+            projectileDirection,
+            projectileSpeed,
+            projectileDamage,
+            projectileLifetime,
+            projectileSprite,
+            projectileScale,
+            projectileFacesRightByDefault,
+            projectileSortingLayerName,
+            projectileSortingOrder
+        );
     }
 }
