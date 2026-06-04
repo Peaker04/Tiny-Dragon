@@ -11,6 +11,9 @@ namespace TinyDragon.UI
         [Tooltip("Danh sách các GameObject chứa nội dung từng bước hướng dẫn (bảng chữ)")]
         public GameObject[] tutorialSteps; 
 
+        [Header("Input")]
+        [SerializeField] private KeyCode continueKey = KeyCode.Space;
+
         private int currentStepIndex = 0;
 
         void Start()
@@ -37,7 +40,7 @@ namespace TinyDragon.UI
         void Update()
         {
             // Lắng nghe người chơi Click chuột trái để qua bài
-            if (Input.GetMouseButtonDown(0) && currentStepIndex < tutorialSteps.Length)
+            if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(continueKey)) && currentStepIndex < tutorialSteps.Length)
             {
                 NextStep();
             }

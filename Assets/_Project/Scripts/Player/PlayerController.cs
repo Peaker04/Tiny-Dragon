@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
         // Doc input trong Update de khong bo lo phim bam giua cac frame vat ly.
         moveX = ReadHorizontalInput();
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space))
         {
             jumpPressed = true;
         }
