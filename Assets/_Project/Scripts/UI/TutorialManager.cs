@@ -12,12 +12,23 @@ namespace TinyDragon.UI
         public GameObject[] tutorialSteps; 
 
         [Header("Input")]
-        [SerializeField] private KeyCode continueKey = KeyCode.Space;
+        [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
+        [SerializeField] private KeyCode moveRightKey = KeyCode.D;
+        [SerializeField] private KeyCode jumpKey = KeyCode.Space;
 
         private int currentStepIndex = 0;
+        private bool tutorialFinished;
+
+        void Awake()
+        {
+            HideAllSteps();
+        }
 
         void Start()
         {
+            currentStepIndex = 0;
+            tutorialFinished = false;
+
             if (darkBackground == null)
             {
                 Debug.LogWarning("Chưa gán Dark Background vào TutorialManager!");
@@ -39,23 +50,36 @@ namespace TinyDragon.UI
 
         void Update()
         {
-            // Lắng nghe người chơi Click chuột trái để qua bài
-            if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(continueKey)) && currentStepIndex < tutorialSteps.Length)
+            if (tutorialFinished || currentStepIndex >= tutorialSteps.Length)
+            {
+                return;
+            }
+
+            if (WasCurrentStepInputPressed())
             {
                 NextStep();
             }
         }
 
+        bool WasCurrentStepInputPressed()
+        {
+            switch (currentStepIndex)
+            {
+                case 0:
+                    return Input.GetKeyDown(moveLeftKey)
+                        || Input.GetKeyDown(moveRightKey)
+                        || Input.GetKeyDown(KeyCode.LeftArrow)
+                        || Input.GetKeyDown(KeyCode.RightArrow);
+                case 1:
+                    return Input.GetKeyDown(jumpKey);
+                default:
+                    return false;
+            }
+        }
+
         void ShowStep(int index)
         {
-            // Tắt toàn bộ các bảng hướng dẫn đi
-            for (int i = 0; i < tutorialSteps.Length; i++)
-            {
-                if (tutorialSteps[i] != null)
-                {
-                    tutorialSteps[i].SetActive(false);
-                }
-            }
+            HideAllSteps();
             
             // Bật bảng hướng dẫn hiện tại
             if (index < tutorialSteps.Length && tutorialSteps[index] != null)
@@ -75,23 +99,39 @@ namespace TinyDragon.UI
             }
             else
             {
-                // Hết hướng dẫn -> Tắt nền đen mờ
-                if (darkBackground != null)
-                {
-                    darkBackground.SetActive(false);
-                }
-                
-                // Xóa các bảng chữ để dọn dẹp bộ nhớ (hoặc dùng SetActive(false) nếu muốn dùng lại sau)
-                foreach (GameObject step in tutorialSteps)
-                {
-                    if (step != null) Destroy(step);
-                }
-                
-                // Tắt script này đi vì đã hoàn thành nhiệm vụ
-                this.enabled = false;
-                
-                Debug.Log("Kết thúc hướng dẫn, vào game!");
+                CompleteTutorial();
             }
+        }
+
+        void HideAllSteps()
+        {
+            if (tutorialSteps == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < tutorialSteps.Length; i++)
+            {
+                if (tutorialSteps[i] != null)
+                {
+                    tutorialSteps[i].SetActive(false);
+                }
+            }
+        }
+
+        void CompleteTutorial()
+        {
+            tutorialFinished = true;
+            HideAllSteps();
+
+            if (darkBackground != null)
+            {
+                darkBackground.SetActive(false);
+            }
+
+            this.enabled = false;
+
+            Debug.Log("Kết thúc hướng dẫn, vào game!");
         }
     }
 }

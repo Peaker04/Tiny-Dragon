@@ -58,14 +58,24 @@ public class PlayerProjectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        EnemyPatrol enemy = other.GetComponentInParent<EnemyPatrol>();
-        if (enemy == null)
+        EnemyHealth enemyHealth = other.GetComponentInParent<EnemyHealth>();
+        if (enemyHealth == null)
         {
-            return;
+            EnemyPatrol enemy = other.GetComponentInParent<EnemyPatrol>();
+            if (enemy == null)
+            {
+                return;
+            }
+
+            enemyHealth = enemy.GetComponent<EnemyHealth>();
+            if (enemyHealth == null)
+            {
+                enemyHealth = enemy.gameObject.AddComponent<EnemyHealth>();
+            }
         }
 
         Debug.Log($"Player projectile hit enemy for {damage} damage.");
-        Destroy(enemy.gameObject);
+        enemyHealth.TakeDamage(damage);
         Destroy(gameObject);
     }
 
