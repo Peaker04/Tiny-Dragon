@@ -77,7 +77,7 @@ public class PlayerProjectile : MonoBehaviour
         }
 
         bool movingRight = directionX > 0f;
-        return facesRightByDefault ? !movingRight : movingRight;
+        return facesRightByDefault ? movingRight : !movingRight;
     }
 
     private static Sprite CreateDefaultSprite()
