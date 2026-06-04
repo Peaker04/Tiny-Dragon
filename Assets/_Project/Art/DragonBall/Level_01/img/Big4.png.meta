@@ -1,0 +1,806 @@
+fileFormatVersion: 2
+guid: 47d15e7627b01ee408079dbdc4563e9d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 202467921980892999
+    second: Big4_0
+  - first:
+      213: 1538422819151383418
+    second: Big4_1
+  - first:
+      213: 7734176355288084282
+    second: Big4_2
+  - first:
+      213: -7666808858762915936
+    second: Big4_3
+  - first:
+      213: -398819093438941255
+    second: Big4_4
+  - first:
+      213: 9034019887412896044
+    second: Big4_5
+  - first:
+      213: 6215648014542926476
+    second: Big4_6
+  - first:
+      213: 4817151035511432104
+    second: Big4_7
+  - first:
+      213: 4937568935825051581
+    second: Big4_8
+  - first:
+      213: 5195254164952390450
+    second: Big4_9
+  - first:
+      213: 8090086310847365453
+    second: Big4_10
+  - first:
+      213: 2791493917178568928
+    second: Big4_11
+  - first:
+      213: 2829232609661840400
+    second: Big4_12
+  - first:
+      213: -6062520183992562357
+    second: Big4_13
+  - first:
+      213: 7218816832677370520
+    second: Big4_14
+  - first:
+      213: 6348556133690612675
+    second: Big4_15
+  - first:
+      213: 4368337702334593911
+    second: Big4_16
+  - first:
+      213: 7898058182535236376
+    second: Big4_17
+  - first:
+      213: -7369869190441139962
+    second: Big4_18
+  - first:
+      213: -4223135686505968256
+    second: Big4_19
+  - first:
+      213: 2275583370582674283
+    second: Big4_20
+  - first:
+      213: 3138924691020388360
+    second: Big4_21
+  - first:
+      213: -8099502227051050278
+    second: Big4_22
+  - first:
+      213: -3394492470098690256
+    second: Big4_23
+  - first:
+      213: -4277360227704152027
+    second: Big4_24
+  - first:
+      213: -2212079143998117824
+    second: Big4_25
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Big4_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 925
+        width: 110
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7472518908f4fc200800000000000000
+      internalID: 202467921980892999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 745
+        width: 282
+        height: 186
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7b8fd13763995510800000000000000
+      internalID: 1538422819151383418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_2
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 921
+        width: 88
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3feb2fea60555b60800000000000000
+      internalID: 7734176355288084282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_3
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 921
+        width: 382
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0af4e94a6f50a9590800000000000000
+      internalID: -7666808858762915936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_4
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 731
+        width: 424
+        height: 243
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b7bde5c52c177af0800000000000000
+      internalID: -398819093438941255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_5
+      rect:
+        serializedVersion: 2
+        x: 542
+        y: 843
+        width: 477
+        height: 177
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c216f0b29394f5d70800000000000000
+      internalID: 9034019887412896044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 641
+        width: 113
+        height: 109
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8271b3ffea624650800000000000000
+      internalID: 6215648014542926476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_7
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 498
+        width: 542
+        height: 341
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a3601d2855f9d240800000000000000
+      internalID: 4817151035511432104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_8
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 495
+        width: 395
+        height: 268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbf0bd969c4c58440800000000000000
+      internalID: 4937568935825051581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_9
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 707
+        width: 294
+        height: 148
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23b1bdb2320491840800000000000000
+      internalID: 5195254164952390450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_10
+      rect:
+        serializedVersion: 2
+        x: 819
+        y: 747
+        width: 86
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d41ce48f2a2c54070800000000000000
+      internalID: 8090086310847365453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_11
+      rect:
+        serializedVersion: 2
+        x: 905
+        y: 703
+        width: 71
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e0a71e7de06db620800000000000000
+      internalID: 2791493917178568928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 499
+        width: 97
+        height: 147
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01c68dd8114734720800000000000000
+      internalID: 2829232609661840400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_13
+      rect:
+        serializedVersion: 2
+        x: 901
+        y: 635
+        width: 89
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4dcc75630a9ddba0800000000000000
+      internalID: -6062520183992562357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 408
+        width: 166
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89a585299a36e2460800000000000000
+      internalID: 7218816832677370520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 242
+        width: 110
+        height: 168
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cb9141ea2a9a1850800000000000000
+      internalID: 6348556133690612675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_16
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 0
+        width: 679
+        height: 585
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77b799eeef37f9c30800000000000000
+      internalID: 4368337702334593911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_17
+      rect:
+        serializedVersion: 2
+        x: 771
+        y: 203
+        width: 108
+        height: 296
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81b4161421a8b9d60800000000000000
+      internalID: 7898058182535236376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_18
+      rect:
+        serializedVersion: 2
+        x: 857
+        y: 205
+        width: 108
+        height: 323
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60109aeb407f8b990800000000000000
+      internalID: -7369869190441139962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_19
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 151
+        width: 190
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08d498fd7786465c0800000000000000
+      internalID: -4223135686505968256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 58
+        width: 117
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6bcd5cd40f749f10800000000000000
+      internalID: 2275583370582674283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_21
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 113
+        width: 116
+        height: 129
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80819f03063bf8b20800000000000000
+      internalID: 3138924691020388360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_22
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 19
+        width: 113
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ada032333a9c89f80800000000000000
+      internalID: -8099502227051050278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_23
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 123
+        width: 80
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03f770f451754e0d0800000000000000
+      internalID: -3394492470098690256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1
+        width: 101
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5206f4b0983c3a4c0800000000000000
+      internalID: -4277360227704152027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big4_25
+      rect:
+        serializedVersion: 2
+        x: 894
+        y: 47
+        width: 79
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04821f61dbd1d41e0800000000000000
+      internalID: -2212079143998117824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Big4_0: 202467921980892999
+      Big4_1: 1538422819151383418
+      Big4_10: 8090086310847365453
+      Big4_11: 2791493917178568928
+      Big4_12: 2829232609661840400
+      Big4_13: -6062520183992562357
+      Big4_14: 7218816832677370520
+      Big4_15: 6348556133690612675
+      Big4_16: 4368337702334593911
+      Big4_17: 7898058182535236376
+      Big4_18: -7369869190441139962
+      Big4_19: -4223135686505968256
+      Big4_2: 7734176355288084282
+      Big4_20: 2275583370582674283
+      Big4_21: 3138924691020388360
+      Big4_22: -8099502227051050278
+      Big4_23: -3394492470098690256
+      Big4_24: -4277360227704152027
+      Big4_25: -2212079143998117824
+      Big4_3: -7666808858762915936
+      Big4_4: -398819093438941255
+      Big4_5: 9034019887412896044
+      Big4_6: 6215648014542926476
+      Big4_7: 4817151035511432104
+      Big4_8: 4937568935825051581
+      Big4_9: 5195254164952390450
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,1040 @@
+fileFormatVersion: 2
+guid: 5d6f8e66c4c58bd4e92610e234a0dd23
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1589233377629274053
+    second: Big3_0
+  - first:
+      213: 7059701407677583963
+    second: Big3_1
+  - first:
+      213: -1171893584574916563
+    second: Big3_2
+  - first:
+      213: 1724638199620132490
+    second: Big3_3
+  - first:
+      213: 3488992709124987262
+    second: Big3_4
+  - first:
+      213: 8671590602352520482
+    second: Big3_5
+  - first:
+      213: 6985423089248258042
+    second: Big3_6
+  - first:
+      213: 5645926724959366383
+    second: Big3_7
+  - first:
+      213: -3311827913194592478
+    second: Big3_8
+  - first:
+      213: -8326408429140190758
+    second: Big3_9
+  - first:
+      213: -3111057902015912947
+    second: Big3_10
+  - first:
+      213: 5083690341373717252
+    second: Big3_11
+  - first:
+      213: -8272316239838834471
+    second: Big3_12
+  - first:
+      213: 3001708818292737479
+    second: Big3_13
+  - first:
+      213: -3631265639349088928
+    second: Big3_14
+  - first:
+      213: -6864373629185854196
+    second: Big3_15
+  - first:
+      213: 7025387920061663682
+    second: Big3_16
+  - first:
+      213: -5188043295780476710
+    second: Big3_17
+  - first:
+      213: 2395948953128163039
+    second: Big3_18
+  - first:
+      213: -8406867446109683508
+    second: Big3_19
+  - first:
+      213: 2390313981925187018
+    second: Big3_20
+  - first:
+      213: 8372593719709125415
+    second: Big3_21
+  - first:
+      213: 7013033844175596592
+    second: Big3_22
+  - first:
+      213: -4408581417924909797
+    second: Big3_23
+  - first:
+      213: 7370872251033763298
+    second: Big3_24
+  - first:
+      213: 5177679119253634613
+    second: Big3_25
+  - first:
+      213: 1348319727097719557
+    second: Big3_26
+  - first:
+      213: 8950125175908302077
+    second: Big3_27
+  - first:
+      213: 1898185886622561303
+    second: Big3_28
+  - first:
+      213: 1893896334488656028
+    second: Big3_29
+  - first:
+      213: -1549261124191314766
+    second: Big3_30
+  - first:
+      213: 2144481193050079090
+    second: Big3_31
+  - first:
+      213: -6001888745547732222
+    second: Big3_32
+  - first:
+      213: 4347006130980776589
+    second: Big3_33
+  - first:
+      213: 6398330452743107534
+    second: Big3_34
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Big3_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 147
+        width: 399
+        height: 873
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cf79ca36571e0610800000000000000
+      internalID: 1589233377629274053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_1
+      rect:
+        serializedVersion: 2
+        x: 343
+        y: 854
+        width: 132
+        height: 166
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5292f0c60919f160800000000000000
+      internalID: 7059701407677583963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_2
+      rect:
+        serializedVersion: 2
+        x: 482
+        y: 910
+        width: 108
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d285ad86ef89cbfe0800000000000000
+      internalID: -1171893584574916563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_3
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 766
+        width: 271
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8e5d661e452fe710800000000000000
+      internalID: 1724638199620132490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_4
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 923
+        width: 61
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e79925b22646b6030800000000000000
+      internalID: 3488992709124987262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_5
+      rect:
+        serializedVersion: 2
+        x: 839
+        y: 887
+        width: 138
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22d66d275bda75870800000000000000
+      internalID: 8671590602352520482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_6
+      rect:
+        serializedVersion: 2
+        x: 891
+        y: 971
+        width: 126
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af744701a4531f060800000000000000
+      internalID: 6985423089248258042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_7
+      rect:
+        serializedVersion: 2
+        x: 470
+        y: 850
+        width: 112
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fec6615617c5a5e40800000000000000
+      internalID: 5645926724959366383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_8
+      rect:
+        serializedVersion: 2
+        x: 826
+        y: 784
+        width: 92
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22720dc4f060a02d0800000000000000
+      internalID: -3311827913194592478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_9
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 626
+        width: 83
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad9d74e16a7a27c80800000000000000
+      internalID: -8326408429140190758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_10
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 753
+        width: 87
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d046baa325d43d4d0800000000000000
+      internalID: -3111057902015912947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_11
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 546
+        width: 269
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40b2aa15e65ec8640800000000000000
+      internalID: 5083690341373717252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_12
+      rect:
+        serializedVersion: 2
+        x: 642
+        y: 553
+        width: 281
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d016be5534d23d80800000000000000
+      internalID: -8272316239838834471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_13
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 445
+        width: 84
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c50f79344638a920800000000000000
+      internalID: 3001708818292737479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_14
+      rect:
+        serializedVersion: 2
+        x: 398
+        y: 568
+        width: 159
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06d0489e3272b9dc0800000000000000
+      internalID: -3631265639349088928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_15
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 486
+        width: 115
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0571d2ad88dcb0a0800000000000000
+      internalID: -6864373629185854196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_16
+      rect:
+        serializedVersion: 2
+        x: 733
+        y: 568
+        width: 252
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c9889857113f7160800000000000000
+      internalID: 7025387920061663682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_17
+      rect:
+        serializedVersion: 2
+        x: 734
+        y: 535
+        width: 104
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad868a32c1e5008b0800000000000000
+      internalID: -5188043295780476710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_18
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 504
+        width: 151
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd65c2be0ee104120800000000000000
+      internalID: 2395948953128163039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_19
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 0
+        width: 521
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc046d8699ec45b80800000000000000
+      internalID: -8406867446109683508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_20
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 418
+        width: 74
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: acddc42f6e91c2120800000000000000
+      internalID: 2390313981925187018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_21
+      rect:
+        serializedVersion: 2
+        x: 993
+        y: 461
+        width: 12
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72bcdefc0ad613470800000000000000
+      internalID: 8372593719709125415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_22
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 402
+        width: 68
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03ce0e7ef1d435160800000000000000
+      internalID: 7013033844175596592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_23
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 208
+        width: 95
+        height: 197
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b15a23dde8291d2c0800000000000000
+      internalID: -4408581417924909797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_24
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 330
+        width: 78
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2edb6af72499a4660800000000000000
+      internalID: 7370872251033763298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_25
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 99
+        width: 113
+        height: 186
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53ef118f9bfcad740800000000000000
+      internalID: 5177679119253634613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_26
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 0
+        width: 323
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50baf49e5a136b210800000000000000
+      internalID: 1348319727097719557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_27
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 108
+        width: 89
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfc7b4d7d6b353c70800000000000000
+      internalID: 8950125175908302077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_28
+      rect:
+        serializedVersion: 2
+        x: 452
+        y: 149
+        width: 44
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7143cc1c106b75a10800000000000000
+      internalID: 1898185886622561303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_29
+      rect:
+        serializedVersion: 2
+        x: 880
+        y: 131
+        width: 102
+        height: 98
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c985c929ea8784a10800000000000000
+      internalID: 1893896334488656028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 36
+        width: 130
+        height: 109
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bc1144473bef7ae0800000000000000
+      internalID: -1549261124191314766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_31
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 185
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27f714b784ab2cd10800000000000000
+      internalID: 2144481193050079090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_32
+      rect:
+        serializedVersion: 2
+        x: 373
+        y: 0
+        width: 86
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20b663c3cf105bca0800000000000000
+      internalID: -6001888745547732222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_33
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 0
+        width: 63
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8aed817b0ba35c30800000000000000
+      internalID: 4347006130980776589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big3_34
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 39
+        width: 112
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec3315f95af6bc850800000000000000
+      internalID: 6398330452743107534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Big3_0: 1589233377629274053
+      Big3_1: 7059701407677583963
+      Big3_10: -3111057902015912947
+      Big3_11: 5083690341373717252
+      Big3_12: -8272316239838834471
+      Big3_13: 3001708818292737479
+      Big3_14: -3631265639349088928
+      Big3_15: -6864373629185854196
+      Big3_16: 7025387920061663682
+      Big3_17: -5188043295780476710
+      Big3_18: 2395948953128163039
+      Big3_19: -8406867446109683508
+      Big3_2: -1171893584574916563
+      Big3_20: 2390313981925187018
+      Big3_21: 8372593719709125415
+      Big3_22: 7013033844175596592
+      Big3_23: -4408581417924909797
+      Big3_24: 7370872251033763298
+      Big3_25: 5177679119253634613
+      Big3_26: 1348319727097719557
+      Big3_27: 8950125175908302077
+      Big3_28: 1898185886622561303
+      Big3_29: 1893896334488656028
+      Big3_3: 1724638199620132490
+      Big3_30: -1549261124191314766
+      Big3_31: 2144481193050079090
+      Big3_32: -6001888745547732222
+      Big3_33: 4347006130980776589
+      Big3_34: 6398330452743107534
+      Big3_4: 3488992709124987262
+      Big3_5: 8671590602352520482
+      Big3_6: 6985423089248258042
+      Big3_7: 5645926724959366383
+      Big3_8: -3311827913194592478
+      Big3_9: -8326408429140190758
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

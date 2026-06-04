@@ -1,0 +1,598 @@
+fileFormatVersion: 2
+guid: 9dae966f29444bf4b952be1af855a960
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6622515736862846845
+    second: mount_12_1_0
+  - first:
+      213: 3009016921838535188
+    second: mount_12_1_1
+  - first:
+      213: -4162830512712914425
+    second: mount_12_1_2
+  - first:
+      213: -9089405701599344930
+    second: mount_12_1_3
+  - first:
+      213: 5186024850326619872
+    second: mount_12_1_4
+  - first:
+      213: 4316615342187395830
+    second: mount_12_1_5
+  - first:
+      213: -1048197565511454255
+    second: mount_12_1_6
+  - first:
+      213: -826608730164599655
+    second: mount_12_1_7
+  - first:
+      213: 3346279085573081188
+    second: mount_12_1_8
+  - first:
+      213: -6019299597279161708
+    second: mount_12_1_9
+  - first:
+      213: 6765405008752589592
+    second: mount_12_1_10
+  - first:
+      213: 8138846135775101748
+    second: mount_12_1_11
+  - first:
+      213: 6463633214890779445
+    second: mount_12_1_12
+  - first:
+      213: -7509471796237745290
+    second: mount_12_1_13
+  - first:
+      213: 5521822326209593708
+    second: mount_12_1_14
+  - first:
+      213: 2411411621414203952
+    second: mount_12_1_15
+  - first:
+      213: 5214019586364142505
+    second: mount_12_1_16
+  - first:
+      213: 8785421346259394352
+    second: mount_12_1_17
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: mount_12_1_0
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 1038
+        width: 100
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3801bd066091814a0800000000000000
+      internalID: -6622515736862846845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_1
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 876
+        width: 258
+        height: 139
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 412435da2fc22c920800000000000000
+      internalID: 3009016921838535188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_2
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 979
+        width: 29
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70ae69d44b7aa36c0800000000000000
+      internalID: -4162830512712914425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_3
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 875
+        width: 23
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed6c2c01ca1fbd180800000000000000
+      internalID: -9089405701599344930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_4
+      rect:
+        serializedVersion: 2
+        x: 325
+        y: 875
+        width: 42
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e60118ef1678f740800000000000000
+      internalID: 5186024850326619872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_5
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 875
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fab41788c2b7eb30800000000000000
+      internalID: 4316615342187395830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_6
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 748
+        width: 77
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d1b2452edd0471f0800000000000000
+      internalID: -1048197565511454255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_7
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 583
+        width: 259
+        height: 144
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9946d4e4dbb4784f0800000000000000
+      internalID: -826608730164599655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_8
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 622
+        width: 42
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46807e6591f507e20800000000000000
+      internalID: 3346279085573081188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_9
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 583
+        width: 19
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 492168b68e6277ca0800000000000000
+      internalID: -6019299597279161708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_10
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 455
+        width: 77
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81bb854c20c83ed50800000000000000
+      internalID: 6765405008752589592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_11
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 300
+        width: 256
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4338f64607df2f070800000000000000
+      internalID: 8138846135775101748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_12
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 424
+        width: 39
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5332bf3c92073b950800000000000000
+      internalID: 6463633214890779445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_13
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 294
+        width: 26
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6734f6e203ff8c790800000000000000
+      internalID: -7509471796237745290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_14
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 163
+        width: 84
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c614b8a562471ac40800000000000000
+      internalID: 5521822326209593708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_15
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 1
+        width: 256
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03274ade71e077120800000000000000
+      internalID: 2411411621414203952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_16
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 140
+        width: 23
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a3f921503beb5840800000000000000
+      internalID: 5214019586364142505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mount_12_1_17
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 0
+        width: 23
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03fdce1da261ce970800000000000000
+      internalID: 8785421346259394352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      mount_12_1_0: -6622515736862846845
+      mount_12_1_1: 3009016921838535188
+      mount_12_1_10: 6765405008752589592
+      mount_12_1_11: 8138846135775101748
+      mount_12_1_12: 6463633214890779445
+      mount_12_1_13: -7509471796237745290
+      mount_12_1_14: 5521822326209593708
+      mount_12_1_15: 2411411621414203952
+      mount_12_1_16: 5214019586364142505
+      mount_12_1_17: 8785421346259394352
+      mount_12_1_2: -4162830512712914425
+      mount_12_1_3: -9089405701599344930
+      mount_12_1_4: 5186024850326619872
+      mount_12_1_5: 4316615342187395830
+      mount_12_1_6: -1048197565511454255
+      mount_12_1_7: -826608730164599655
+      mount_12_1_8: 3346279085573081188
+      mount_12_1_9: -6019299597279161708
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,780 @@
+fileFormatVersion: 2
+guid: eec7963bf190f88419c11979a2b1d1eb
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5877269231717265697
+    second: Big5_0
+  - first:
+      213: -7391167444687335988
+    second: Big5_1
+  - first:
+      213: 6063198941371755800
+    second: Big5_2
+  - first:
+      213: 562523109020501105
+    second: Big5_3
+  - first:
+      213: 4967596987616837369
+    second: Big5_4
+  - first:
+      213: -1109679296863215462
+    second: Big5_5
+  - first:
+      213: 9165803017345722781
+    second: Big5_6
+  - first:
+      213: -3603384642228176411
+    second: Big5_7
+  - first:
+      213: 1955246162683454584
+    second: Big5_8
+  - first:
+      213: -7111066675918474139
+    second: Big5_9
+  - first:
+      213: 2656817524215016624
+    second: Big5_10
+  - first:
+      213: -5068801492809781902
+    second: Big5_11
+  - first:
+      213: 2695137986188482252
+    second: Big5_12
+  - first:
+      213: -2463285656597391832
+    second: Big5_13
+  - first:
+      213: 160197794643100471
+    second: Big5_14
+  - first:
+      213: -4777298158126217395
+    second: Big5_15
+  - first:
+      213: -1471003386833970268
+    second: Big5_16
+  - first:
+      213: -4180571321287482477
+    second: Big5_17
+  - first:
+      213: -4217495905624557214
+    second: Big5_18
+  - first:
+      213: -4035714709022446708
+    second: Big5_19
+  - first:
+      213: -4916564546448184612
+    second: Big5_20
+  - first:
+      213: -8312907903920446784
+    second: Big5_21
+  - first:
+      213: -5485540427770565367
+    second: Big5_22
+  - first:
+      213: -188533969318425552
+    second: Big5_23
+  - first:
+      213: -173410898349525534
+    second: Big5_24
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Big5_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 395
+        width: 802
+        height: 625
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12137d52a31409150800000000000000
+      internalID: 5877269231717265697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_1
+      rect:
+        serializedVersion: 2
+        x: 771
+        y: 975
+        width: 98
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccdcaff7e5c4d6990800000000000000
+      internalID: -7391167444687335988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_2
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 970
+        width: 91
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81decfe105fc42450800000000000000
+      internalID: 6063198941371755800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_3
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 929
+        width: 74
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1748d1b89cb7ec700800000000000000
+      internalID: 562523109020501105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_4
+      rect:
+        serializedVersion: 2
+        x: 524
+        y: 670
+        width: 422
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9feb33a042370f440800000000000000
+      internalID: 4967596987616837369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_5
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 914
+        width: 104
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a90ecdf0f80a990f0800000000000000
+      internalID: -1109679296863215462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_6
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 582
+        width: 100
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9968122849733f70800000000000000
+      internalID: 9165803017345722781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_7
+      rect:
+        serializedVersion: 2
+        x: 798
+        y: 623
+        width: 67
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e934ea62c43efdc0800000000000000
+      internalID: -3603384642228176411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_8
+      rect:
+        serializedVersion: 2
+        x: 683
+        y: 338
+        width: 163
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 874613f860e622b10800000000000000
+      internalID: 1955246162683454584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_9
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 535
+        width: 58
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 564f2c7c88a605d90800000000000000
+      internalID: -7111066675918474139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 299
+        width: 69
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bc6edb3679eed420800000000000000
+      internalID: 2656817524215016624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_11
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 315
+        width: 60
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27d6a10e5eff7a9b0800000000000000
+      internalID: -5068801492809781902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_12
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 254
+        width: 100
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc61d6f08bd076520800000000000000
+      internalID: 2695137986188482252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_13
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 294
+        width: 242
+        height: 227
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82692321fb6a0ddd0800000000000000
+      internalID: -2463285656597391832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_14
+      rect:
+        serializedVersion: 2
+        x: 238
+        y: 23
+        width: 525
+        height: 473
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 733c083ab03293200800000000000000
+      internalID: 160197794643100471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 207
+        width: 109
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4742cae2a0a3bdb0800000000000000
+      internalID: -4777298158126217395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 43
+        width: 177
+        height: 166
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ab5d50a632f59be0800000000000000
+      internalID: -1471003386833970268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_17
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 206
+        width: 80
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 393697c6880abf5c0800000000000000
+      internalID: -4180571321287482477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_18
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 201
+        width: 82
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 269759fa1d17875c0800000000000000
+      internalID: -4217495905624557214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_19
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 201
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8be5e1bad24ef7c0800000000000000
+      internalID: -4035714709022446708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_20
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 0
+        width: 194
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cda2da5189ad4cbb0800000000000000
+      internalID: -4916564546448184612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_21
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 9
+        width: 136
+        height: 193
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c2e8481e4e92ac80800000000000000
+      internalID: -8312907903920446784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_22
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 14
+        width: 87
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90de0b96b027fd3b0800000000000000
+      internalID: -5485540427770565367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_23
+      rect:
+        serializedVersion: 2
+        x: 379
+        y: 1
+        width: 98
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03c4ea29a51326df0800000000000000
+      internalID: -188533969318425552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Big5_24
+      rect:
+        serializedVersion: 2
+        x: 474
+        y: 0
+        width: 76
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e5f1bbe4bbe79df0800000000000000
+      internalID: -173410898349525534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Big5_0: 5877269231717265697
+      Big5_1: -7391167444687335988
+      Big5_10: 2656817524215016624
+      Big5_11: -5068801492809781902
+      Big5_12: 2695137986188482252
+      Big5_13: -2463285656597391832
+      Big5_14: 160197794643100471
+      Big5_15: -4777298158126217395
+      Big5_16: -1471003386833970268
+      Big5_17: -4180571321287482477
+      Big5_18: -4217495905624557214
+      Big5_19: -4035714709022446708
+      Big5_2: 6063198941371755800
+      Big5_20: -4916564546448184612
+      Big5_21: -8312907903920446784
+      Big5_22: -5485540427770565367
+      Big5_23: -188533969318425552
+      Big5_24: -173410898349525534
+      Big5_3: 562523109020501105
+      Big5_4: 4967596987616837369
+      Big5_5: -1109679296863215462
+      Big5_6: 9165803017345722781
+      Big5_7: -3603384642228176411
+      Big5_8: 1955246162683454584
+      Big5_9: -7111066675918474139
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
