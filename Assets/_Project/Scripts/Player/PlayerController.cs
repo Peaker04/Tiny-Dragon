@@ -28,6 +28,11 @@ public class PlayerController : MonoBehaviour
     private bool hasAttackParameter;
     private float nextAttackTime;
 
+    [Header("Tutorial State")]
+    public bool canMove = true;
+    public bool canJump = true;
+    public bool canAttack = true;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -46,15 +51,15 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // Doc input trong Update de khong bo lo phim bam giua cac frame vat ly.
-        moveX = ReadHorizontalInput();
+        moveX = canMove ? ReadHorizontalInput() : 0f;
 
-        if (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space))
+        if (canJump && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space)))
         {
             jumpPressed = true;
         }
 
         // Bam attackKey de kich hoat animation chuong cua body.
-        if (Input.GetKeyDown(attackKey) && Time.time >= nextAttackTime && animator != null && hasAttackParameter)
+        if (canAttack && Input.GetKeyDown(attackKey) && Time.time >= nextAttackTime && animator != null && hasAttackParameter)
         {
             animator.SetTrigger("Attack");
             nextAttackTime = Time.time + attackCooldown;

@@ -4,56 +4,34 @@ namespace TinyDragon.UI
 {
     public class TutorialManager : MonoBehaviour
     {
-        [Header("UI References")]
-        [Tooltip("Hình nền đen mờ bao phủ toàn màn hình")]
-        public GameObject darkBackground; 
-        
-        [Tooltip("Danh sách các GameObject chứa nội dung từng bước hướng dẫn (bảng chữ)")]
+        public GameObject darkBackground;
         public GameObject[] tutorialSteps; 
 
-        [Header("Input")]
         [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
         [SerializeField] private KeyCode moveRightKey = KeyCode.D;
         [SerializeField] private KeyCode jumpKey = KeyCode.Space;
 
         private int currentStepIndex = 0;
-        private bool tutorialFinished;
-
-        void Awake()
-        {
-            HideAllSteps();
-        }
+        private PlayerController player;
 
         void Start()
         {
-            currentStepIndex = 0;
-            tutorialFinished = false;
-
-            if (darkBackground == null)
+            if (darkBackground == null || tutorialSteps == null || tutorialSteps.Length == 0)
             {
-                Debug.LogWarning("Chưa gán Dark Background vào TutorialManager!");
+                Debug.LogWarning("Chưa cấu hình TutorialManager!");
+                this.enabled = false;
                 return;
             }
 
-            if (tutorialSteps == null || tutorialSteps.Length == 0)
-            {
-                Debug.LogWarning("Chưa có bước hướng dẫn nào trong TutorialManager!");
-                return;
-            }
-
-            // Bật nền đen mờ
-            darkBackground.SetActive(true);
+            player = FindFirstObjectByType<PlayerController>();
             
-            // Hiển thị bước đầu tiên
+            darkBackground.SetActive(true);
             ShowStep(0); 
         }
 
         void Update()
         {
-            if (tutorialFinished || currentStepIndex >= tutorialSteps.Length)
-            {
-                return;
-            }
+            if (currentStepIndex >= tutorialSteps.Length) return;
 
             if (WasCurrentStepInputPressed())
             {
@@ -63,28 +41,35 @@ namespace TinyDragon.UI
 
         bool WasCurrentStepInputPressed()
         {
-            switch (currentStepIndex)
+            if (currentStepIndex == 0)
             {
-                case 0:
-                    return Input.GetKeyDown(moveLeftKey)
-                        || Input.GetKeyDown(moveRightKey)
-                        || Input.GetKeyDown(KeyCode.LeftArrow)
-                        || Input.GetKeyDown(KeyCode.RightArrow);
-                case 1:
-                    return Input.GetKeyDown(jumpKey);
-                default:
-                    return false;
+                return Input.GetKeyDown(moveLeftKey) || Input.GetKeyDown(moveRightKey) || 
+                       Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow);
             }
+            if (currentStepIndex == 1)
+            {
+                return Input.GetKeyDown(jumpKey);
+            }
+            return false;
         }
 
         void ShowStep(int index)
         {
-            HideAllSteps();
+            foreach (var step in tutorialSteps)
+            {
+                if (step != null) step.SetActive(false);
+            }
             
-            // Bật bảng hướng dẫn hiện tại
             if (index < tutorialSteps.Length && tutorialSteps[index] != null)
             {
                 tutorialSteps[index].SetActive(true);
+            }
+
+            if (player != null)
+            {
+                player.canMove = true;
+                player.canJump = (index == 1);
+                player.canAttack = false;
             }
         }
 
@@ -94,7 +79,6 @@ namespace TinyDragon.UI
 
             if (currentStepIndex < tutorialSteps.Length)
             {
-                // Bật bước tiếp theo
                 ShowStep(currentStepIndex);
             }
             else
@@ -103,34 +87,24 @@ namespace TinyDragon.UI
             }
         }
 
-        void HideAllSteps()
-        {
-            if (tutorialSteps == null)
-            {
-                return;
-            }
-
-            for (int i = 0; i < tutorialSteps.Length; i++)
-            {
-                if (tutorialSteps[i] != null)
-                {
-                    tutorialSteps[i].SetActive(false);
-                }
-            }
-        }
-
         void CompleteTutorial()
         {
-            tutorialFinished = true;
-            HideAllSteps();
-
-            if (darkBackground != null)
+            foreach (var step in tutorialSteps)
             {
-                darkBackground.SetActive(false);
+                if (step != null) step.SetActive(false);
             }
 
-            this.enabled = false;
+            if (player != null)
+            {
+                player.canMove = true;
+                player.canJump = true;
+                player.canAttack = true;
+            }
 
+            darkBackground.SetActive(false);
+            
+            this.enabled = false;
+            
             Debug.Log("Kết thúc hướng dẫn, vào game!");
         }
     }
