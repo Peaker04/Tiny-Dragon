@@ -11,99 +11,129 @@ namespace TinyDragon.UI
         [Tooltip("Danh sách các GameObject chứa nội dung từng bước hướng dẫn (bảng chữ)")]
         public GameObject[] tutorialSteps; 
 
-        [Header("Input")]
-        [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
-        [SerializeField] private KeyCode moveRightKey = KeyCode.D;
-        [SerializeField] private KeyCode jumpKey = KeyCode.Space;
-
-        private int currentStepIndex = 0;
-        private bool tutorialFinished;
+        [Header("Layout")]
+        [SerializeField] private bool applyRuntimeLayout = false;
+        [SerializeField] private Vector2 topRightPadding = new Vector2(24f, 14f);
+        [SerializeField] private Vector2 textPadding = new Vector2(10f, 0f);
+        [SerializeField] private Vector2 stepSize = new Vector2(500f, 34f);
+        [SerializeField] private float stepSpacing = 4f;
+        [SerializeField] private float fontSize = 22f;
 
         void Awake()
         {
-            HideAllSteps();
+            ApplyLayoutIfEnabled();
+            ShowAllSteps();
         }
 
         void Start()
         {
-            currentStepIndex = 0;
-            tutorialFinished = false;
-
-            if (darkBackground == null)
+            if (darkBackground != null)
             {
-                Debug.LogWarning("Chưa gán Dark Background vào TutorialManager!");
-                return;
+                darkBackground.SetActive(false);
             }
 
-            if (tutorialSteps == null || tutorialSteps.Length == 0)
-            {
-                Debug.LogWarning("Chưa có bước hướng dẫn nào trong TutorialManager!");
-                return;
-            }
-
-            // Bật nền đen mờ
-            darkBackground.SetActive(true);
-            
-            // Hiển thị bước đầu tiên
-            ShowStep(0); 
+            ApplyLayoutIfEnabled();
+            ShowAllSteps();
         }
 
-        void Update()
+        void ApplyLayoutIfEnabled()
         {
-            if (tutorialFinished || currentStepIndex >= tutorialSteps.Length)
+            if (!applyRuntimeLayout)
             {
                 return;
             }
 
-            if (WasCurrentStepInputPressed())
-            {
-                NextStep();
-            }
+            FixTutorialLayout();
         }
 
-        bool WasCurrentStepInputPressed()
+        void FixTutorialLayout()
         {
-            switch (currentStepIndex)
+            Canvas canvas = GetComponentInParent<Canvas>();
+            if (canvas == null && tutorialSteps != null)
             {
-                case 0:
-                    return Input.GetKeyDown(moveLeftKey)
-                        || Input.GetKeyDown(moveRightKey)
-                        || Input.GetKeyDown(KeyCode.LeftArrow)
-                        || Input.GetKeyDown(KeyCode.RightArrow);
-                case 1:
-                    return Input.GetKeyDown(jumpKey);
-                default:
-                    return false;
+                for (int i = 0; i < tutorialSteps.Length; i++)
+                {
+                    if (tutorialSteps[i] == null)
+                    {
+                        continue;
+                    }
+
+                    canvas = tutorialSteps[i].GetComponentInParent<Canvas>();
+                    if (canvas != null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (canvas != null)
+            {
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                canvas.worldCamera = null;
+            }
+
+            if (tutorialSteps == null)
+            {
+                return;
+            }
+
+            float currentY = topRightPadding.y;
+            for (int i = 0; i < tutorialSteps.Length; i++)
+            {
+                if (tutorialSteps[i] == null)
+                {
+                    continue;
+                }
+
+                RectTransform rectTransform = tutorialSteps[i].GetComponent<RectTransform>();
+                if (rectTransform == null)
+                {
+                    continue;
+                }
+
+                rectTransform.anchorMin = new Vector2(1f, 1f);
+                rectTransform.anchorMax = new Vector2(1f, 1f);
+                rectTransform.pivot = new Vector2(1f, 1f);
+                rectTransform.anchoredPosition = new Vector2(-topRightPadding.x, -currentY);
+                rectTransform.sizeDelta = stepSize;
+                FixStepChildren(rectTransform);
+                currentY += rectTransform.sizeDelta.y + stepSpacing;
             }
         }
 
-        void ShowStep(int index)
+        void FixStepChildren(RectTransform stepRoot)
         {
-            HideAllSteps();
-            
-            // Bật bảng hướng dẫn hiện tại
-            if (index < tutorialSteps.Length && tutorialSteps[index] != null)
+            for (int i = 0; i < stepRoot.childCount; i++)
             {
-                tutorialSteps[index].SetActive(true);
+                RectTransform child = stepRoot.GetChild(i) as RectTransform;
+                if (child == null)
+                {
+                    continue;
+                }
+
+                child.anchorMin = new Vector2(0.5f, 0.5f);
+                child.anchorMax = new Vector2(0.5f, 0.5f);
+                child.pivot = new Vector2(0.5f, 0.5f);
+                child.anchoredPosition = textPadding.y * Vector2.up;
+                child.sizeDelta = new Vector2(
+                    Mathf.Max(0f, stepRoot.sizeDelta.x - textPadding.x * 2f),
+                    stepRoot.sizeDelta.y
+                );
+
+                TMPro.TMP_Text text = child.GetComponent<TMPro.TMP_Text>();
+                if (text != null)
+                {
+                    text.alignment = TMPro.TextAlignmentOptions.Center;
+                    text.fontSize = fontSize;
+                    text.enableAutoSizing = true;
+                    text.fontSizeMin = 18f;
+                    text.fontSizeMax = fontSize;
+                    text.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
+                }
             }
         }
 
-        void NextStep()
-        {
-            currentStepIndex++;
-
-            if (currentStepIndex < tutorialSteps.Length)
-            {
-                // Bật bước tiếp theo
-                ShowStep(currentStepIndex);
-            }
-            else
-            {
-                CompleteTutorial();
-            }
-        }
-
-        void HideAllSteps()
+        void ShowAllSteps()
         {
             if (tutorialSteps == null)
             {
@@ -112,26 +142,13 @@ namespace TinyDragon.UI
 
             for (int i = 0; i < tutorialSteps.Length; i++)
             {
-                if (tutorialSteps[i] != null)
+                if (tutorialSteps[i] == null)
                 {
-                    tutorialSteps[i].SetActive(false);
+                    continue;
                 }
+
+                tutorialSteps[i].SetActive(true);
             }
-        }
-
-        void CompleteTutorial()
-        {
-            tutorialFinished = true;
-            HideAllSteps();
-
-            if (darkBackground != null)
-            {
-                darkBackground.SetActive(false);
-            }
-
-            this.enabled = false;
-
-            Debug.Log("Kết thúc hướng dẫn, vào game!");
         }
     }
 }
