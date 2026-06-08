@@ -5,10 +5,10 @@ namespace TinyDragon.UI
     public class TutorialManager : MonoBehaviour
     {
         [Header("UI References")]
-        [Tooltip("H├¼nh nß╗ün ─æen mß╗¥ bao phß╗º to├án m├án h├¼nh")]
+        [Tooltip("Hình nền đen mờ bao phủ toàn màn hình")]
         public GameObject darkBackground; 
         
-        [Tooltip("Danh s├ích c├íc GameObject chß╗⌐a nß╗Öi dung tß╗½ng b╞░ß╗¢c h╞░ß╗¢ng dß║½n (bß║úng chß╗»)")]
+        [Tooltip("Danh sách các GameObject chứa nội dung từng bước hướng dẫn (bảng chữ)")]
         public GameObject[] tutorialSteps; 
 
         [Header("Layout")]
