@@ -1,83 +1,151 @@
+using System;
+using TinyDragon.Data;
+using TinyDragon.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TinyDragon.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private int maxHealth = 5;
-    [SerializeField] private string guideSceneName = "Level_01_guide";
-    [SerializeField] private bool immortalInGuideScene = true;
+    private const string DefaultDamagePopupPrefabPath = "Combat/DamagePopup";
+
+    [SerializeField] private int maxHealth = GameplayBalanceDefaults.PlayerBaseHealth;
+    [SerializeField] private FloatingDamageText damagePopupPrefab;
+    [SerializeField] private int damagePopupPoolPrewarmCount = 4;
     [SerializeField] private Vector3 damagePopupOffset = new Vector3(0f, 1.1f, 0f);
     [SerializeField] private Color damagePopupColor = new Color(1f, 0.15f, 0.05f);
-    [SerializeField] private GameOver gameOverUI;
+
+    [Header("Guide Scene Logic")]
+    [SerializeField] private string guideSceneName = "Level_01_guide";
+    [SerializeField] private bool immortalInGuideScene = true;
 
     private int currentHealth;
+    private int flatDamageReduction;
+    private int damageReductionPercent;
     private bool isDead;
+    private ComponentPool<FloatingDamageText> damagePopupPool;
+
+    public static event Action<PlayerHealth> PlayerAvailable;
+    public event Action<PlayerHealth> HealthChanged;
+    public event Action<PlayerHealth> Died;
 
     public int CurrentHealth => currentHealth;
     public int MaxHealth => maxHealth;
 
     private void Awake()
     {
-        // Khi Player duoc tao, mau hien tai bat dau bang mau toi da.
         currentHealth = maxHealth;
         isDead = false;
+        EnsureDamagePopupPool();
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        PlayerStatusHud.EnsureFor(this);
+        PlayerAvailable?.Invoke(this);
+        HealthChanged?.Invoke(this);
     }
 
     public void TakeDamage(int damage)
     {
-        // Bo qua damage khong hop le, hoac khi Player da chet.
         if (damage <= 0 || isDead)
         {
             return;
         }
 
-        currentHealth -= damage;
+        int effectiveDamage = CalculateIncomingDamage(damage);
+        
+        currentHealth -= effectiveDamage;
+        if (currentHealth <= 0)
+        {
+            if (immortalInGuideScene && SceneManager.GetActiveScene().name == guideSceneName)
+            {
+                currentHealth = 1;
+            }
+            else
+            {
+                currentHealth = 0;
+            }
+        }
+
+        TinyDragonSaveManager.Instance.SaveCurrentHealth(currentHealth, maxHealth);
+        ShowDamagePopup(effectiveDamage);
+        HealthChanged?.Invoke(this);
+        Debug.Log($"Player took {effectiveDamage} damage. HP: {currentHealth}/{maxHealth}");
 
         if (currentHealth <= 0)
         {
-            currentHealth = 0;
-            HandleNoHealth();
+            isDead = true;
+            Died?.Invoke(this);
+            GameOver.Ensure().GameOverActive();
         }
-
-        ShowDamagePopup(damage);
-        Debug.Log($"Player took {damage} damage. HP: {currentHealth}/{maxHealth}");
     }
 
-    private void HandleNoHealth()
+    public void Revive()
     {
-        if (immortalInGuideScene && SceneManager.GetActiveScene().name == guideSceneName)
-        {
-            Debug.Log("Player is out of HP but stays alive in guide level.");
-            return;
-        }
-
-        Die();
+        currentHealth = maxHealth;
+        isDead = false;
+        TinyDragonSaveManager.Instance.SaveCurrentHealth(currentHealth, maxHealth);
+        HealthChanged?.Invoke(this);
     }
 
-    private void Die()
+    public void RestoreHealth(int savedCurrentHealth, int savedMaxHealth)
     {
-        isDead = true;
-        Debug.Log("Player died.");
+        maxHealth = Mathf.Max(savedMaxHealth, 1);
+        currentHealth = Mathf.Clamp(savedCurrentHealth, 0, maxHealth);
+        isDead = currentHealth <= 0;
+        HealthChanged?.Invoke(this);
+    }
 
-        if (gameOverUI != null)
-        {
-            gameOverUI.GameOverActive();
-        }
+    public void ApplyRuntimeStats(int runtimeMaxHealth, int flatDefense, int reductionPercent)
+    {
+        maxHealth = Mathf.Max(runtimeMaxHealth, 1);
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        flatDamageReduction = Mathf.Max(flatDefense, 0);
+        damageReductionPercent = Mathf.Clamp(reductionPercent, 0, 95);
+        isDead = currentHealth <= 0;
+        HealthChanged?.Invoke(this);
+    }
+
+    private int CalculateIncomingDamage(int damage)
+    {
+        int percentReducedDamage = Mathf.RoundToInt(damage * (100 - damageReductionPercent) / 100f);
+        return Mathf.Max(percentReducedDamage - flatDamageReduction, 1);
     }
 
     private void ShowDamagePopup(int damage)
     {
-        // Tao text damage tai vi tri Player cong offset de hien len tren dau.
-        GameObject popupObject = new GameObject("Damage Popup");
-        popupObject.transform.position = transform.position + damagePopupOffset;
+        EnsureDamagePopupPool();
+        if (damagePopupPool == null)
+        {
+            return;
+        }
 
-        FloatingDamageText floatingText = popupObject.AddComponent<FloatingDamageText>();
-        floatingText.Initialize($"-{damage}", damagePopupColor);
+        FloatingDamageText floatingText = damagePopupPool.Get(transform.position + damagePopupOffset, Quaternion.identity);
+        floatingText.Initialize($"-{damage}", damagePopupColor, damagePopupPool.Release);
+    }
+
+    private void EnsureDamagePopupPool()
+    {
+        if (damagePopupPool != null)
+        {
+            return;
+        }
+
+        if (damagePopupPrefab == null)
+        {
+            GameObject damagePopupPrefabObject = Resources.Load<GameObject>(DefaultDamagePopupPrefabPath);
+            if (damagePopupPrefabObject != null)
+            {
+                damagePopupPrefab = damagePopupPrefabObject.GetComponent<FloatingDamageText>();
+            }
+        }
+
+        if (damagePopupPrefab != null)
+        {
+            damagePopupPool = new ComponentPool<FloatingDamageText>(
+                damagePopupPrefab,
+                RuntimeSceneRoot.GetChild("DamagePopupPool"),
+                damagePopupPoolPrewarmCount
+            );
+        }
     }
 }
