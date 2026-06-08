@@ -7,13 +7,11 @@ namespace TinyDragon.UI
     {
         public void PlayGame()
         {
-            // Chuyển sang màn hình Level_01
-            SceneManager.LoadScene("Level_01");
+            SceneManager.LoadScene("Level_01_guide");
         }
 
         public void QuitGame()
         {
-            // Thoát game (Chỉ hoạt động khi đã build ra game thật, trên editor sẽ in log)
             Debug.Log("Đã bấm Quit!");
             Application.Quit();
         }

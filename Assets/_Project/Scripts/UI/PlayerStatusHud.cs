@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace TinyDragon.UI
 {
@@ -20,6 +21,7 @@ namespace TinyDragon.UI
         [SerializeField] private Vector2 healthBarSize = new Vector2(98f, 15f);
         [SerializeField] private Vector2 kiBarPosition = new Vector2(123f, -31f);
         [SerializeField] private Vector2 kiBarSize = new Vector2(88f, 9f);
+        [SerializeField] private string[] hiddenScenes = new string[] { "Level_01_Original" };
 
         private PlayerHealth playerHealth;
         private Image frameImage;
@@ -27,7 +29,34 @@ namespace TinyDragon.UI
         private Image kiBarImage;
         private float kiPercent = 1f;
 
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            Canvas canvas = GetComponent<Canvas>();
+            if (canvas == null) return;
+
+            bool shouldShow = true;
+
+            foreach (string hiddenScene in hiddenScenes)
+            {
+                if (scene.name == hiddenScene)
+                {
+                    shouldShow = false;
+                    break;
+                }
+            }
+            canvas.enabled = shouldShow;
+        }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+
         private static void ResetActiveHud()
         {
             activeHud = null;

@@ -9,6 +9,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private bool immortalInGuideScene = true;
     [SerializeField] private Vector3 damagePopupOffset = new Vector3(0f, 1.1f, 0f);
     [SerializeField] private Color damagePopupColor = new Color(1f, 0.15f, 0.05f);
+    [SerializeField] private GameOver gameOverUI;
 
     private int currentHealth;
     private bool isDead;
@@ -21,12 +22,6 @@ public class PlayerHealth : MonoBehaviour
         // Khi Player duoc tao, mau hien tai bat dau bang mau toi da.
         currentHealth = maxHealth;
         isDead = false;
-        PlayerStatusHud.EnsureFor(this);
-    }
-
-    private void OnEnable()
-    {
-        PlayerStatusHud.EnsureFor(this);
     }
 
     private void Start()
@@ -36,8 +31,6 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        PlayerStatusHud.EnsureFor(this);
-
         // Bo qua damage khong hop le, hoac khi Player da chet.
         if (damage <= 0 || isDead)
         {
@@ -45,13 +38,15 @@ public class PlayerHealth : MonoBehaviour
         }
 
         currentHealth -= damage;
-        ShowDamagePopup(damage);
-        Debug.Log($"Player took {damage} damage. HP: {currentHealth}/{maxHealth}");
 
         if (currentHealth <= 0)
         {
+            currentHealth = 0;
             HandleNoHealth();
         }
+
+        ShowDamagePopup(damage);
+        Debug.Log($"Player took {damage} damage. HP: {currentHealth}/{maxHealth}");
     }
 
     private void HandleNoHealth()
@@ -70,9 +65,9 @@ public class PlayerHealth : MonoBehaviour
         isDead = true;
         Debug.Log("Player died.");
 
-        if (!string.IsNullOrWhiteSpace(guideSceneName))
+        if (gameOverUI != null)
         {
-            SceneManager.LoadScene(guideSceneName, LoadSceneMode.Single);
+            gameOverUI.GameOverActive();
         }
     }
 
