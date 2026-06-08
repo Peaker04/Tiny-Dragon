@@ -172,5 +172,31 @@ namespace TinyDragon.UI
 
             this.enabled = false;
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (tutorialSteps != null)
+            {
+                for (int i = 0; i < tutorialSteps.Length; i++)
+                {
+                    // Nếu người dùng tick vào ô "Enable All" trên Inspector
+                    if (tutorialSteps[i].enableAll)
+                    {
+                        // Tự động tick tất cả các ô còn lại
+                        tutorialSteps[i].enableMovement = true;
+                        tutorialSteps[i].enableJump = true;
+                        tutorialSteps[i].enableAttack = true;
+                        tutorialSteps[i].enablePowerShot = true;
+                        tutorialSteps[i].enableInventory = true;
+                        
+                        // Bỏ tick ô Enable All đi để biến nó thành một "Nút bấm" thay vì checkbox cố định
+                        // (Nếu không bỏ tick, bạn sẽ không thể un-tick các ô bên dưới được nữa)
+                        tutorialSteps[i].enableAll = false; 
+                    }
+                }
+            }
+        }
+#endif
     }
 }

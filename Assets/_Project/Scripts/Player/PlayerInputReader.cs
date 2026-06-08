@@ -4,10 +4,10 @@ public class PlayerInputReader : MonoBehaviour
 {
     [SerializeField] private KeyCode attackKey = KeyCode.J;
     [SerializeField] private KeyCode powerShotKey = KeyCode.K;
-    [SerializeField] public bool movementInputEnabled = true;
-    [SerializeField] public bool jumpInputEnabled = true;
-    [SerializeField] public bool attackInputEnabled = true;
-    [SerializeField] public bool powerShotInputEnabled = true;
+    [SerializeField] private bool movementInputEnabled = true;
+    [SerializeField] private bool jumpInputEnabled = true;
+    [SerializeField] private bool attackInputEnabled = true;
+    [SerializeField] private bool powerShotInputEnabled = true;
     [SerializeField] public bool inventoryInputEnabled = true;
 
     public float Horizontal { get; private set; }
