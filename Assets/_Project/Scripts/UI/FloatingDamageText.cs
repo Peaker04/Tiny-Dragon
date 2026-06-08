@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(TextMesh))]
 public class FloatingDamageText : MonoBehaviour
 {
     [SerializeField] private float lifetime = 0.8f;
@@ -10,19 +11,38 @@ public class FloatingDamageText : MonoBehaviour
     private Color startColor;
     private float age;
     private Vector3 velocity;
+    private System.Action<FloatingDamageText> releaseToPool;
 
-    public void Initialize(string text, Color color)
+    private void Awake()
     {
-        textMesh = gameObject.AddComponent<TextMesh>();
-        textMesh.text = text;
-        textMesh.color = color;
+        textMesh = GetComponent<TextMesh>();
         textMesh.anchor = TextAnchor.MiddleCenter;
         textMesh.alignment = TextAlignment.Center;
         textMesh.fontSize = 48;
         textMesh.characterSize = 0.04f;
 
         MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
-        meshRenderer.sortingOrder = 1000;
+        if (meshRenderer != null)
+        {
+            meshRenderer.sortingOrder = 1000;
+            if (textMesh.font == null)
+            {
+                textMesh.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            }
+
+            if (meshRenderer.sharedMaterial == null && textMesh.font != null)
+            {
+                meshRenderer.sharedMaterial = textMesh.font.material;
+            }
+        }
+    }
+
+    public void Initialize(string text, Color color, System.Action<FloatingDamageText> releaseHandler = null)
+    {
+        age = 0f;
+        releaseToPool = releaseHandler;
+        textMesh.text = text;
+        textMesh.color = color;
 
         startColor = color;
         velocity = new Vector3(Random.Range(-horizontalDrift, horizontalDrift), riseSpeed, 0f);
@@ -38,7 +58,18 @@ public class FloatingDamageText : MonoBehaviour
 
         if (age >= lifetime)
         {
-            Destroy(gameObject);
+            Release();
         }
+    }
+
+    private void Release()
+    {
+        if (releaseToPool != null)
+        {
+            releaseToPool(this);
+            return;
+        }
+
+        Destroy(gameObject);
     }
 }

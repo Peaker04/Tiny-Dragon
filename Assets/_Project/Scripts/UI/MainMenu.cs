@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TinyDragon.Data;
 
 namespace TinyDragon.UI
 {
@@ -7,6 +8,8 @@ namespace TinyDragon.UI
     {
         public void PlayGame()
         {
+            PlayerAttack.ResetManaForNewRun();
+            TinyDragonSaveManager.Instance.ResetCurrentKiToMax();
             SceneManager.LoadScene("Level_01_guide");
         }
 

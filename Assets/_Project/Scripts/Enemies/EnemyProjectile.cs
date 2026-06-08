@@ -1,10 +1,33 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CircleCollider2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class EnemyProjectile : MonoBehaviour
 {
+    private static Material spriteDefaultMaterial;
+
     private int damage;
     private float lifetime;
     private float age;
+    private Rigidbody2D rb;
+    private CircleCollider2D projectileCollider;
+    private SpriteRenderer spriteRenderer;
+    private System.Action<EnemyProjectile> releaseToPool;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        projectileCollider = GetComponent<CircleCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        projectileCollider.isTrigger = true;
+        projectileCollider.radius = 0.12f;
+    }
 
     public void Initialize(
         Vector2 direction,
@@ -13,30 +36,24 @@ public class EnemyProjectile : MonoBehaviour
         float projectileLifetime,
         Sprite projectileSprite,
         float projectileScale,
-        bool projectileFacesRightByDefault
+        bool projectileFacesRightByDefault,
+        System.Action<EnemyProjectile> releaseHandler = null
     )
     {
         damage = projectileDamage;
         lifetime = projectileLifetime;
+        age = 0f;
+        releaseToPool = releaseHandler;
         transform.localScale = Vector3.one * projectileScale;
 
-        Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.gravityScale = 0f;
-        rb.freezeRotation = true;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.linearVelocity = direction.normalized * speed;
 
-        CircleCollider2D collider = gameObject.AddComponent<CircleCollider2D>();
-        collider.isTrigger = true;
-        collider.radius = 0.12f;
-
-        SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
         bool hasCustomSprite = projectileSprite != null;
-        renderer.sprite = hasCustomSprite ? projectileSprite : CreateDefaultSprite();
-        renderer.color = hasCustomSprite ? Color.white : new Color(1f, 0.8f, 0.05f);
-        renderer.flipX = ShouldFlipSprite(direction.x, projectileFacesRightByDefault);
-        renderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
-        renderer.sortingOrder = 50;
+        spriteRenderer.sprite = hasCustomSprite ? projectileSprite : CreateDefaultSprite();
+        spriteRenderer.color = hasCustomSprite ? Color.white : new Color(1f, 0.8f, 0.05f);
+        spriteRenderer.flipX = ShouldFlipSprite(direction.x, projectileFacesRightByDefault);
+        SetUnlitSpriteMaterial(spriteRenderer);
+        spriteRenderer.sortingOrder = 50;
     }
 
     private void Update()
@@ -45,7 +62,7 @@ public class EnemyProjectile : MonoBehaviour
 
         if (age >= lifetime)
         {
-            Destroy(gameObject);
+            Release();
         }
     }
 
@@ -58,6 +75,19 @@ public class EnemyProjectile : MonoBehaviour
         }
 
         playerHealth.TakeDamage(damage);
+        Release();
+    }
+
+    private void Release()
+    {
+        rb.linearVelocity = Vector2.zero;
+
+        if (releaseToPool != null)
+        {
+            releaseToPool(this);
+            return;
+        }
+
         Destroy(gameObject);
     }
 
@@ -93,5 +123,21 @@ public class EnemyProjectile : MonoBehaviour
 
         bool movingRight = directionX > 0f;
         return facesRightByDefault ? !movingRight : movingRight;
+    }
+
+    private static void SetUnlitSpriteMaterial(SpriteRenderer renderer)
+    {
+        if (spriteDefaultMaterial == null)
+        {
+            Shader spriteShader = Shader.Find("Sprites/Default");
+            if (spriteShader == null)
+            {
+                return;
+            }
+
+            spriteDefaultMaterial = new Material(spriteShader);
+        }
+
+        renderer.sharedMaterial = spriteDefaultMaterial;
     }
 }

@@ -1,5 +1,8 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CircleCollider2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class PlayerProjectile : MonoBehaviour
 {
     private static Material spriteDefaultMaterial;
@@ -7,6 +10,24 @@ public class PlayerProjectile : MonoBehaviour
     private int damage;
     private float lifetime;
     private float age;
+    private Rigidbody2D rb;
+    private CircleCollider2D projectileCollider;
+    private SpriteRenderer spriteRenderer;
+    private System.Action<PlayerProjectile> releaseToPool;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        projectileCollider = GetComponent<CircleCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        projectileCollider.isTrigger = true;
+        projectileCollider.radius = 0.16f;
+    }
 
     public void Initialize(
         Vector2 direction,
@@ -17,33 +38,27 @@ public class PlayerProjectile : MonoBehaviour
         float projectileScale,
         bool projectileFacesRightByDefault,
         string projectileSortingLayerName,
-        int projectileSortingOrder
+        int projectileSortingOrder,
+        System.Action<PlayerProjectile> releaseHandler = null
     )
     {
         damage = projectileDamage;
         lifetime = projectileLifetime;
+        age = 0f;
+        releaseToPool = releaseHandler;
         transform.localScale = Vector3.one * projectileScale;
 
-        Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.gravityScale = 0f;
-        rb.freezeRotation = true;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.linearVelocity = direction.normalized * speed;
 
-        CircleCollider2D projectileCollider = gameObject.AddComponent<CircleCollider2D>();
-        projectileCollider.isTrigger = true;
-        projectileCollider.radius = 0.16f;
-
-        SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
         bool hasCustomSprite = projectileSprite != null;
-        renderer.sprite = hasCustomSprite ? projectileSprite : CreateDefaultSprite();
-        renderer.color = hasCustomSprite ? Color.white : new Color(1f, 0.2f, 0.8f);
-        renderer.flipX = ShouldFlipSprite(direction.x, projectileFacesRightByDefault);
-        SetUnlitSpriteMaterial(renderer);
-        renderer.sortingLayerName = string.IsNullOrWhiteSpace(projectileSortingLayerName)
+        spriteRenderer.sprite = hasCustomSprite ? projectileSprite : CreateDefaultSprite();
+        spriteRenderer.color = hasCustomSprite ? Color.white : new Color(1f, 0.2f, 0.8f);
+        spriteRenderer.flipX = ShouldFlipSprite(direction.x, projectileFacesRightByDefault);
+        SetUnlitSpriteMaterial(spriteRenderer);
+        spriteRenderer.sortingLayerName = string.IsNullOrWhiteSpace(projectileSortingLayerName)
             ? "Default"
             : projectileSortingLayerName;
-        renderer.sortingOrder = projectileSortingOrder;
+        spriteRenderer.sortingOrder = projectileSortingOrder;
     }
 
     private void Update()
@@ -52,7 +67,7 @@ public class PlayerProjectile : MonoBehaviour
 
         if (age >= lifetime)
         {
-            Destroy(gameObject);
+            Release();
         }
     }
 
@@ -70,12 +85,33 @@ public class PlayerProjectile : MonoBehaviour
             enemyHealth = enemy.GetComponent<EnemyHealth>();
             if (enemyHealth == null)
             {
-                enemyHealth = enemy.gameObject.AddComponent<EnemyHealth>();
+                Debug.LogWarning("Projectile hit an enemy without EnemyHealth. Add EnemyHealth to the enemy prefab/template.", enemy);
+                Release();
+                return;
             }
         }
 
         Debug.Log($"Player projectile hit enemy for {damage} damage.");
         enemyHealth.TakeDamage(damage);
+        BossAI hitBoss = enemyHealth.GetComponent<BossAI>();
+        if (hitBoss != null)
+        {
+            hitBoss.PlayHit();
+        }
+
+        Release();
+    }
+
+    private void Release()
+    {
+        rb.linearVelocity = Vector2.zero;
+
+        if (releaseToPool != null)
+        {
+            releaseToPool(this);
+            return;
+        }
+
         Destroy(gameObject);
     }
 

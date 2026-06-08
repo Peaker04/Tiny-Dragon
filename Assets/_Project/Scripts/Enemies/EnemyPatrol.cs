@@ -1,24 +1,29 @@
+using TinyDragon.Data;
 using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 1.5f;
+    private const string DefaultProjectilePrefabPath = "Combat/EnemyProjectile";
+
+    [SerializeField] private float moveSpeed = GameplayBalanceDefaults.NormalEnemySpeed;
     [SerializeField] private float leftDistance = 1.5f;
     [SerializeField] private float rightDistance = 1.5f;
     [SerializeField] private float pointReachDistance = 0.05f;
     [SerializeField] private float attackRange = 1.5f;
     [SerializeField] private float verticalAttackTolerance = 1f;
     [SerializeField] private float attackCooldown = 1f;
-    [SerializeField] private int attackDamage = 1;
+    [SerializeField] private int attackDamage = GameplayBalanceDefaults.NormalEnemyDamage;
     [SerializeField] private string attackTriggerName = "attack";
     [SerializeField] private string attackStateName = "Attack";
     [SerializeField] private float rangeAttackRange = 4f;
     [SerializeField] private float rangeAttackCooldown = 2f;
-    [SerializeField] private int rangeAttackDamage = 1;
+    [SerializeField] private int rangeAttackDamage = GameplayBalanceDefaults.NormalEnemyDamage;
     [SerializeField] private float projectileSpeed = 5f;
     [SerializeField] private float projectileLifetime = 3f;
     [SerializeField] private float projectileScale = 0.35f;
     [SerializeField] private Vector2 projectileSpawnOffset = new Vector2(0.45f, -0.05f);
+    [SerializeField] private EnemyProjectile projectilePrefab;
+    [SerializeField] private int projectilePoolPrewarmCount = 2;
     [SerializeField] private Sprite projectileSprite;
     [SerializeField] private bool projectileFacesRightByDefault = true;
     [SerializeField] private string rangeAttackTriggerName = "rangeAttack";
@@ -36,12 +41,14 @@ public class EnemyPatrol : MonoBehaviour
     private int direction;
     private float nextAttackTime;
     private float nextRangeAttackTime;
+    private ComponentPool<EnemyProjectile> projectilePool;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        EnsureProjectilePool();
     }
 
     private void Start()
@@ -57,7 +64,7 @@ public class EnemyPatrol : MonoBehaviour
 
             if (playerHealth == null)
             {
-                playerHealth = playerController.gameObject.AddComponent<PlayerHealth>();
+                Debug.LogWarning("PlayerHealth is missing on the player. Enemy attacks will not damage the player.", playerController);
             }
         }
     }
@@ -195,6 +202,21 @@ public class EnemyPatrol : MonoBehaviour
         playerHealth.TakeDamage(attackDamage);
     }
 
+    public void ApplyCombatStats(
+        float speed,
+        int meleeDamage,
+        int rangedDamage,
+        float meleeCooldown,
+        float rangedCooldown
+    )
+    {
+        moveSpeed = Mathf.Max(speed, 0.1f);
+        attackDamage = Mathf.Max(meleeDamage, 1);
+        rangeAttackDamage = Mathf.Max(rangedDamage, 1);
+        attackCooldown = Mathf.Max(meleeCooldown, 0.01f);
+        rangeAttackCooldown = Mathf.Max(rangedCooldown, 0.01f);
+    }
+
     public void ShootProjectile()
     {
         if (player == null)
@@ -207,10 +229,14 @@ public class EnemyPatrol : MonoBehaviour
         Vector3 spawnPosition = transform.position + spawnOffset;
         Vector2 projectileDirection = new Vector2(facingDirection, 0f);
 
-        GameObject projectileObject = new GameObject("Enemy Projectile");
-        projectileObject.transform.position = spawnPosition;
+        EnsureProjectilePool();
+        if (projectilePool == null)
+        {
+            Debug.LogWarning("Enemy projectile prefab is missing. Assign Resources/Combat/EnemyProjectile to EnemyPatrol.", this);
+            return;
+        }
 
-        EnemyProjectile projectile = projectileObject.AddComponent<EnemyProjectile>();
+        EnemyProjectile projectile = projectilePool.Get(spawnPosition, Quaternion.identity);
         projectile.Initialize(
             projectileDirection,
             projectileSpeed,
@@ -218,8 +244,35 @@ public class EnemyPatrol : MonoBehaviour
             projectileLifetime,
             projectileSprite,
             projectileScale,
-            projectileFacesRightByDefault
+            projectileFacesRightByDefault,
+            projectilePool.Release
         );
+    }
+
+    private void EnsureProjectilePool()
+    {
+        if (projectilePool != null)
+        {
+            return;
+        }
+
+        if (projectilePrefab == null)
+        {
+            GameObject projectilePrefabObject = Resources.Load<GameObject>(DefaultProjectilePrefabPath);
+            if (projectilePrefabObject != null)
+            {
+                projectilePrefab = projectilePrefabObject.GetComponent<EnemyProjectile>();
+            }
+        }
+
+        if (projectilePrefab != null)
+        {
+            projectilePool = new ComponentPool<EnemyProjectile>(
+                projectilePrefab,
+                RuntimeSceneRoot.GetChild("ProjectilePool"),
+                projectilePoolPrewarmCount
+            );
+        }
     }
 
     private float GetTargetX()
