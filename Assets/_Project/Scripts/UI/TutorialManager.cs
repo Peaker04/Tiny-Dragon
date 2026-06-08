@@ -23,6 +23,8 @@ namespace TinyDragon.UI
 
         [Header("Extra Actions")]
         public UnityEngine.Events.UnityEvent onStepStart;
+
+        [HideInInspector] public bool _previousEnableAll;
     }
 
     public class TutorialManager : MonoBehaviour
@@ -180,19 +182,43 @@ namespace TinyDragon.UI
             {
                 for (int i = 0; i < tutorialSteps.Length; i++)
                 {
-                    // Nếu người dùng tick vào ô "Enable All" trên Inspector
-                    if (tutorialSteps[i].enableAll)
+                    // Nếu giá trị của ô enableAll vừa bị người dùng thay đổi
+                    if (tutorialSteps[i].enableAll != tutorialSteps[i]._previousEnableAll)
                     {
-                        // Tự động tick tất cả các ô còn lại
-                        tutorialSteps[i].enableMovement = true;
-                        tutorialSteps[i].enableJump = true;
-                        tutorialSteps[i].enableAttack = true;
-                        tutorialSteps[i].enablePowerShot = true;
-                        tutorialSteps[i].enableInventory = true;
+                        if (tutorialSteps[i].enableAll)
+                        {
+                            // Người dùng vừa tick vào Enable All -> Tự động tick tất cả ô con
+                            tutorialSteps[i].enableMovement = true;
+                            tutorialSteps[i].enableJump = true;
+                            tutorialSteps[i].enableAttack = true;
+                            tutorialSteps[i].enablePowerShot = true;
+                            tutorialSteps[i].enableInventory = true;
+                        }
+                        else
+                        {
+                            // Người dùng vừa bỏ tick Enable All -> Tự động bỏ tick tất cả ô con
+                            tutorialSteps[i].enableMovement = false;
+                            tutorialSteps[i].enableJump = false;
+                            tutorialSteps[i].enableAttack = false;
+                            tutorialSteps[i].enablePowerShot = false;
+                            tutorialSteps[i].enableInventory = false;
+                        }
+                        // Cập nhật lại trạng thái previous
+                        tutorialSteps[i]._previousEnableAll = tutorialSteps[i].enableAll;
+                    }
+                    else
+                    {
+                        // Nếu enableAll KHÔNG bị thay đổi, tức là người dùng vừa click vào một ô con bất kỳ.
+                        // Kiểm tra xem tất cả các ô con có đang được tick hay không
+                        bool allEnabled = tutorialSteps[i].enableMovement && 
+                                          tutorialSteps[i].enableJump && 
+                                          tutorialSteps[i].enableAttack && 
+                                          tutorialSteps[i].enablePowerShot && 
+                                          tutorialSteps[i].enableInventory;
                         
-                        // Bỏ tick ô Enable All đi để biến nó thành một "Nút bấm" thay vì checkbox cố định
-                        // (Nếu không bỏ tick, bạn sẽ không thể un-tick các ô bên dưới được nữa)
-                        tutorialSteps[i].enableAll = false; 
+                        // Tự động điều chỉnh ô Enable All dựa theo các ô con
+                        tutorialSteps[i].enableAll = allEnabled;
+                        tutorialSteps[i]._previousEnableAll = allEnabled;
                     }
                 }
             }
