@@ -15,6 +15,8 @@ public class PlayerInputReader : MonoBehaviour
     public bool AttackPressed { get; private set; }
     public bool PowerShotPressed { get; private set; }
 
+    private System.Collections.Generic.HashSet<string> customEnabledFeatures = new System.Collections.Generic.HashSet<string>();
+
     private void Update()
     {
         Horizontal = movementInputEnabled ? ReadHorizontalInput() : 0f;
@@ -75,6 +77,26 @@ public class PlayerInputReader : MonoBehaviour
     public void EnablePowerShot(bool enable) { powerShotInputEnabled = enable; if (!enable) PowerShotPressed = false; }
     public void EnableInventory(bool enable) { inventoryInputEnabled = enable; }
     public void EnableAll() { SetInputEnabled(true, true, true, true, true); }
+
+    public void EnableCustomFeature(string featureName)
+    {
+        customEnabledFeatures.Add(featureName);
+    }
+
+    public void DisableCustomFeature(string featureName)
+    {
+        customEnabledFeatures.Remove(featureName);
+    }
+
+    public bool IsFeatureEnabled(string featureName)
+    {
+        return customEnabledFeatures.Contains(featureName);
+    }
+
+    public void ClearCustomFeatures()
+    {
+        customEnabledFeatures.Clear();
+    }
 
     public bool ConsumeJumpPressed()
     {

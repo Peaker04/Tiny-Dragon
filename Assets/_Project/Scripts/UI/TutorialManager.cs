@@ -17,6 +17,12 @@ namespace TinyDragon.UI
         public bool enableAttack;
         public bool enablePowerShot;
         public bool enableInventory;
+
+        [Header("Custom Enables (Text)")]
+        public string[] customEnables;
+
+        [Header("Extra Actions")]
+        public UnityEngine.Events.UnityEvent onStepStart;
     }
 
     public class TutorialManager : MonoBehaviour
@@ -102,7 +108,21 @@ namespace TinyDragon.UI
                     {
                         playerInput.SetInputEnabled(step.enableMovement, step.enableJump, step.enableAttack, step.enablePowerShot, step.enableInventory);
                     }
+
+                    playerInput.ClearCustomFeatures();
+                    if (step.customEnables != null)
+                    {
+                        foreach (string customFeature in step.customEnables)
+                        {
+                            if (!string.IsNullOrWhiteSpace(customFeature))
+                            {
+                                playerInput.EnableCustomFeature(customFeature);
+                            }
+                        }
+                    }
                 }
+
+                tutorialSteps[index].onStepStart?.Invoke();
             }
         }
 
