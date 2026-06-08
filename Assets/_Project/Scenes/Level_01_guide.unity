@@ -640,7 +640,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.6868081, y: -1.5799999, z: -10}
+  m_LocalPosition: {x: -1.4095016, y: -1.5799999, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1141,6 +1141,12 @@ GameObject:
   - component: {fileID: 956085404}
   - component: {fileID: 956085407}
   - component: {fileID: 956085406}
+  - component: {fileID: 956085413}
+  - component: {fileID: 956085412}
+  - component: {fileID: 956085411}
+  - component: {fileID: 956085410}
+  - component: {fileID: 956085409}
+  - component: {fileID: 956085408}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1252,38 +1258,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 988c8045c17d5c949bf6350258fa7e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 5
-  jumpForce: 15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  groundCheck: {fileID: 1507850587}
-  attackKey: 106
-  attackCooldown: 0.35
-  projectileDamage: 1
-  projectileSpeed: 8
-  projectileLifetime: 2
-  projectileScale: 1.2
-  projectileSpawnOffset: {x: 0.6, y: 0.15}
-  projectileSprite: {fileID: 21300000, guid: e9c32b8f30ada4b4e8876bdaf533f912, type: 3}
-  projectileFacesRightByDefault: 1
-  projectileSortingLayerName: Default
-  projectileSortingOrder: 100
-  enableSceneTransitions: 1
-  level01SceneName: Level_01_guide
-  level02SceneName: Level_02
-  transitionExitPadding: 0.35
-  transitionEntryPadding: 1
-  transitionCooldown: 0.75
-  transitionSpawnY: -3.57
-  levelLeftEdgeX: -12.16
-  levelRightEdgeX: 12.34
-  restoreCameraOnStart: 0
-  cameraPosition: {x: 0.06, y: 0, z: -10}
-  cameraOrthographicSize: 5
-  canMove: 1
-  canJump: 1
-  canAttack: 1
+  projectileShooter: {fileID: 0}
+  _canMove: 1
+  _canJump: 1
+  _canAttack: 1
 --- !u!95 &956085406
 Animator:
   serializedVersion: 7
@@ -1319,11 +1297,145 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 5
-  guideSceneName: Level_01_guide
-  immortalInGuideScene: 1
+  damagePopupPrefab: {fileID: 0}
+  damagePopupPoolPrewarmCount: 4
   damagePopupOffset: {x: 0, y: 1.1, z: 0}
   damagePopupColor: {r: 1, g: 0.15, b: 0.05, a: 1}
-  gameOverUI: {fileID: 0}
+  guideSceneName: Level_01_guide
+  immortalInGuideScene: 1
+--- !u!114 &956085408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 990da0456d6142de94c8ef1cc0dda2d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSceneTransition
+  enableSceneTransitions: 1
+  level01SceneName: Level_01_guide
+  level02SceneName: Level_02
+  transitionExitPadding: 0.35
+  transitionEntryPadding: 1
+  transitionCooldown: 0.75
+  transitionSpawnY: -3.57
+  levelLeftEdgeX: -12.16
+  levelRightEdgeX: 12.34
+  restoreCameraOnStart: 0
+  cameraPosition: {x: 0.06, y: 0, z: -10}
+  cameraOrthographicSize: 5
+--- !u!114 &956085409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 512fd064676f40e0a7ecc16d3c8f5071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileShooter
+  projectilePrefab: {fileID: 0}
+  projectilePoolPrewarmCount: 4
+  projectileDamage: 12
+  projectileSpeed: 8
+  projectileLifetime: 2
+  projectileScale: 1.2
+  projectileSpawnOffset: {x: 0.6, y: 0.15}
+  projectileSprite: {fileID: 0}
+  projectileFacesRightByDefault: 1
+  projectileSortingLayerName: Default
+  projectileSortingOrder: 100
+  powerShotDamage: 36
+  powerShotSpeed: 6
+  powerShotLifetime: 3
+  powerShotScale: 1
+  powerShotSpawnOffset: {x: 0.8, y: 0.2}
+  powerShotSprite: {fileID: 0}
+  powerShotFacesRightByDefault: 1
+  powerShotSortingLayerName: Default
+  powerShotSortingOrder: 100
+--- !u!114 &956085410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 900a2b690f5f44e9856a9ef1a4084b15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  inputReader: {fileID: 0}
+  animatorDriver: {fileID: 0}
+  projectileShooter: {fileID: 0}
+  attackCooldown: 0.35
+  powerShotCooldown: 1.2
+  powerShotManaCostRatio: 0.5
+  maxMana: 100
+  manaRegenRate: 10
+  auraEffect: {fileID: 0}
+  audioSource: {fileID: 0}
+  attackSound: {fileID: 0}
+  powerShotSound: {fileID: 0}
+--- !u!114 &956085411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53c2d033a2ce489b9b950f306ad6c819, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimatorDriver
+  inputReader: {fileID: 0}
+  movement: {fileID: 0}
+  animator: {fileID: 0}
+--- !u!114 &956085412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d91b6fdacde44a9b250c7f33c99897b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  inputReader: {fileID: 0}
+  moveSpeed: 5
+  jumpForce: 15
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheck: {fileID: 0}
+  groundCheckRadius: 0.2
+--- !u!114 &956085413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2158c9225acb4bf99f7ebfd4e21fd5c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputReader
+  attackKey: 106
+  powerShotKey: 107
+  movementInputEnabled: 1
+  jumpInputEnabled: 1
+  attackInputEnabled: 1
+  powerShotInputEnabled: 1
 --- !u!1 &1201954600
 GameObject:
   m_ObjectHideFlags: 0
@@ -1375,6 +1487,8 @@ MonoBehaviour:
   projectileLifetime: 3
   projectileScale: 0.35
   projectileSpawnOffset: {x: 0.45, y: 0.1}
+  projectilePrefab: {fileID: 0}
+  projectilePoolPrewarmCount: 2
   projectileSprite: {fileID: 6344236997622909882, guid: 7bb8fa80d31daa245b8b2bea445dc42b, type: 3}
   projectileFacesRightByDefault: 1
   rangeAttackTriggerName: rangeAttack
@@ -1563,7 +1677,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd29a62ea73a4b7a8fd929ce427fc234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  displayName: "Kh\u1EE7ng long"
+  balanceEnemyId: 
   maxHealth: 10
+  damagePopupPrefab: {fileID: 0}
+  damagePopupPoolPrewarmCount: 4
   damagePopupOffset: {x: 0, y: 1, z: 0}
   damagePopupColor: {r: 1, g: 0.85, b: 0.05, a: 1}
   showHealthBar: 1
@@ -1934,7 +2052,7 @@ PrefabInstance:
       objectReference: {fileID: 956085401}
     - target: {fileID: 7531964551594974974, guid: f4b525c5e1df51643a08ff04cf69e062, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.6868081
+      value: -1.4095016
       objectReference: {fileID: 0}
     - target: {fileID: 7531964551594974974, guid: f4b525c5e1df51643a08ff04cf69e062, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2367,10 +2485,11 @@ MonoBehaviour:
   tutorialSteps:
   - {fileID: 337594496}
   - {fileID: 225407461}
+  - {fileID: 225407461}
   moveLeftKey: 97
   moveRightKey: 100
   jumpKey: 32
-  forceShowTutorial: 1
+  forceShowTutorial: 0
 --- !u!1 &1855028074
 GameObject:
   m_ObjectHideFlags: 0
@@ -2746,11 +2865,18 @@ MonoBehaviour:
   enemyTemplate: {fileID: 1201954601}
   groundCollider: {fileID: 1962639333}
   maxEnemiesOnGround: 3
+  totalEnemiesBeforeBoss: 3
+  respawnKilledEnemies: 1
   spawnInterval: 2
   spawnXPadding: 1
   spawnYOffset: 0.02
   spawnCamera: {fileID: 0}
   enemyParent: {fileID: 0}
+  spawnBossAfterNormalEnemies: 0
+  bossTemplate: {fileID: 0}
+  bossSpawnPoint: {fileID: 0}
+  bossParent: {fileID: 0}
+  bossSpawnYOffset: 0.02
 --- !u!1 &2120000000
 GameObject:
   m_ObjectHideFlags: 0
@@ -2873,6 +2999,10 @@ MonoBehaviour:
   healthBarSize: {x: 98, y: 15}
   kiBarPosition: {x: 123, y: -31}
   kiBarSize: {x: 88, y: 9}
+  targetInfoPosition: {x: 22, y: -8}
+  targetInfoSize: {x: 90, y: 43}
+  targetHealthBarPosition: {x: 121, y: -8}
+  targetHealthBarSize: {x: 98, y: 15}
   hiddenScenes:
   - Level_01_Original
 --- !u!1 &2120000010

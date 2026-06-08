@@ -10,8 +10,13 @@ namespace TinyDragon.UI
         public string instructionText;
         public KeyCode[] requiredKeys;
         
-        [Header("Step Actions")]
-        public UnityEngine.Events.UnityEvent onStepStart;
+        [Header("Player Input Permissions")]
+        public bool enableAll;
+        public bool enableMovement;
+        public bool enableJump;
+        public bool enableAttack;
+        public bool enablePowerShot;
+        public bool enableInventory;
     }
 
     public class TutorialManager : MonoBehaviour
@@ -84,9 +89,20 @@ namespace TinyDragon.UI
         {
             if (index < tutorialSteps.Length)
             {
-                var step = tutorialSteps[index];
-                displayText.text = step.instructionText;
-                step.onStepStart?.Invoke();
+                displayText.text = tutorialSteps[index].instructionText;
+
+                if (playerInput != null)
+                {
+                    var step = tutorialSteps[index];
+                    if (step.enableAll)
+                    {
+                        playerInput.SetInputEnabled(true, true, true, true, true);
+                    }
+                    else
+                    {
+                        playerInput.SetInputEnabled(step.enableMovement, step.enableJump, step.enableAttack, step.enablePowerShot, step.enableInventory);
+                    }
+                }
             }
         }
 
@@ -127,7 +143,7 @@ namespace TinyDragon.UI
 
             if (playerInput != null)
             {
-                playerInput.ResetInputRestrictions();
+                playerInput.SetInputEnabled(true, true, true, true, true);
             }
 
             this.enabled = false;
