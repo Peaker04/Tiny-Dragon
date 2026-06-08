@@ -1,15 +1,30 @@
 using UnityEngine;
+using TMPro;
 
 namespace TinyDragon.UI
 {
+    [System.Serializable]
+    public struct TutorialStepData
+    {
+        [TextArea(3, 5)]
+        public string instructionText;
+        public KeyCode[] requiredKeys;
+        
+        [Header("Player Input Permissions")]
+        public bool enableMovement;
+        public bool enableJump;
+        public bool enableAttack;
+        public bool enablePowerShot;
+    }
+
     public class TutorialManager : MonoBehaviour
     {
+        [Header("UI Components")]
         public GameObject darkBackground;
-        public GameObject[] tutorialSteps;
+        public TextMeshProUGUI displayText;
 
-        [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
-        [SerializeField] private KeyCode moveRightKey = KeyCode.D;
-        [SerializeField] private KeyCode jumpKey = KeyCode.Space;
+        [Header("Tutorial Data")]
+        public TutorialStepData[] tutorialSteps;
 
         [Header("Developer Options")]
         [SerializeField] private bool forceShowTutorial = false;
@@ -19,9 +34,9 @@ namespace TinyDragon.UI
 
         void Start()
         {
-            if (darkBackground == null || tutorialSteps == null || tutorialSteps.Length == 0)
+            if (darkBackground == null || displayText == null || tutorialSteps == null || tutorialSteps.Length == 0)
             {
-                Debug.LogWarning("Chưa cấu hình Guide!");
+                Debug.LogWarning("Chưa cấu hình Tutorial Manager!");
                 this.enabled = false;
                 return;
             }
@@ -35,6 +50,7 @@ namespace TinyDragon.UI
             }
 
             darkBackground.SetActive(true);
+            displayText.gameObject.SetActive(true);
             ShowStep(0);
         }
 
@@ -50,33 +66,34 @@ namespace TinyDragon.UI
 
         bool WasCurrentStepInputPressed()
         {
-            if (currentStepIndex == 0)
+            var keys = tutorialSteps[currentStepIndex].requiredKeys;
+            if (keys == null || keys.Length == 0)
             {
-                return Input.GetKeyDown(moveLeftKey) || Input.GetKeyDown(moveRightKey) ||
-                       Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow);
+                // Nếu bước này không yêu cầu phím đặc biệt, nhấn chuột trái hoặc phím Space để qua bước
+                return Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return);
             }
-            if (currentStepIndex == 1)
+
+            foreach (var key in keys)
             {
-                return Input.GetKeyDown(jumpKey);
+                if (Input.GetKeyDown(key))
+                {
+                    return true;
+                }
             }
             return false;
         }
 
         void ShowStep(int index)
         {
-            foreach (var step in tutorialSteps)
+            if (index < tutorialSteps.Length)
             {
-                if (step != null) step.SetActive(false);
-            }
+                displayText.text = tutorialSteps[index].instructionText;
 
-            if (index < tutorialSteps.Length && tutorialSteps[index] != null)
-            {
-                tutorialSteps[index].SetActive(true);
-            }
-
-            if (playerInput != null)
-            {
-                playerInput.SetInputEnabled(true, index == 1, false, false);
+                if (playerInput != null)
+                {
+                    var step = tutorialSteps[index];
+                    playerInput.SetInputEnabled(step.enableMovement, step.enableJump, step.enableAttack, step.enablePowerShot);
+                }
             }
         }
 
@@ -105,9 +122,9 @@ namespace TinyDragon.UI
 
         void SkipTutorialLogic()
         {
-            foreach (var step in tutorialSteps)
+            if (displayText != null)
             {
-                if (step != null) step.SetActive(false);
+                displayText.gameObject.SetActive(false);
             }
 
             if (darkBackground != null)
