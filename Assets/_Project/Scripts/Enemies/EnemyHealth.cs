@@ -1,11 +1,18 @@
+using TinyDragon.Data;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    private const string DefaultDamagePopupPrefabPath = "Combat/DamagePopup";
+
     private static Sprite healthBarSprite;
     private static Material healthBarMaterial;
 
-    [SerializeField] private int maxHealth = 10;
+    [SerializeField] private string displayName = "Khủng long";
+    [SerializeField] private string balanceEnemyId;
+    [SerializeField] private int maxHealth = GameplayBalanceDefaults.NormalEnemyHealth;
+    [SerializeField] private FloatingDamageText damagePopupPrefab;
+    [SerializeField] private int damagePopupPoolPrewarmCount = 4;
     [SerializeField] private Vector3 damagePopupOffset = new Vector3(0f, 1f, 0f);
     [SerializeField] private Color damagePopupColor = new Color(1f, 0.85f, 0.05f);
     [SerializeField] private bool showHealthBar = true;
@@ -20,12 +27,16 @@ public class EnemyHealth : MonoBehaviour
     private Transform healthBarRoot;
     private SpriteRenderer healthBarBack;
     private SpriteRenderer healthBarFill;
+    private ComponentPool<FloatingDamageText> damagePopupPool;
 
     public int CurrentHealth => currentHealth;
     public int MaxHealth => maxHealth;
+    public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
 
     private void Awake()
     {
+        ApplyDatabaseBalanceIfAvailable();
+        EnsureDamagePopupPool();
         ResetHealth();
     }
 
@@ -65,6 +76,20 @@ public class EnemyHealth : MonoBehaviour
         UpdateHealthBar();
     }
 
+    public void ApplyBalance(string newDisplayName, int newMaxHealth, bool refillCurrentHealth = true)
+    {
+        if (!string.IsNullOrWhiteSpace(newDisplayName))
+        {
+            displayName = newDisplayName;
+        }
+
+        maxHealth = Mathf.Max(newMaxHealth, 1);
+        currentHealth = refillCurrentHealth
+            ? maxHealth
+            : Mathf.Clamp(currentHealth, 0, maxHealth);
+        UpdateHealthBar();
+    }
+
     public void TakeDamage(int damage)
     {
         if (damage <= 0 || currentHealth <= 0)
@@ -89,13 +114,59 @@ public class EnemyHealth : MonoBehaviour
         Destroy(gameObject);
     }
 
+    private void ApplyDatabaseBalanceIfAvailable()
+    {
+        string enemyId = ResolveBalanceEnemyId();
+        if (!TinyDragonSaveManager.Instance.TryLoadEnemyBalance(enemyId, out EnemyBalanceData balance))
+        {
+            return;
+        }
+
+        ApplyBalance(balance.DisplayName, balance.BaseHP);
+
+        EnemyPatrol patrol = GetComponent<EnemyPatrol>();
+        if (patrol != null)
+        {
+            patrol.ApplyCombatStats(
+                balance.BaseSpd,
+                balance.BaseAtk,
+                balance.BaseAtk,
+                GameplayBalanceDefaults.NormalEnemyAttackCooldown,
+                GameplayBalanceDefaults.NormalEnemyRangeAttackCooldown
+            );
+        }
+
+        BossAI boss = GetComponent<BossAI>();
+        if (boss != null)
+        {
+            boss.ApplyCombatStats(
+                balance.BaseSpd,
+                balance.BaseAtk,
+                GameplayBalanceDefaults.BossEnergyDamage
+            );
+        }
+    }
+
+    private string ResolveBalanceEnemyId()
+    {
+        if (!string.IsNullOrWhiteSpace(balanceEnemyId))
+        {
+            return balanceEnemyId;
+        }
+
+        return GetComponent<BossAI>() != null ? "enemy_boss_act_1" : "enemy_monster_1";
+    }
+
     private void ShowDamagePopup(int damage)
     {
-        GameObject popupObject = new GameObject("Enemy Damage Popup");
-        popupObject.transform.position = transform.position + damagePopupOffset;
+        EnsureDamagePopupPool();
+        if (damagePopupPool == null)
+        {
+            return;
+        }
 
-        FloatingDamageText floatingText = popupObject.AddComponent<FloatingDamageText>();
-        floatingText.Initialize($"-{damage}", damagePopupColor);
+        FloatingDamageText floatingText = damagePopupPool.Get(transform.position + damagePopupOffset, Quaternion.identity);
+        floatingText.Initialize($"-{damage}", damagePopupColor, damagePopupPool.Release);
     }
 
     private void UpdateHealthBar()
@@ -124,6 +195,7 @@ public class EnemyHealth : MonoBehaviour
         }
 
         healthBarRoot = new GameObject($"{name} Health Bar").transform;
+        healthBarRoot.SetParent(RuntimeSceneRoot.GetChild("HealthBars"), false);
         healthBarRoot.position = transform.position + healthBarOffset;
 
         healthBarBack = CreateHealthBarPart("Back", healthBarRoot, healthBarBackColor, healthBarSortingOrder);
@@ -184,5 +256,31 @@ public class EnemyHealth : MonoBehaviour
 
         healthBarMaterial = new Material(spriteShader);
         return healthBarMaterial;
+    }
+
+    private void EnsureDamagePopupPool()
+    {
+        if (damagePopupPool != null)
+        {
+            return;
+        }
+
+        if (damagePopupPrefab == null)
+        {
+            GameObject damagePopupPrefabObject = Resources.Load<GameObject>(DefaultDamagePopupPrefabPath);
+            if (damagePopupPrefabObject != null)
+            {
+                damagePopupPrefab = damagePopupPrefabObject.GetComponent<FloatingDamageText>();
+            }
+        }
+
+        if (damagePopupPrefab != null)
+        {
+            damagePopupPool = new ComponentPool<FloatingDamageText>(
+                damagePopupPrefab,
+                RuntimeSceneRoot.GetChild("DamagePopupPool"),
+                damagePopupPoolPrewarmCount
+            );
+        }
     }
 }

@@ -4,27 +4,63 @@ using UnityEngine.SceneManagement;
 
 public class EnemySpawner : MonoBehaviour
 {
+    [Header("Normal Enemies")]
     [SerializeField] private EnemyPatrol enemyTemplate;
     [SerializeField] private Collider2D groundCollider;
     [SerializeField] private int maxEnemiesOnGround = 3;
+    [SerializeField] private int totalEnemiesBeforeBoss = 3;
+    [SerializeField] private bool respawnKilledEnemies = true;
     [SerializeField] private float spawnInterval = 2f;
     [SerializeField] private float spawnXPadding = 1f;
     [SerializeField] private float spawnYOffset = 0.02f;
     [SerializeField] private Camera spawnCamera;
     [SerializeField] private Transform enemyParent;
+    [Header("Boss Spawn")]
+    [SerializeField] private bool spawnBossAfterNormalEnemies;
+    [SerializeField] private BossAI bossTemplate;
+    [SerializeField] private Transform bossSpawnPoint;
+    [SerializeField] private Transform bossParent;
+    [SerializeField] private float bossSpawnYOffset = 0.02f;
 
     private readonly List<EnemyPatrol> activeEnemies = new List<EnemyPatrol>();
     private float nextSpawnTime;
     private bool hideSceneTemplate;
+    private bool hideBossTemplate;
+    private int spawnedEnemyCount;
+    private int defeatedEnemyCount;
+    private bool bossSpawned;
+
+    private void OnValidate()
+    {
+        totalEnemiesBeforeBoss = Mathf.Max(totalEnemiesBeforeBoss, 0);
+        maxEnemiesOnGround = Mathf.Max(maxEnemiesOnGround, 0);
+    }
 
     private void Awake()
     {
+        ApplySceneDefaults();
+
         if (enemyTemplate == null)
         {
             enemyTemplate = FindAnyObjectByType<EnemyPatrol>();
         }
 
         hideSceneTemplate = enemyTemplate != null && enemyTemplate.gameObject.scene.IsValid();
+        if (hideSceneTemplate)
+        {
+            enemyTemplate.gameObject.SetActive(false);
+        }
+
+        if (bossTemplate == null)
+        {
+            bossTemplate = FindAnyObjectByType<BossAI>();
+        }
+
+        hideBossTemplate = bossTemplate != null && bossTemplate.gameObject.scene.IsValid();
+        if (hideBossTemplate)
+        {
+            bossTemplate.gameObject.SetActive(false);
+        }
 
         if (groundCollider == null)
         {
@@ -35,6 +71,11 @@ public class EnemySpawner : MonoBehaviour
         {
             spawnCamera = Camera.main != null ? Camera.main : FindAnyObjectByType<Camera>();
         }
+
+        if (enemyParent == null)
+        {
+            enemyParent = RuntimeSceneRoot.GetChild("Enemies");
+        }
     }
 
     private void Start()
@@ -44,14 +85,47 @@ public class EnemySpawner : MonoBehaviour
             enemyTemplate.gameObject.SetActive(false);
         }
 
+        if (hideBossTemplate)
+        {
+            bossTemplate.gameObject.SetActive(false);
+        }
+
         FillEnemySlots();
+    }
+
+    private void ApplySceneDefaults()
+    {
+        if (SceneManager.GetActiveScene().name != "Level_02")
+        {
+            return;
+        }
+
+        maxEnemiesOnGround = 2;
+        respawnKilledEnemies = false;
+        totalEnemiesBeforeBoss = 2;
+        spawnBossAfterNormalEnemies = true;
     }
 
     private void Update()
     {
         RemoveMissingEnemies();
 
+        if (spawnBossAfterNormalEnemies)
+        {
+            TrySpawnBoss();
+        }
+
+        if (!respawnKilledEnemies)
+        {
+            return;
+        }
+
         if (Time.time < nextSpawnTime || activeEnemies.Count >= maxEnemiesOnGround)
+        {
+            return;
+        }
+
+        if (!CanSpawnMoreNormalEnemies())
         {
             return;
         }
@@ -64,7 +138,7 @@ public class EnemySpawner : MonoBehaviour
     {
         RemoveMissingEnemies();
 
-        while (activeEnemies.Count < maxEnemiesOnGround)
+        while (activeEnemies.Count < maxEnemiesOnGround && CanSpawnMoreNormalEnemies())
         {
             if (!SpawnEnemy())
             {
@@ -77,7 +151,7 @@ public class EnemySpawner : MonoBehaviour
 
     private bool SpawnEnemy()
     {
-        if (enemyTemplate == null || groundCollider == null || maxEnemiesOnGround <= 0)
+        if (enemyTemplate == null || groundCollider == null || maxEnemiesOnGround <= 0 || !CanSpawnMoreNormalEnemies())
         {
             return false;
         }
@@ -91,12 +165,85 @@ public class EnemySpawner : MonoBehaviour
         EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
         if (enemyHealth == null)
         {
-            enemyHealth = enemy.gameObject.AddComponent<EnemyHealth>();
+            Debug.LogWarning("Spawned enemy is missing EnemyHealth. Add EnemyHealth to the enemy template.", enemy);
+            activeEnemies.Add(enemy);
+            return true;
         }
 
         enemyHealth.ResetHealth();
         activeEnemies.Add(enemy);
+        spawnedEnemyCount++;
         return true;
+    }
+
+    private bool CanSpawnMoreNormalEnemies()
+    {
+        return !spawnBossAfterNormalEnemies || spawnedEnemyCount < totalEnemiesBeforeBoss;
+    }
+
+    private void TrySpawnBoss()
+    {
+        if (bossSpawned || bossTemplate == null)
+        {
+            return;
+        }
+
+        if (spawnedEnemyCount < totalEnemiesBeforeBoss || defeatedEnemyCount < totalEnemiesBeforeBoss || activeEnemies.Count > 0)
+        {
+            return;
+        }
+
+        SpawnBoss();
+    }
+
+    private void SpawnBoss()
+    {
+        Vector3 spawnPosition = GetBossSpawnPosition();
+        Transform parent = bossParent != null ? bossParent : enemyParent;
+
+        BossAI boss = hideBossTemplate
+            ? bossTemplate
+            : Instantiate(bossTemplate, spawnPosition, bossTemplate.transform.rotation, parent);
+
+        boss.name = bossTemplate.name;
+        if (parent != null)
+        {
+            boss.transform.SetParent(parent, true);
+        }
+
+        boss.transform.position = spawnPosition;
+        boss.transform.rotation = bossTemplate.transform.rotation;
+        boss.gameObject.SetActive(true);
+        PlaceBossOnGround(boss);
+
+        EnemyHealth bossHealth = boss.GetComponent<EnemyHealth>();
+        if (bossHealth != null)
+        {
+            bossHealth.ResetHealth();
+        }
+
+        bossSpawned = true;
+    }
+
+    private Vector3 GetBossSpawnPosition()
+    {
+        if (bossSpawnPoint != null)
+        {
+            return bossSpawnPoint.position;
+        }
+
+        if (groundCollider == null)
+        {
+            return bossTemplate.transform.position;
+        }
+
+        Bounds groundBounds = groundCollider.bounds;
+        float spawnX = spawnCamera != null
+            ? GetCameraBounds(spawnCamera).max.x - spawnXPadding
+            : groundBounds.max.x - spawnXPadding;
+
+        spawnX = Mathf.Clamp(spawnX, groundBounds.min.x + spawnXPadding, groundBounds.max.x - spawnXPadding);
+        return new Vector3(spawnX, groundBounds.max.y + bossSpawnYOffset, bossTemplate.transform.position.z);
     }
 
     private Vector3 GetRandomGroundPosition()
@@ -163,6 +310,25 @@ public class EnemySpawner : MonoBehaviour
         enemy.transform.position = position;
     }
 
+    private void PlaceBossOnGround(BossAI boss)
+    {
+        if (groundCollider == null)
+        {
+            return;
+        }
+
+        Collider2D bossCollider = boss.GetComponent<Collider2D>();
+        if (bossCollider == null)
+        {
+            return;
+        }
+
+        Vector3 position = boss.transform.position;
+        float bottomOffset = position.y - bossCollider.bounds.min.y;
+        position.y = groundCollider.bounds.max.y + bottomOffset + bossSpawnYOffset;
+        boss.transform.position = position;
+    }
+
     private void RemoveMissingEnemies()
     {
         for (int i = activeEnemies.Count - 1; i >= 0; i--)
@@ -170,6 +336,7 @@ public class EnemySpawner : MonoBehaviour
             if (activeEnemies[i] == null)
             {
                 activeEnemies.RemoveAt(i);
+                defeatedEnemyCount++;
             }
         }
     }

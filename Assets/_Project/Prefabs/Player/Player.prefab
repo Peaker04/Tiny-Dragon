@@ -13,6 +13,13 @@ GameObject:
   - component: {fileID: 956085402}
   - component: {fileID: 956085404}
   - component: {fileID: 956085407}
+  - component: {fileID: 956085410}
+  - component: {fileID: 956085411}
+  - component: {fileID: 956085412}
+  - component: {fileID: 956085413}
+  - component: {fileID: 956085414}
+  - component: {fileID: 956085415}
+  - component: {fileID: 956085416}
   - component: {fileID: 956085406}
   m_Layer: 0
   m_Name: Player
@@ -123,17 +130,70 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 988c8045c17d5c949bf6350258fa7e25, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  projectileShooter: {fileID: 956085413}
+--- !u!114 &956085410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2158c9225acb4bf99f7ebfd4e21fd5c5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputReader
+  attackKey: 106
+--- !u!114 &956085411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d91b6fdacde44a9b250c7f33c99897b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  inputReader: {fileID: 956085410}
   moveSpeed: 5
   jumpForce: 15
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   groundCheck: {fileID: 1507850587}
-  attackKey: 106
-  attackCooldown: 0.35
-  projectileDamage: 1
+  groundCheckRadius: 0.2
+--- !u!114 &956085412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53c2d033a2ce489b9b950f306ad6c819, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimatorDriver
+  inputReader: {fileID: 956085410}
+  movement: {fileID: 956085411}
+  animator: {fileID: 956085406}
+--- !u!114 &956085413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 512fd064676f40e0a7ecc16d3c8f5071, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileShooter
+  projectileDamage: 12
   projectileSpeed: 8
   projectileLifetime: 2
   projectileScale: 1.2
@@ -142,6 +202,33 @@ MonoBehaviour:
   projectileFacesRightByDefault: 1
   projectileSortingLayerName: Default
   projectileSortingOrder: 100
+--- !u!114 &956085414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 900a2b690f5f44e9856a9ef1a4084b15, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  inputReader: {fileID: 956085410}
+  animatorDriver: {fileID: 956085412}
+  attackCooldown: 0.35
+--- !u!114 &956085415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 990da0456d6142de94c8ef1cc0dda2d8, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSceneTransition
   enableSceneTransitions: 1
   level01SceneName: Level_01_guide
   level02SceneName: Level_02
@@ -166,11 +253,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0d4c51f0e7543e5a26dbd83ec6e91b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHealth: 5
-  guideSceneName: Level_01_guide
-  immortalInGuideScene: 1
+  maxHealth: 230
   damagePopupOffset: {x: 0, y: 1.1, z: 0}
   damagePopupColor: {r: 1, g: 0.15, b: 0.05, a: 1}
+--- !u!114 &956085416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbd33263cd244f06a9f91642a6dda7a7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDeathSceneHandler
+  guideSceneName: Level_01_guide
+  immortalInGuideScene: 1
 --- !u!95 &956085406
 Animator:
   serializedVersion: 7

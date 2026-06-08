@@ -18,15 +18,34 @@ namespace TinyDragon.UI
         [SerializeField] private Vector2 stepSize = new Vector2(500f, 34f);
         [SerializeField] private float stepSpacing = 4f;
         [SerializeField] private float fontSize = 22f;
+        [Header("Step Gating")]
+        [SerializeField] private bool advanceStepsWithInput = false;
+        [SerializeField] private bool gatePlayerActions = false;
+        [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
+        [SerializeField] private KeyCode moveRightKey = KeyCode.D;
+        [SerializeField] private KeyCode jumpKey = KeyCode.Space;
+        [SerializeField] private KeyCode attackKey = KeyCode.J;
+
+        private int currentStepIndex;
+        private PlayerInputReader playerInput;
 
         void Awake()
         {
             ApplyLayoutIfEnabled();
-            ShowAllSteps();
+            if (!advanceStepsWithInput)
+            {
+                ShowAllSteps();
+            }
         }
 
         void Start()
         {
+            if (advanceStepsWithInput)
+            {
+                BeginStepTutorial();
+                return;
+            }
+
             if (darkBackground != null)
             {
                 darkBackground.SetActive(false);
@@ -34,6 +53,27 @@ namespace TinyDragon.UI
 
             ApplyLayoutIfEnabled();
             ShowAllSteps();
+        }
+
+        void Update()
+        {
+            if (!advanceStepsWithInput || tutorialSteps == null || currentStepIndex >= tutorialSteps.Length)
+            {
+                return;
+            }
+
+            if (WasCurrentStepInputPressed())
+            {
+                NextStep();
+            }
+        }
+
+        void OnDisable()
+        {
+            if (gatePlayerActions && playerInput != null)
+            {
+                playerInput.ResetInputRestrictions();
+            }
         }
 
         void ApplyLayoutIfEnabled()
@@ -149,6 +189,130 @@ namespace TinyDragon.UI
 
                 tutorialSteps[i].SetActive(true);
             }
+        }
+
+        void BeginStepTutorial()
+        {
+            if (tutorialSteps == null || tutorialSteps.Length == 0)
+            {
+                Debug.LogWarning("TutorialManager is missing tutorial steps.", this);
+                enabled = false;
+                return;
+            }
+
+            playerInput = FindAnyObjectByType<PlayerInputReader>();
+            currentStepIndex = 0;
+
+            if (darkBackground != null)
+            {
+                darkBackground.SetActive(true);
+            }
+
+            ApplyLayoutIfEnabled();
+            ShowStep(currentStepIndex);
+        }
+
+        bool WasCurrentStepInputPressed()
+        {
+            if (currentStepIndex == 0)
+            {
+                return Input.GetKeyDown(moveLeftKey)
+                    || Input.GetKeyDown(moveRightKey)
+                    || Input.GetKeyDown(KeyCode.LeftArrow)
+                    || Input.GetKeyDown(KeyCode.RightArrow);
+            }
+
+            if (currentStepIndex == 1)
+            {
+                return Input.GetKeyDown(jumpKey) || Input.GetButtonDown("Jump");
+            }
+
+            if (currentStepIndex == 2)
+            {
+                return Input.GetKeyDown(attackKey);
+            }
+
+            return Input.anyKeyDown;
+        }
+
+        void NextStep()
+        {
+            currentStepIndex++;
+            if (currentStepIndex < tutorialSteps.Length)
+            {
+                ShowStep(currentStepIndex);
+                return;
+            }
+
+            CompleteTutorial();
+        }
+
+        void ShowStep(int index)
+        {
+            HideAllSteps();
+
+            if (index >= 0 && index < tutorialSteps.Length && tutorialSteps[index] != null)
+            {
+                tutorialSteps[index].SetActive(true);
+            }
+
+            ApplyPlayerInputForStep(index);
+        }
+
+        void HideAllSteps()
+        {
+            if (tutorialSteps == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < tutorialSteps.Length; i++)
+            {
+                if (tutorialSteps[i] != null)
+                {
+                    tutorialSteps[i].SetActive(false);
+                }
+            }
+        }
+
+        void CompleteTutorial()
+        {
+            HideAllSteps();
+
+            if (darkBackground != null)
+            {
+                darkBackground.SetActive(false);
+            }
+
+            if (playerInput != null)
+            {
+                playerInput.ResetInputRestrictions();
+            }
+
+            enabled = false;
+            Debug.Log("Tutorial completed.");
+        }
+
+        void ApplyPlayerInputForStep(int index)
+        {
+            if (!gatePlayerActions)
+            {
+                return;
+            }
+
+            if (playerInput == null)
+            {
+                playerInput = FindAnyObjectByType<PlayerInputReader>();
+            }
+
+            if (playerInput == null)
+            {
+                return;
+            }
+
+            bool allowJump = index >= 1;
+            bool allowAttack = index >= 2;
+            playerInput.SetInputEnabled(true, allowJump, allowAttack, allowAttack);
         }
     }
 }
