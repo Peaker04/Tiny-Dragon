@@ -69,6 +69,13 @@ public class PlayerInputReader : MonoBehaviour
         SetInputEnabled(true, true, true, true, true);
     }
 
+    public void EnableMovement(bool enable) { movementInputEnabled = enable; if (!enable) Horizontal = 0f; }
+    public void EnableJump(bool enable) { jumpInputEnabled = enable; if (!enable) JumpPressed = false; }
+    public void EnableAttack(bool enable) { attackInputEnabled = enable; if (!enable) AttackPressed = false; }
+    public void EnablePowerShot(bool enable) { powerShotInputEnabled = enable; if (!enable) PowerShotPressed = false; }
+    public void EnableInventory(bool enable) { inventoryInputEnabled = enable; }
+    public void EnableAll() { SetInputEnabled(true, true, true, true, true); }
+
     public bool ConsumeJumpPressed()
     {
         bool wasPressed = JumpPressed;
