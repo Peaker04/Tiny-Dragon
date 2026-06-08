@@ -190,6 +190,12 @@ namespace TinyDragon.UI
 
         private bool CanOpenInventory()
         {
+            var playerInput = FindAnyObjectByType<PlayerInputReader>();
+            if (playerInput != null && !playerInput.inventoryInputEnabled)
+            {
+                return false;
+            }
+
             if (SceneManager.GetActiveScene().name == "Level_01_Original")
             {
                 return false;

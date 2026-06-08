@@ -8,6 +8,7 @@ public class PlayerInputReader : MonoBehaviour
     [SerializeField] private bool jumpInputEnabled = true;
     [SerializeField] private bool attackInputEnabled = true;
     [SerializeField] private bool powerShotInputEnabled = true;
+    public bool inventoryInputEnabled = true;
 
     public float Horizontal { get; private set; }
     public bool JumpPressed { get; private set; }
@@ -34,12 +35,13 @@ public class PlayerInputReader : MonoBehaviour
         }
     }
 
-    public void SetInputEnabled(bool movement, bool jump, bool attack, bool powerShot)
+    public void SetInputEnabled(bool movement, bool jump, bool attack, bool powerShot, bool inventory = true)
     {
         movementInputEnabled = movement;
         jumpInputEnabled = jump;
         attackInputEnabled = attack;
         powerShotInputEnabled = powerShot;
+        inventoryInputEnabled = inventory;
 
         if (!movementInputEnabled)
         {
@@ -64,7 +66,7 @@ public class PlayerInputReader : MonoBehaviour
 
     public void ResetInputRestrictions()
     {
-        SetInputEnabled(true, true, true, true);
+        SetInputEnabled(true, true, true, true, true);
     }
 
     public bool ConsumeJumpPressed()
