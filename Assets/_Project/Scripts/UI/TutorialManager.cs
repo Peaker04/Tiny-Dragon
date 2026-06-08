@@ -102,11 +102,15 @@ namespace TinyDragon.UI
                     var step = tutorialSteps[index];
                     if (step.enableAll)
                     {
-                        playerInput.SetInputEnabled(true, true, true, true, true);
+                        playerInput.EnableAll();
                     }
                     else
                     {
-                        playerInput.SetInputEnabled(step.enableMovement, step.enableJump, step.enableAttack, step.enablePowerShot, step.enableInventory);
+                        playerInput.EnableMovement(step.enableMovement);
+                        playerInput.EnableJump(step.enableJump);
+                        playerInput.EnableAttack(step.enableAttack);
+                        playerInput.EnablePowerShot(step.enablePowerShot);
+                        playerInput.EnableInventory(step.enableInventory);
                     }
 
                     playerInput.ClearCustomFeatures();
@@ -163,7 +167,7 @@ namespace TinyDragon.UI
 
             if (playerInput != null)
             {
-                playerInput.SetInputEnabled(true, true, true, true, true);
+                playerInput.EnableAll();
             }
 
             this.enabled = false;

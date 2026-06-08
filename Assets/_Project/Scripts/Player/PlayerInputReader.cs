@@ -37,38 +37,9 @@ public class PlayerInputReader : MonoBehaviour
         }
     }
 
-    public void SetInputEnabled(bool movement, bool jump, bool attack, bool powerShot, bool inventory = true)
-    {
-        movementInputEnabled = movement;
-        jumpInputEnabled = jump;
-        attackInputEnabled = attack;
-        powerShotInputEnabled = powerShot;
-        inventoryInputEnabled = inventory;
-
-        if (!movementInputEnabled)
-        {
-            Horizontal = 0f;
-        }
-
-        if (!jumpInputEnabled)
-        {
-            JumpPressed = false;
-        }
-
-        if (!attackInputEnabled)
-        {
-            AttackPressed = false;
-        }
-
-        if (!powerShotInputEnabled)
-        {
-            PowerShotPressed = false;
-        }
-    }
-
     public void ResetInputRestrictions()
     {
-        SetInputEnabled(true, true, true, true, true);
+        EnableAll();
     }
 
     public void EnableMovement(bool enable) { movementInputEnabled = enable; if (!enable) Horizontal = 0f; }
@@ -76,7 +47,15 @@ public class PlayerInputReader : MonoBehaviour
     public void EnableAttack(bool enable) { attackInputEnabled = enable; if (!enable) AttackPressed = false; }
     public void EnablePowerShot(bool enable) { powerShotInputEnabled = enable; if (!enable) PowerShotPressed = false; }
     public void EnableInventory(bool enable) { inventoryInputEnabled = enable; }
-    public void EnableAll() { SetInputEnabled(true, true, true, true, true); }
+    
+    public void EnableAll() 
+    { 
+        EnableMovement(true);
+        EnableJump(true);
+        EnableAttack(true);
+        EnablePowerShot(true);
+        EnableInventory(true);
+    }
 
     public void EnableCustomFeature(string featureName)
     {
