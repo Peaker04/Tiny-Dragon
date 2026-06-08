@@ -50,7 +50,10 @@ public class PlayerController : MonoBehaviour
     {
         if (inputReader != null)
         {
-            inputReader.SetInputEnabled(_canMove, _canJump, _canAttack, _canAttack);
+            inputReader.EnableMovement(_canMove);
+            inputReader.EnableJump(_canJump);
+            inputReader.EnableAttack(_canAttack);
+            inputReader.EnablePowerShot(_canAttack);
         }
     }
 
