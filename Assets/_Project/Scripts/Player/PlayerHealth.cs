@@ -75,7 +75,11 @@ public class PlayerHealth : MonoBehaviour
         {
             isDead = true;
             Died?.Invoke(this);
-            GameOver.Ensure().GameOverActive();
+            GameOver foundGameOver = FindAnyObjectByType<GameOver>(FindObjectsInactive.Include);
+            if (foundGameOver != null)
+            {
+                foundGameOver.GameOverActive();
+            }
         }
     }
 
