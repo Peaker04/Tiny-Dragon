@@ -64,43 +64,14 @@ namespace TinyDragon.UI
             ShowStep(0);
         }
 
-        private bool isTransitioning = false;
-
         void Update()
         {
             if (currentStepIndex >= tutorialSteps.Length) return;
-            if (isTransitioning) return;
 
             if (WasCurrentStepInputPressed())
             {
-                Debug.Log($"[TutorialManager] Đã bấm đúng phím! Chuyển sang bước {currentStepIndex + 1}");
-                StartCoroutine(NextStepDelayed());
+                NextStep();
             }
-            else if (Input.anyKeyDown)
-            {
-                var keys = tutorialSteps[currentStepIndex].requiredKeys;
-                if (keys != null && keys.Length > 0)
-                {
-                    string expectedKeys = "";
-                    foreach (var k in keys) expectedKeys += k.ToString() + " ";
-                    Debug.Log($"[TutorialManager] Đang ở bước {currentStepIndex}, ĐANG CHỜ PHÍM: [{expectedKeys}]. Bạn vừa bấm phím khác, hoặc cấu hình mảng Required Keys bị rỗng ở Runtime!");
-                }
-                else
-                {
-                    Debug.Log($"[TutorialManager] Đang ở bước {currentStepIndex}, KHÔNG CÓ REQUIRED KEYS, bấm Chuột trái/Space/Enter để qua.");
-                }
-            }
-        }
-
-        private System.Collections.IEnumerator NextStepDelayed()
-        {
-            isTransitioning = true;
-            // Đợi 0.1s (hoặc đến FixedUpdate) để đảm bảo nhân vật kịp nhận lệnh và thực hiện hành động (Nhảy, Chém...)
-            // trước khi TutorialManager khóa phím ở bước tiếp theo.
-            yield return new WaitForSeconds(0.1f);
-            
-            NextStep();
-            isTransitioning = false;
         }
 
         bool WasCurrentStepInputPressed()

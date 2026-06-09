@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
         float horizontalInput = HorizontalInput;
         rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
 
-        if (inputReader != null && inputReader.ConsumeJumpPressed() && IsGrounded)
+        if (inputReader != null && IsGrounded && inputReader.ConsumeJumpPressed())
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
