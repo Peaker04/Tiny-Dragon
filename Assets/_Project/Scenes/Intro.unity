@@ -290,7 +290,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000030518, y: 0.0011444}
+  m_AnchoredPosition: {x: -14, y: 0.0011444}
   m_SizeDelta: {x: 1920, y: 880.92}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1246610483
@@ -527,7 +527,7 @@ MonoBehaviour:
       ta s\u1EBD c\xF3 th\u1EC3 h\u1ED3i sinh \xF4ng n\u1ED9i... v\xE0 l\u1EA5y l\u1EA1i
       \u0111\u01B0\u1EE3c k\u1EF7 v\u1EADt c\u1EE7a m\xECnh!"
   nextLevelName: Level_01_Original
-  forceShowIntro: 0
+  forceShowIntro: 1
 --- !u!114 &1768860142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -727,7 +727,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 14, y: 161}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1854735600

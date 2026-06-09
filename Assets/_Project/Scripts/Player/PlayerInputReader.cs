@@ -21,7 +21,7 @@ public class PlayerInputReader : MonoBehaviour
     {
         Horizontal = movementInputEnabled ? ReadHorizontalInput() : 0f;
 
-        if (jumpInputEnabled && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space)))
+        if (jumpInputEnabled && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)))
         {
             JumpPressed = true;
         }
