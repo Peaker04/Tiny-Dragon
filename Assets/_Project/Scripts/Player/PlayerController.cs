@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _canMove = true;
     [SerializeField] private bool _canJump = true;
     [SerializeField] private bool _canAttack = true;
-    [SerializeField] private bool _canPowerShot = true;
 
     public bool canMove 
     { 
@@ -31,11 +30,6 @@ public class PlayerController : MonoBehaviour
     { 
         get => _canAttack; 
         set { _canAttack = value; UpdateInputReader(); } 
-    }
-    public bool canPowerShot 
-    { 
-        get => _canPowerShot; 
-        set { _canPowerShot = value; UpdateInputReader(); } 
     }
 
     private void Awake()
@@ -59,7 +53,7 @@ public class PlayerController : MonoBehaviour
             inputReader.EnableMovement(_canMove);
             inputReader.EnableJump(_canJump);
             inputReader.EnableAttack(_canAttack);
-            inputReader.EnablePowerShot(_canPowerShot);
+            inputReader.EnablePowerShot(_canAttack);
         }
     }
 
