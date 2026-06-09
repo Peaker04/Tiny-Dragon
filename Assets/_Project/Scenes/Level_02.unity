@@ -1274,7 +1274,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2130000000, guid: 4db81396b9204048ade992d72e76e0c6, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2130000001, guid: 4db81396b9204048ade992d72e76e0c6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1803,6 +1803,7 @@ MonoBehaviour:
   jumpInputEnabled: 1
   attackInputEnabled: 1
   powerShotInputEnabled: 1
+  inventoryInputEnabled: 1
 --- !u!1 &968452081
 GameObject:
   m_ObjectHideFlags: 0
