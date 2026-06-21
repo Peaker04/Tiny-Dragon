@@ -115,7 +115,13 @@ namespace TinyDragon.UI
                         playerInput.EnableInventory(step.enableInventory);
                     }
 
-                    playerInput.ClearCustomFeatures();
+                    // Only clear custom features at the very start of the tutorial (step 0).
+                    // This allows custom features from previous steps to carry over to subsequent steps.
+                    if (index == 0)
+                    {
+                        playerInput.ClearCustomFeatures();
+                    }
+
                     if (step.customEnables != null)
                     {
                         foreach (string customFeature in step.customEnables)
