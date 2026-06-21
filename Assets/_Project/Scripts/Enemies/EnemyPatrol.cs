@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
 {
+    private enum RangedAttackMode
+    {
+        Projectile = 0,
+        DirectHit = 1
+    }
+
     private const string DefaultProjectilePrefabPath = "Combat/EnemyProjectile";
 
     [SerializeField] private float moveSpeed = GameplayBalanceDefaults.NormalEnemySpeed;
@@ -18,6 +24,7 @@ public class EnemyPatrol : MonoBehaviour
     [SerializeField] private float rangeAttackRange = 4f;
     [SerializeField] private float rangeAttackCooldown = 2f;
     [SerializeField] private int rangeAttackDamage = GameplayBalanceDefaults.NormalEnemyDamage;
+    [SerializeField] private RangedAttackMode rangedAttackMode = RangedAttackMode.Projectile;
     [SerializeField] private float projectileSpeed = 5f;
     [SerializeField] private float projectileLifetime = 3f;
     [SerializeField] private float projectileScale = 0.35f;
@@ -45,14 +52,22 @@ public class EnemyPatrol : MonoBehaviour
 
     private void Awake()
     {
+        if (!Application.isPlaying) return;
+
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        EnsureProjectilePool();
+
+        if (rangedAttackMode == RangedAttackMode.Projectile)
+        {
+            EnsureProjectilePool();
+        }
     }
 
     private void Start()
     {
+        if (!Application.isPlaying) return;
+
         patrolOrigin = transform.position;
         direction = startMovingRight ? 1 : -1;
 
@@ -157,7 +172,15 @@ public class EnemyPatrol : MonoBehaviour
         }
 
         PlayAnimation(rangeAttackTriggerName, rangeAttackStateName);
-        ShootProjectile();
+        if (rangedAttackMode == RangedAttackMode.DirectHit)
+        {
+            DealRangeDamage();
+        }
+        else
+        {
+            ShootProjectile();
+        }
+
         nextRangeAttackTime = Time.time + rangeAttackCooldown;
     }
 
@@ -200,6 +223,17 @@ public class EnemyPatrol : MonoBehaviour
 
         Debug.Log($"Enemy dealt {attackDamage} damage to player.");
         playerHealth.TakeDamage(attackDamage);
+    }
+
+    private void DealRangeDamage()
+    {
+        if (!CanRangeAttackPlayer() || playerHealth == null)
+        {
+            return;
+        }
+
+        Debug.Log($"Enemy dealt {rangeAttackDamage} ranged damage to player.");
+        playerHealth.TakeDamage(rangeAttackDamage);
     }
 
     public void ApplyCombatStats(

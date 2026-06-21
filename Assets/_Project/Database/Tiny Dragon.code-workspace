@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		},
+		{
+			"path": "C:/Users/Administrator/Desktop/40BAFWDM2H_frames"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.asset": "yaml",
+			"*.meta": "yaml",
+			"*.prefab": "yaml",
+			"*.unity": "yaml"
+		}
+	}
+}

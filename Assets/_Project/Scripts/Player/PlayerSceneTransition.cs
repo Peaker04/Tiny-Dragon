@@ -8,6 +8,7 @@ public class PlayerSceneTransition : MonoBehaviour
     [SerializeField] private bool enableSceneTransitions = true;
     [SerializeField] private string level01SceneName = "Level_01_guide";
     [SerializeField] private string level02SceneName = "Level_02";
+    [SerializeField] private string level03SceneName = "Level_03";
     [SerializeField] private float transitionExitPadding = 0.35f;
     [SerializeField] private float transitionEntryPadding = 1f;
     [SerializeField] private float transitionCooldown = 0.75f;
@@ -78,6 +79,14 @@ public class PlayerSceneTransition : MonoBehaviour
         else if (activeSceneName == level02SceneName && transform.position.x <= leftExitX)
         {
             LoadLinkedScene(level01SceneName, levelRightEdgeX - transitionEntryPadding, -1f);
+        }
+        else if (activeSceneName == level02SceneName && transform.position.x >= rightExitX)
+        {
+            LoadLinkedScene(level03SceneName, levelLeftEdgeX + transitionEntryPadding, 1f);
+        }
+        else if (activeSceneName == level03SceneName && transform.position.x <= leftExitX)
+        {
+            LoadLinkedScene(level02SceneName, levelRightEdgeX - transitionEntryPadding, -1f);
         }
     }
 
