@@ -35,7 +35,7 @@ public class Level03Manager : MonoBehaviour
     [SerializeField] private float platformFadeDelay = 0.15f;
     [SerializeField] private float platformTransitionDuration = 0.25f;
     [SerializeField] private float fragmentPixelsPerUnit = 512f;
-    [SerializeField] private Vector3 mergePoint = new Vector3(0f, 10.0f, 0f);
+    [SerializeField] private Vector3 mergePoint = new Vector3(0f, 15.0f, 0f);
 
     private readonly List<Level03DragonFragment> fragments = new List<Level03DragonFragment>();
     private PlatformGroupRuntime platformGroupA;
@@ -165,17 +165,17 @@ public class Level03Manager : MonoBehaviour
         platformGroupA = new PlatformGroupRuntime();
         platformGroupB = new PlatformGroupRuntime();
 
-        Vector3 platformA1 = new Vector3(-3.0f, -2.5f, 0f);
-        Vector3 platformA2 = new Vector3(2.5f, 0.5f, 0f);
-        Vector3 platformA3 = new Vector3(-3.0f, 3.5f, 0f);
-        Vector3 platformA4 = new Vector3(2.5f, 6.5f, 0f);
-        Vector3 platformA5 = new Vector3(-3.0f, 9.5f, 0f);
+        Vector3 platformA1 = new Vector3(-3.5f, -2.5f, 0f);
+        Vector3 platformA2 = new Vector3(3.0f, 1.0f, 0f);
+        Vector3 platformA3 = new Vector3(-4.0f, 5.0f, 0f);
+        Vector3 platformA4 = new Vector3(3.5f, 9.0f, 0f);
+        Vector3 platformA5 = new Vector3(-2.5f, 13.0f, 0f);
 
         Vector3 platformB1 = new Vector3(0.0f, -1.0f, 0f);
-        Vector3 platformB2 = new Vector3(-0.5f, 2.0f, 0f);
-        Vector3 platformB3 = new Vector3(0.0f, 5.0f, 0f);
-        Vector3 platformB4 = new Vector3(-0.5f, 8.0f, 0f);
-        Vector3 platformB5 = new Vector3(0.0f, 11.0f, 0f);
+        Vector3 platformB2 = new Vector3(-1.0f, 3.0f, 0f);
+        Vector3 platformB3 = new Vector3(0.0f, 7.0f, 0f);
+        Vector3 platformB4 = new Vector3(1.0f, 11.0f, 0f);
+        Vector3 platformB5 = new Vector3(1.0f, 15.0f, 0f);
 
         CreatePlatform("Platform_A1", platformA1, groupARoot, platformGroupA);
         CreatePlatform("Platform_A2", platformA2, groupARoot, platformGroupA);
