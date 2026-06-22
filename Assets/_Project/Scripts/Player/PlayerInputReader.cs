@@ -5,7 +5,7 @@ public class PlayerInputReader : MonoBehaviour
     [SerializeField] private KeyCode attackKey = KeyCode.J;
     [SerializeField] private KeyCode powerShotKey = KeyCode.K;
     [SerializeField] private KeyCode punchKey = KeyCode.L;
-    [SerializeField] private KeyCode kickKey = KeyCode.I;
+    [SerializeField] private KeyCode kickKey = KeyCode.M;
     [SerializeField] private bool movementInputEnabled = true;
     [SerializeField] private bool jumpInputEnabled = true;
     [SerializeField] private bool attackInputEnabled = true;

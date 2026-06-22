@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &421456021
 GameObject:
@@ -256,7 +256,7 @@ MonoBehaviour:
   attackKey: 106
   powerShotKey: 107
   punchKey: 108
-  kickKey: 105
+  kickKey: 109
   movementInputEnabled: 1
   jumpInputEnabled: 1
   attackInputEnabled: 1

@@ -1107,7 +1107,7 @@ MonoBehaviour:
   attackKey: 106
   powerShotKey: 107
   punchKey: 108
-  kickKey: 105
+  kickKey: 109
   movementInputEnabled: 1
   jumpInputEnabled: 1
   attackInputEnabled: 1

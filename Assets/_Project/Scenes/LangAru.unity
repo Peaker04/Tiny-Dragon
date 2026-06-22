@@ -27413,7 +27413,7 @@ MonoBehaviour:
   attackKey: 106
   powerShotKey: 107
   punchKey: 108
-  kickKey: 105
+  kickKey: 109
   movementInputEnabled: 1
   jumpInputEnabled: 1
   attackInputEnabled: 1
@@ -27511,7 +27511,7 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   attackSound: {fileID: 0}
   powerShotSound: {fileID: 0}
-  comboWindow: 0.5
+  comboWindow: 1
 --- !u!114 &956085415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48798,8 +48798,8 @@ Transform:
   m_GameObject: {fileID: 1676606902}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.11, y: 0.2663, z: 0}
-  m_LocalScale: {x: 2.3973467, y: 3.3716428, z: 2.2179968}
+  m_LocalPosition: {x: 0.087, y: 0.514, z: 0}
+  m_LocalScale: {x: 2.345993, y: 3.4720528, z: 1.9435419}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 956085401}

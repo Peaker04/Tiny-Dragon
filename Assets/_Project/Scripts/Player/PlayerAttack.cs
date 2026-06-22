@@ -1,4 +1,4 @@
-﻿using TinyDragon.Data;
+using TinyDragon.Data;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
@@ -107,6 +107,7 @@ public class PlayerAttack : MonoBehaviour
 
         animatorDriver?.TriggerPunch(punchComboStep);
         PlaySound(attackSound);
+        DealMeleeDamage();
         nextAttackTime = Time.time + attackCooldown;
         lastPunchTime = Time.time;
         return true;
@@ -128,9 +129,29 @@ public class PlayerAttack : MonoBehaviour
 
         animatorDriver?.TriggerKick(kickComboStep);
         PlaySound(attackSound);
+        DealMeleeDamage();
         nextAttackTime = Time.time + attackCooldown;
         lastKickTime = Time.time;
         return true;
+    }
+
+    private void DealMeleeDamage()
+    {
+        int damage = GameplayBalanceDefaults.PlayerBaseAttack;
+        float facingDirection = transform.localScale.x >= 0f ? 1f : -1f;
+        Vector2 hitOffset = new Vector2(0.8f * facingDirection, 0.2f);
+        Vector2 hitPosition = (Vector2)transform.position + hitOffset;
+        float hitRadius = 0.8f;
+
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(hitPosition, hitRadius);
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            EnemyHealth enemyHealth = enemy.GetComponentInParent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(damage);
+            }
+        }
     }
 
     private void HandleNormalAttack()
