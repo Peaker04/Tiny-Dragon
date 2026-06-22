@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using TinyDragon.Data;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -119,7 +119,12 @@ namespace TinyDragon.UI
                 return true;
             }
 
-            if (EditorUtility.IsPersistent(gameObject))
+            if (gameObject == null)
+            {
+                return false;
+            }
+
+            if (PrefabUtility.IsPartOfPrefabAsset(gameObject))
             {
                 return false;
             }
