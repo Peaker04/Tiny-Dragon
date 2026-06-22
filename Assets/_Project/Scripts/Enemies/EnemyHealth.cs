@@ -100,10 +100,22 @@ public class EnemyHealth : MonoBehaviour
             return;
         }
 
-        currentHealth = Mathf.Max(currentHealth - damage, 0);
+        int actualDamage = damage;
+        IEnemyDamageFilter filter = GetComponent<IEnemyDamageFilter>();
+        if (filter != null)
+        {
+            actualDamage = filter.FilterDamage(damage);
+        }
+
+        if (actualDamage <= 0)
+        {
+            return;
+        }
+
+        currentHealth = Mathf.Max(currentHealth - actualDamage, 0);
         UpdateHealthBar();
-        ShowDamagePopup(damage);
-        Debug.Log($"Enemy took {damage} damage. HP: {currentHealth}/{maxHealth}", this);
+        ShowDamagePopup(actualDamage);
+        Debug.Log($"Enemy took {actualDamage} damage. HP: {currentHealth}/{maxHealth}", this);
 
         if (currentHealth <= 0)
         {
