@@ -1527,7 +1527,7 @@ MonoBehaviour:
   projectileSpeed: 8
   projectileLifetime: 2
   projectileScale: 1.2
-  projectileSpawnOffset: {x: 0.6, y: 0.82}
+  projectileSpawnOffset: {x: 0.6, y: 0.37}
   projectileSprite: {fileID: 21300000, guid: e9c32b8f30ada4b4e8876bdaf533f912, type: 3}
   projectileFacesRightByDefault: 1
   projectileSortingLayerName: Default
@@ -1536,7 +1536,7 @@ MonoBehaviour:
   powerShotSpeed: 6
   powerShotLifetime: 3
   powerShotScale: 1
-  powerShotSpawnOffset: {x: 0.8, y: 0.87}
+  powerShotSpawnOffset: {x: 0.8, y: 0.42}
   powerShotSprite: {fileID: 21300000, guid: 0b11dc408440d4440a3c4cfc6566c580, type: 3}
   powerShotFacesRightByDefault: 1
   powerShotSortingLayerName: Default
@@ -2499,7 +2499,7 @@ Transform:
   m_GameObject: {fileID: 1889000014}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.85, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
