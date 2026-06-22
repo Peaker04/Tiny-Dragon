@@ -1,3 +1,4 @@
+using System;
 using TinyDragon.Data;
 using UnityEngine;
 
@@ -32,6 +33,7 @@ public class EnemyHealth : MonoBehaviour
     public int CurrentHealth => currentHealth;
     public int MaxHealth => maxHealth;
     public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+    public event Action<EnemyHealth> Died;
 
     private void Awake()
     {
@@ -99,6 +101,19 @@ public class EnemyHealth : MonoBehaviour
             return;
         }
 
+        MonoBehaviour[] behaviours = GetComponents<MonoBehaviour>();
+        for (int i = 0; i < behaviours.Length; i++)
+        {
+            if (behaviours[i] is IEnemyDamageFilter damageFilter)
+            {
+                damage = damageFilter.FilterDamage(damage);
+                if (damage <= 0)
+                {
+                    return;
+                }
+            }
+        }
+
         currentHealth = Mathf.Max(currentHealth - damage, 0);
         UpdateHealthBar();
         ShowDamagePopup(damage);
@@ -113,7 +128,25 @@ public class EnemyHealth : MonoBehaviour
     private void Die()
     {
         Debug.Log("Enemy died.", this);
+        Died?.Invoke(this);
         Destroy(gameObject);
+    }
+
+    public void ShowStatusPopup(string message, Color color)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return;
+        }
+
+        EnsureDamagePopupPool();
+        if (damagePopupPool == null)
+        {
+            return;
+        }
+
+        FloatingDamageText floatingText = damagePopupPool.Get(transform.position + damagePopupOffset, Quaternion.identity);
+        floatingText.Initialize(message, color, damagePopupPool.Release);
     }
 
     private void ApplyDatabaseBalanceIfAvailable()

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -15,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public bool IsGrounded { get; private set; }
     public float HorizontalInput => inputReader != null ? inputReader.Horizontal : 0f;
     public float FacingDirection => transform.localScale.x >= 0f ? 1f : -1f;
+    public event Action JumpPerformed;
 
     private void Awake()
     {
@@ -33,9 +35,11 @@ public class PlayerMovement : MonoBehaviour
         float horizontalInput = HorizontalInput;
         rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
 
-        if (inputReader != null && inputReader.ConsumeJumpPressed() && IsGrounded)
+        bool jumpRequested = inputReader != null && inputReader.ConsumeJumpPressed();
+        if (jumpRequested && IsGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            JumpPerformed?.Invoke();
         }
 
         Flip(horizontalInput);

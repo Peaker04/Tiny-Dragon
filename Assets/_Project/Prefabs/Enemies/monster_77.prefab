@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6187413806477217690}
   - component: {fileID: 5791910548343334350}
   - component: {fileID: 5858059153072833711}
+  - component: {fileID: 7000000000000000001}
   m_Layer: 0
   m_Name: monster_77
   m_TagString: Untagged
@@ -205,8 +206,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPatrol
   moveSpeed: 1.2
-  leftDistance: 4
-  rightDistance: 4
+  leftDistance: 1.5
+  rightDistance: 1.5
   pointReachDistance: 0.05
   attackRange: 2.5
   verticalAttackTolerance: 1
@@ -244,7 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   displayName: Mob 77
-  balanceEnemyId: enemy_monster_1
+  balanceEnemyId: enemy_boss_act_1
   maxHealth: 120
   damagePopupPrefab: {fileID: 0}
   damagePopupPoolPrewarmCount: 4
@@ -323,3 +324,20 @@ MonoBehaviour:
     jsonActionName: Hurt
   - animatorStateName: Die
     jsonActionName: Die
+--- !u!114 &7000000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7620781613243225900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c37a7f9e2d3b4af7a8d1972f4d5e6c02, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Level03BossShield
+  phaseTwoMovementMultiplier: 1.15
+  phaseTwoAttackIntervalMultiplier: 0.85
+  shieldFlashColor: {r: 0.35, g: 0.9, b: 1, a: 1}
+  phaseTwoTint: {r: 1, g: 0.72, b: 0.72, a: 1}
+  shieldPopupCooldown: 0.2

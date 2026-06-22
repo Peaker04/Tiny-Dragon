@@ -1126,7 +1126,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 214149976032124535, guid: 990a386db439d31468ddc5786564a6cf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 214149976032124535, guid: 990a386db439d31468ddc5786564a6cf, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2443,6 +2443,61 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea11fb613fcd81840975c59a7178bacb, type: 3}
+--- !u!1 &3100000000000000000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3100000000000000001}
+  - component: {fileID: 3100000000000000002}
+  m_Layer: 0
+  m_Name: Level03Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3100000000000000001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100000000000000000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3100000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100000000000000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c37a7f9e2d3b4af7a8d1972f4d5e6c01, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Level03Manager
+  platformBlockSprite: {fileID: 4113829005332862926, guid: 0142fb4a5f40022469f8b8b374e8a60e, type: 3}
+  platformColor: {r: 1, g: 1, b: 1, a: 1}
+  fragmentTexture: {fileID: 2800000, guid: d47b8e0f5c614ae49f4ea31c55dc9a01, type: 3}
+  completeGemTexture: {fileID: 2800000, guid: d47b8e0f5c614ae49f4ea31c55dc9a02, type: 3}
+  mergeEffectTexture: {fileID: 2800000, guid: d47b8e0f5c614ae49f4ea31c55dc9a03, type: 3}
+  mergeEffectData: {fileID: 4900000, guid: d47b8e0f5c614ae49f4ea31c55dc9a04, type: 3}
+  requiredFragments: 2
+  platformFadeDelay: 0.15
+  platformTransitionDuration: 0.25
+  fragmentPixelsPerUnit: 512
+  mergePoint: {x: 0, y: 0.5, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -2455,3 +2510,4 @@ SceneRoots:
   - {fileID: 2120000001}
   - {fileID: 4545772139970297049}
   - {fileID: 1349843816}
+  - {fileID: 3100000000000000001}

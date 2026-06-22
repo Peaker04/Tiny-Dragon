@@ -108,3 +108,6 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 /docs/
 
+# Custom ignores - không push lên GitHub
+Course Project report template.docx
+Level03_Boss_DragonGem_Design.md

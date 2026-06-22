@@ -251,6 +251,14 @@ public class EnemyPatrol : MonoBehaviour
         rangeAttackCooldown = Mathf.Max(rangedCooldown, 0.01f);
     }
 
+    public void ApplyPhaseMultipliers(float movementMultiplier, float attackIntervalMultiplier)
+    {
+        moveSpeed = Mathf.Max(moveSpeed * Mathf.Max(movementMultiplier, 0.1f), 0.1f);
+        float intervalMultiplier = Mathf.Max(attackIntervalMultiplier, 0.1f);
+        attackCooldown = Mathf.Max(attackCooldown * intervalMultiplier, 0.01f);
+        rangeAttackCooldown = Mathf.Max(rangeAttackCooldown * intervalMultiplier, 0.01f);
+    }
+
     public void ShootProjectile()
     {
         if (player == null)
