@@ -21,7 +21,7 @@ INSERT OR IGNORE INTO Stage (
     'GUIDE',
     'Training Guide',
     'Tutorial and first movement area.',
-    'Level_01_guide',
+    'LangAru',
     0,
     1,
     0,

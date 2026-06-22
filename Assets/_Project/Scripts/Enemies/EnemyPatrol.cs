@@ -42,6 +42,9 @@ public class EnemyPatrol : MonoBehaviour
     private float nextAttackTime;
     private float nextRangeAttackTime;
     private ComponentPool<EnemyProjectile> projectilePool;
+    private bool hasPatrolBounds;
+    private float patrolMinX;
+    private float patrolMaxX;
 
     private void Awake()
     {
@@ -217,6 +220,13 @@ public class EnemyPatrol : MonoBehaviour
         rangeAttackCooldown = Mathf.Max(rangedCooldown, 0.01f);
     }
 
+    public void SetPatrolBounds(float minimumX, float maximumX)
+    {
+        patrolMinX = Mathf.Min(minimumX, maximumX);
+        patrolMaxX = Mathf.Max(minimumX, maximumX);
+        hasPatrolBounds = patrolMinX < patrolMaxX;
+    }
+
     public void ShootProjectile()
     {
         if (player == null)
@@ -278,7 +288,8 @@ public class EnemyPatrol : MonoBehaviour
     private float GetTargetX()
     {
         float distance = direction > 0 ? rightDistance : -leftDistance;
-        return patrolOrigin.x + distance;
+        float targetX = patrolOrigin.x + distance;
+        return hasPatrolBounds ? Mathf.Clamp(targetX, patrolMinX, patrolMaxX) : targetX;
     }
 
     private void MoveHorizontally(float moveDirection)

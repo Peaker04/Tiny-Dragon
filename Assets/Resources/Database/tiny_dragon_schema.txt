@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS Player (
   baseAttackSpeed   REAL NOT NULL DEFAULT 1.0 CHECK(baseAttackSpeed > 0),
   baseSpd          REAL NOT NULL DEFAULT 5.0 CHECK(baseSpd >= 0),
   currentStageId   TEXT,
-  currentSceneName TEXT NOT NULL DEFAULT 'Level_01_guide',
+  currentSceneName TEXT NOT NULL DEFAULT 'LangAru',
   positionX        REAL NOT NULL DEFAULT 0,
   positionY        REAL NOT NULL DEFAULT 0,
   facingDirection  INTEGER NOT NULL DEFAULT 1 CHECK(facingDirection IN (-1, 1)),

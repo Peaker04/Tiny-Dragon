@@ -5,7 +5,7 @@ using TinyDragon.UI;
 [RequireComponent(typeof(PlayerHealth))]
 public class PlayerDeathSceneHandler : MonoBehaviour
 {
-    [SerializeField] private string guideSceneName = "Level_01_guide";
+    [SerializeField] private string guideSceneName = "LangAru";
     [SerializeField] private bool immortalInGuideScene = true;
     [SerializeField] private bool showGameOverOutsideGuide = true;
     [SerializeField] private GameOver gameOverUI;

@@ -15,6 +15,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float spawnYOffset = 0.02f;
     [SerializeField] private Camera spawnCamera;
     [SerializeField] private Transform enemyParent;
+    [SerializeField] private Transform[] fixedSpawnPoints;
     [Header("Boss Spawn")]
     [SerializeField] private bool spawnBossAfterNormalEnemies;
     [SerializeField] private BossAI bossTemplate;
@@ -29,6 +30,7 @@ public class EnemySpawner : MonoBehaviour
     private int spawnedEnemyCount;
     private int defeatedEnemyCount;
     private bool bossSpawned;
+    private int nextFixedSpawnPointIndex;
 
     private void OnValidate()
     {
@@ -50,6 +52,8 @@ public class EnemySpawner : MonoBehaviour
         {
             enemyTemplate.gameObject.SetActive(false);
         }
+
+        HideFixedSpawnTemplates();
 
         if (bossTemplate == null)
         {
@@ -161,6 +165,7 @@ public class EnemySpawner : MonoBehaviour
         enemy.name = enemyTemplate.name;
         enemy.gameObject.SetActive(true);
         PlaceEnemyOnGround(enemy);
+        ConstrainEnemyToGround(enemy);
 
         EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
         if (enemyHealth == null)
@@ -248,6 +253,23 @@ public class EnemySpawner : MonoBehaviour
 
     private Vector3 GetRandomGroundPosition()
     {
+        Transform fixedSpawnPoint = GetNextFixedSpawnPoint();
+        if (fixedSpawnPoint != null)
+        {
+            Bounds fixedSpawnGroundBounds = groundCollider.bounds;
+            float spawnX = Mathf.Clamp(
+                fixedSpawnPoint.position.x,
+                fixedSpawnGroundBounds.min.x + spawnXPadding,
+                fixedSpawnGroundBounds.max.x - spawnXPadding
+            );
+
+            return new Vector3(
+                spawnX,
+                fixedSpawnPoint.position.y,
+                enemyTemplate.transform.position.z
+            );
+        }
+
         Bounds groundBounds = groundCollider.bounds;
         GetSpawnXBounds(groundBounds, out float minX, out float maxX);
 
@@ -256,6 +278,49 @@ public class EnemySpawner : MonoBehaviour
             groundBounds.max.y + spawnYOffset,
             enemyTemplate.transform.position.z
         );
+    }
+
+    private Transform GetNextFixedSpawnPoint()
+    {
+        if (fixedSpawnPoints == null || fixedSpawnPoints.Length == 0)
+        {
+            return null;
+        }
+
+        for (int attempt = 0; attempt < fixedSpawnPoints.Length; attempt++)
+        {
+            int index = nextFixedSpawnPointIndex % fixedSpawnPoints.Length;
+            nextFixedSpawnPointIndex++;
+
+            if (fixedSpawnPoints[index] != null)
+            {
+                return fixedSpawnPoints[index];
+            }
+        }
+
+        return null;
+    }
+
+    private void HideFixedSpawnTemplates()
+    {
+        if (fixedSpawnPoints == null)
+        {
+            return;
+        }
+
+        foreach (Transform spawnPoint in fixedSpawnPoints)
+        {
+            if (spawnPoint == null || (enemyTemplate != null && spawnPoint == enemyTemplate.transform))
+            {
+                continue;
+            }
+
+            if (spawnPoint.TryGetComponent(out EnemyPatrol sceneEnemy)
+                && sceneEnemy.gameObject.scene.IsValid())
+            {
+                sceneEnemy.gameObject.SetActive(false);
+            }
+        }
     }
 
     private void GetSpawnXBounds(Bounds groundBounds, out float minX, out float maxX)
@@ -308,6 +373,22 @@ public class EnemySpawner : MonoBehaviour
         float bottomOffset = position.y - enemyCollider.bounds.min.y;
         position.y = groundCollider.bounds.max.y + bottomOffset + spawnYOffset;
         enemy.transform.position = position;
+    }
+
+    private void ConstrainEnemyToGround(EnemyPatrol enemy)
+    {
+        if (groundCollider == null)
+        {
+            return;
+        }
+
+        Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+        float halfEnemyWidth = enemyCollider != null ? enemyCollider.bounds.extents.x : 0f;
+        Bounds groundBounds = groundCollider.bounds;
+        enemy.SetPatrolBounds(
+            groundBounds.min.x + halfEnemyWidth,
+            groundBounds.max.x - halfEnemyWidth
+        );
     }
 
     private void PlaceBossOnGround(BossAI boss)
