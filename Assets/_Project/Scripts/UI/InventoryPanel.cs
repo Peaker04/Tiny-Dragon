@@ -114,11 +114,6 @@ namespace TinyDragon.UI
 
         private bool CanBuildInCurrentContext()
         {
-            if (Application.isPlaying)
-            {
-                return true;
-            }
-
             if (gameObject == null)
             {
                 return false;
@@ -127,6 +122,11 @@ namespace TinyDragon.UI
             if (PrefabUtility.IsPartOfPrefabAsset(gameObject))
             {
                 return false;
+            }
+
+            if (Application.isPlaying)
+            {
+                return true;
             }
 
             return PrefabStageUtility.GetPrefabStage(gameObject) != null;
