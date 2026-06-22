@@ -35,7 +35,7 @@ public class Level03Manager : MonoBehaviour
     [SerializeField] private float platformFadeDelay = 0.15f;
     [SerializeField] private float platformTransitionDuration = 0.25f;
     [SerializeField] private float fragmentPixelsPerUnit = 512f;
-    [SerializeField] private Vector3 mergePoint = new Vector3(0f, 6.0f, 0f);
+    [SerializeField] private Vector3 mergePoint = new Vector3(0f, 10.0f, 0f);
 
     private readonly List<Level03DragonFragment> fragments = new List<Level03DragonFragment>();
     private PlatformGroupRuntime platformGroupA;
@@ -166,20 +166,28 @@ public class Level03Manager : MonoBehaviour
         platformGroupB = new PlatformGroupRuntime();
 
         Vector3 platformA1 = new Vector3(-3.5f, -2.5f, 0f);
-        Vector3 platformA2 = new Vector3(-2.5f, 0.7f, 0f);
-        Vector3 platformA3 = new Vector3(-1.5f, 3.9f, 0f);
+        Vector3 platformA2 = new Vector3(3.5f, 0.5f, 0f);
+        Vector3 platformA3 = new Vector3(2.0f, 3.5f, 0f);
+        Vector3 platformA4 = new Vector3(3.0f, 6.5f, 0f);
+        Vector3 platformA5 = new Vector3(0.0f, 9.5f, 0f);
 
-        Vector3 platformB1 = new Vector3(0.0f, -0.9f, 0f);
-        Vector3 platformB2 = new Vector3(1.0f, 2.3f, 0f);
-        Vector3 platformB3 = new Vector3(1.5f, 5.5f, 0f);
+        Vector3 platformB1 = new Vector3(0.0f, -1.0f, 0f);
+        Vector3 platformB2 = new Vector3(-2.5f, 2.0f, 0f);
+        Vector3 platformB3 = new Vector3(-1.0f, 5.0f, 0f);
+        Vector3 platformB4 = new Vector3(-3.0f, 8.0f, 0f);
+        Vector3 platformB5 = new Vector3(2.5f, 11.0f, 0f);
 
         CreatePlatform("Platform_A1", platformA1, groupARoot, platformGroupA);
         CreatePlatform("Platform_A2", platformA2, groupARoot, platformGroupA);
         CreatePlatform("Platform_A3", platformA3, groupARoot, platformGroupA);
+        CreatePlatform("Platform_A4", platformA4, groupARoot, platformGroupA);
+        CreatePlatform("Platform_A5", platformA5, groupARoot, platformGroupA);
 
         CreatePlatform("Platform_B1", platformB1, groupBRoot, platformGroupB);
         CreatePlatform("Platform_B2", platformB2, groupBRoot, platformGroupB);
         CreatePlatform("Platform_B3", platformB3, groupBRoot, platformGroupB);
+        CreatePlatform("Platform_B4", platformB4, groupBRoot, platformGroupB);
+        CreatePlatform("Platform_B5", platformB5, groupBRoot, platformGroupB);
 
         SetPlatformGroupState(platformGroupA, 1f, true);
         SetPlatformGroupState(platformGroupB, 0f, false);
@@ -187,12 +195,8 @@ public class Level03Manager : MonoBehaviour
         Transform fragmentRoot = CreateRoot("DragonFragments", transform);
         CreateFragments(
             fragmentRoot,
-            platformA1,
-            platformA2,
-            platformA3,
-            platformB1,
-            platformB2,
-            platformB3);
+            new Vector3[] { platformA1, platformA2, platformA3, platformA4, platformA5 },
+            new Vector3[] { platformB1, platformB2, platformB3, platformB4, platformB5 });
 
         Transform completeRoot = CreateRoot("DragonGemComplete", transform);
         completeRoot.position = mergePoint;
@@ -212,12 +216,8 @@ public class Level03Manager : MonoBehaviour
 
     private void CreateFragments(
         Transform parent,
-        Vector3 platformA1,
-        Vector3 platformA2,
-        Vector3 platformA3,
-        Vector3 platformB1,
-        Vector3 platformB2,
-        Vector3 platformB3)
+        Vector3[] platformsA,
+        Vector3[] platformsB)
     {
         if (fragmentTexture == null)
         {
@@ -244,15 +244,18 @@ public class Level03Manager : MonoBehaviour
 
         Vector3[] pathOne =
         {
-            platformA2 + fragmentStandOffset,
-            platformB2 + fragmentStandOffset,
-            platformA3 + fragmentStandOffset
+            platformsA[1] + fragmentStandOffset, // A2
+            platformsB[2] + fragmentStandOffset, // B3
+            platformsA[3] + fragmentStandOffset, // A4
+            platformsB[4] + fragmentStandOffset  // B5
         };
+        
         Vector3[] pathTwo =
         {
-            platformB2 + fragmentStandOffset,
-            platformA3 + fragmentStandOffset,
-            platformB3 + fragmentStandOffset
+            platformsB[1] + fragmentStandOffset, // B2
+            platformsA[2] + fragmentStandOffset, // A3
+            platformsB[3] + fragmentStandOffset, // B4
+            platformsA[4] + fragmentStandOffset  // A5
         };
 
         fragments.Add(CreateFragment("Fragment_01", 1, leftFragment, pathOne, parent));
