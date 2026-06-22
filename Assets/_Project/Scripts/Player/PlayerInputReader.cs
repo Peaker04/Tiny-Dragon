@@ -72,6 +72,56 @@ public class PlayerInputReader : MonoBehaviour
         SetInputEnabled(true, true, true, true, true, true);
     }
 
+    // --- Feature-specific enable helpers (used by Level03Manager, PauseManager) ---
+
+    public void EnableAll()
+    {
+        SetInputEnabled(true, true, true, true, true, true);
+    }
+
+    public void EnableMovement(bool enabled)
+    {
+        movementInputEnabled = enabled;
+        if (!enabled) Horizontal = 0f;
+    }
+
+    public void EnableJump(bool enabled)
+    {
+        jumpInputEnabled = enabled;
+        if (!enabled) JumpPressed = false;
+    }
+
+    public void EnableAttack(bool enabled)
+    {
+        attackInputEnabled = enabled;
+        if (!enabled) AttackPressed = false;
+    }
+
+    public void EnablePowerShot(bool enabled)
+    {
+        powerShotInputEnabled = enabled;
+        if (!enabled) PowerShotPressed = false;
+    }
+
+    /// <summary>
+    /// Returns whether a named input feature is currently active.
+    /// Supported feature names: "Movement", "Jump", "Attack", "PowerShot", "Punch", "Kick".
+    /// Any unrecognised name returns true (fail-open).
+    /// </summary>
+    public bool IsFeatureEnabled(string featureName)
+    {
+        return featureName switch
+        {
+            "Movement"  => movementInputEnabled,
+            "Jump"      => jumpInputEnabled,
+            "Attack"    => attackInputEnabled,
+            "PowerShot" => powerShotInputEnabled,
+            "Punch"     => punchInputEnabled,
+            "Kick"      => kickInputEnabled,
+            _           => true,
+        };
+    }
+
     public bool ConsumeJumpPressed()
     {
         bool wasPressed = JumpPressed;
