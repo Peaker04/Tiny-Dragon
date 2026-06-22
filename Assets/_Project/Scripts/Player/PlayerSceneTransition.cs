@@ -6,7 +6,7 @@ using TinyDragon.Data;
 public class PlayerSceneTransition : MonoBehaviour
 {
     [SerializeField] private bool enableSceneTransitions = true;
-    [SerializeField] private string level01SceneName = "Level_01_guide";
+    [SerializeField] private string level01SceneName = "LangAru";
     [SerializeField] private string level02SceneName = "Level_02";
     [SerializeField] private float transitionExitPadding = 0.35f;
     [SerializeField] private float transitionEntryPadding = 1f;
@@ -14,12 +14,17 @@ public class PlayerSceneTransition : MonoBehaviour
     [SerializeField] private float transitionSpawnY = -3.57f;
     [SerializeField] private float levelLeftEdgeX = -12.16f;
     [SerializeField] private float levelRightEdgeX = 12.34f;
+    [SerializeField] private string leftExitColliderName;
+    [SerializeField] private bool exitColliderIsOnLeft = true;
+    [SerializeField] private bool exitOnColliderContact;
     [SerializeField] private bool restoreCameraOnStart = false;
     [SerializeField] private Vector3 cameraPosition = new Vector3(0.06f, 0f, -10f);
     [SerializeField] private float cameraOrthographicSize = 5f;
 
     private PlayerMovement movement;
     private Rigidbody2D rb;
+    private Collider2D playerCollider;
+    private Collider2D leftExitCollider;
     private bool isTransitioning;
 
     private static bool hasPendingSpawn;
@@ -27,6 +32,20 @@ public class PlayerSceneTransition : MonoBehaviour
     private static float pendingFacingDirection = 1f;
     private static bool globalTransitionInProgress;
     private static float transitionsLockedUntil;
+
+    public static void LoadSceneWithPlayerSpawn(string sceneName, Vector3 spawnPosition, float facingDirection)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            return;
+        }
+
+        hasPendingSpawn = true;
+        pendingSpawnPosition = spawnPosition;
+        pendingFacingDirection = Mathf.Approximately(facingDirection, 0f) ? 1f : Mathf.Sign(facingDirection);
+        globalTransitionInProgress = true;
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+    }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetTransitionState()
@@ -42,6 +61,7 @@ public class PlayerSceneTransition : MonoBehaviour
     {
         movement = GetComponent<PlayerMovement>();
         rb = GetComponent<Rigidbody2D>();
+        playerCollider = GetComponent<Collider2D>();
         ApplyPendingSpawn();
     }
 
@@ -69,16 +89,46 @@ public class PlayerSceneTransition : MonoBehaviour
 
         string activeSceneName = SceneManager.GetActiveScene().name;
         float rightExitX = levelRightEdgeX - transitionExitPadding;
-        float leftExitX = levelLeftEdgeX + transitionExitPadding;
-
         if (activeSceneName == level01SceneName && transform.position.x >= rightExitX)
         {
             LoadLinkedScene(level02SceneName, levelLeftEdgeX + transitionEntryPadding, 1f);
         }
-        else if (activeSceneName == level02SceneName && transform.position.x <= leftExitX)
+        else if (activeSceneName == level02SceneName && HasReachedLinkedSceneExit())
         {
             LoadLinkedScene(level01SceneName, levelRightEdgeX - transitionEntryPadding, -1f);
         }
+    }
+
+    private bool HasReachedLinkedSceneExit()
+    {
+        if (string.IsNullOrWhiteSpace(leftExitColliderName))
+        {
+            return transform.position.x <= levelLeftEdgeX + transitionExitPadding;
+        }
+
+        if (leftExitCollider == null)
+        {
+            GameObject exitObject = GameObject.Find(leftExitColliderName);
+            leftExitCollider = exitObject != null ? exitObject.GetComponent<Collider2D>() : null;
+        }
+
+        if (leftExitCollider == null)
+        {
+            return transform.position.x <= levelLeftEdgeX + transitionExitPadding;
+        }
+
+        if (exitOnColliderContact && playerCollider != null)
+        {
+            return playerCollider.IsTouching(leftExitCollider);
+        }
+
+        float exitX = exitColliderIsOnLeft
+            ? leftExitCollider.bounds.max.x + transitionExitPadding
+            : leftExitCollider.bounds.min.x - transitionExitPadding;
+
+        return exitColliderIsOnLeft
+            ? transform.position.x <= exitX
+            : transform.position.x >= exitX;
     }
 
     private void LoadLinkedScene(string sceneName, float spawnX, float facingDirection)
@@ -91,11 +141,12 @@ public class PlayerSceneTransition : MonoBehaviour
         isTransitioning = true;
         globalTransitionInProgress = true;
         transitionsLockedUntil = Time.time + transitionCooldown;
-        hasPendingSpawn = true;
-        pendingSpawnPosition = new Vector3(spawnX, transitionSpawnY, transform.position.z);
-        pendingFacingDirection = facingDirection;
         TinyDragonSaveManager.Instance.SaveCurrentPlayer();
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        LoadSceneWithPlayerSpawn(
+            sceneName,
+            new Vector3(spawnX, transitionSpawnY, transform.position.z),
+            facingDirection
+        );
     }
 
     private void ApplyPendingSpawn()
