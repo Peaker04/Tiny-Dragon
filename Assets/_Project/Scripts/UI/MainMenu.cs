@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using TinyDragon.Data;
 
@@ -10,7 +10,7 @@ namespace TinyDragon.UI
         {
             PlayerAttack.ResetManaForNewRun();
             TinyDragonSaveManager.Instance.ResetCurrentKiToMax();
-            SceneManager.LoadScene("Level_01_guide");
+            SceneManager.LoadScene("LangAru");
         }
 
         public void QuitGame()

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,7 +9,7 @@ namespace TinyDragon.UI
     {
         private static GameOver instance;
 
-        [SerializeField] private string menuSceneName = "Intro";
+        [SerializeField] private string menuSceneName = "Level_01_Origin";
 
         private Canvas canvas;
         private GraphicRaycaster raycaster;

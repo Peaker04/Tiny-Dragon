@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -36,7 +36,7 @@ public class IntroManager : MonoBehaviour
 
     [Header("Story Data")]
     [SerializeField] private StorySceneData[] introScenes;
-    [SerializeField] private string nextLevelName = "LangAru";
+    [SerializeField] private string nextLevelName = "Level_01_Origin";
 
     [Header("Developer Options")]
     [SerializeField] private bool forceShowIntro = false;

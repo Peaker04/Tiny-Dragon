@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TinyDragon.Data;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -190,7 +190,7 @@ namespace TinyDragon.UI
 
         private bool CanOpenInventory()
         {
-            if (SceneManager.GetActiveScene().name == "Level_01_Original")
+            if (SceneManager.GetActiveScene().name == "Level_01_Origin")
             {
                 return false;
             }

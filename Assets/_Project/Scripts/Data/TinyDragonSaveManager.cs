@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Data;
 using System.IO;
 using UnityEngine;
@@ -449,7 +449,7 @@ namespace TinyDragon.Data
             string sceneName = SceneManager.GetActiveScene().name;
             if (string.IsNullOrWhiteSpace(sceneName))
             {
-                sceneName = "Level_01_guide";
+                sceneName = "Level_01_Origin";
             }
 
             string stageId = GetStageIdForScene(sceneName) ?? "stage_guide";

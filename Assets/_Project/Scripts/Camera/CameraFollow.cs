@@ -1,56 +1,50 @@
-using UnityEngine;
+﻿using UnityEngine;
+using TinyDragon.Camera;
 
 public sealed class CameraFollow : MonoBehaviour
 {
     [SerializeField] private Transform target;
-    [SerializeField] private Transform leftBoundary;
-    [SerializeField] private Transform rightBoundary;
-    [SerializeField] private Vector3 offset = new Vector3(0f, 1.5f, -10f);
+    [SerializeField] private Vector3 offset = new Vector3(0f, 0.75f, -10f);
     [SerializeField, Min(0.01f)] private float smoothTime = 0.12f;
 
     private Vector3 followVelocity;
-    private Camera sceneCamera;
-    private Collider2D terrainBounds;
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void AttachToMainCameras()
-    {
-        foreach (Camera camera in Object.FindObjectsByType<Camera>())
-        {
-            if (!camera.CompareTag("MainCamera") || camera.GetComponent<CameraFollow>() != null)
-            {
-                continue;
-            }
-
-            camera.gameObject.AddComponent<CameraFollow>();
-        }
-    }
+    private UnityEngine.Camera sceneCamera;
+    private MapBounds2D mapBounds;
+    private Collider2D targetCollider;
 
     private void Awake()
     {
-        sceneCamera = GetComponent<Camera>();
+        sceneCamera = GetComponent<UnityEngine.Camera>();
     }
 
     private void OnEnable()
     {
         ResolveTarget();
+        ResolveMapBounds();
+        SnapToTarget();
+    }
 
+    public void SnapToTarget()
+    {
         if (target != null)
         {
-            transform.position = ClampToMapBounds(target.position + offset);
+            Vector3 targetPos = GetTargetPosition();
+            transform.position = ClampToMapBounds(targetPos + offset);
+            followVelocity = Vector3.zero;
         }
     }
 
     private void LateUpdate()
     {
         ResolveTarget();
+        ResolveMapBounds();
 
         if (target == null)
         {
             return;
         }
 
-        Vector3 desiredPosition = target.position + offset;
+        Vector3 desiredPosition = GetTargetPosition() + offset;
         desiredPosition = ClampToMapBounds(desiredPosition);
 
         transform.position = Vector3.SmoothDamp(
@@ -68,87 +62,56 @@ public sealed class CameraFollow : MonoBehaviour
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             target = player != null ? player.transform : null;
         }
+        
+        if (target != null && targetCollider == null)
+        {
+            targetCollider = target.GetComponent<Collider2D>();
+        }
+    }
 
+    private void ResolveMapBounds()
+    {
+        if (mapBounds == null)
+        {
+            mapBounds = Object.FindAnyObjectByType<MapBounds2D>();
+        }
+    }
+
+    private Vector3 GetTargetPosition()
+    {
+        if (targetCollider != null)
+        {
+            return targetCollider.bounds.center;
+        }
+        return target.position;
     }
 
     private Vector3 ClampToMapBounds(Vector3 desiredPosition)
     {
-        if (sceneCamera == null)
-        {
-            sceneCamera = GetComponent<Camera>();
-        }
-
-        if (sceneCamera == null || !sceneCamera.orthographic)
+        if (sceneCamera == null || !sceneCamera.orthographic || mapBounds == null)
         {
             return desiredPosition;
         }
 
-        ResolveTerrainBounds();
+        Bounds bounds = mapBounds.GetBounds();
+        
+        float halfCameraHeight = sceneCamera.orthographicSize;
+        float halfCameraWidth = halfCameraHeight * sceneCamera.aspect;
 
-        float minimumMapX;
-        float maximumMapX;
-        if (leftBoundary != null && rightBoundary != null)
-        {
-            minimumMapX = leftBoundary.position.x;
-            maximumMapX = rightBoundary.position.x;
-        }
-        else if (terrainBounds != null)
-        {
-            minimumMapX = terrainBounds.bounds.min.x;
-            maximumMapX = terrainBounds.bounds.max.x;
-        }
-        else
-        {
-            return desiredPosition;
-        }
-
-        float halfCameraWidth = sceneCamera.orthographicSize * sceneCamera.aspect;
-        float minimumX = minimumMapX + halfCameraWidth;
-        float maximumX = maximumMapX - halfCameraWidth;
+        float minimumX = bounds.min.x + halfCameraWidth;
+        float maximumX = bounds.max.x - halfCameraWidth;
+        
+        float minimumY = bounds.min.y + halfCameraHeight;
+        float maximumY = bounds.max.y - halfCameraHeight;
 
         desiredPosition.x = minimumX <= maximumX
             ? Mathf.Clamp(desiredPosition.x, minimumX, maximumX)
-            : (minimumMapX + maximumMapX) * 0.5f;
+            : bounds.center.x;
+
+        desiredPosition.y = minimumY <= maximumY
+            ? Mathf.Clamp(desiredPosition.y, minimumY, maximumY)
+            : bounds.center.y;
 
         return desiredPosition;
-    }
-
-    private void ResolveTerrainBounds()
-    {
-        if (terrainBounds != null || (leftBoundary != null && rightBoundary != null))
-        {
-            return;
-        }
-
-        foreach (Collider2D collider in Object.FindObjectsByType<Collider2D>(FindObjectsInactive.Exclude))
-        {
-            if (collider.name.StartsWith("LeftWall"))
-            {
-                if (leftBoundary == null || collider.bounds.min.x < leftBoundary.position.x)
-                {
-                    leftBoundary = collider.transform;
-                }
-            }
-            else if (collider.name.StartsWith("RightWall"))
-            {
-                if (rightBoundary == null || collider.bounds.max.x > rightBoundary.position.x)
-                {
-                    rightBoundary = collider.transform;
-                }
-            }
-        }
-
-        if (leftBoundary != null && rightBoundary != null)
-        {
-            return;
-        }
-
-        GameObject terrain = GameObject.Find("Terrain_Collision");
-        terrain ??= GameObject.Find("Ground_Main_Collider");
-        terrain ??= GameObject.Find("Ground_Collider");
-        if (terrain != null)
-        {
-            terrainBounds = terrain.GetComponent<Collider2D>();
-        }
     }
 }

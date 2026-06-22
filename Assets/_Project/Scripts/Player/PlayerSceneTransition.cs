@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using TinyDragon.Data;
 
@@ -6,8 +6,8 @@ using TinyDragon.Data;
 public class PlayerSceneTransition : MonoBehaviour
 {
     [SerializeField] private bool enableSceneTransitions = true;
-    [SerializeField] private string level01SceneName = "LangAru";
-    [SerializeField] private string level02SceneName = "Level_02";
+    
+    
     [SerializeField] private float transitionExitPadding = 0.35f;
     [SerializeField] private float transitionEntryPadding = 1f;
     [SerializeField] private float transitionCooldown = 0.75f;
@@ -71,14 +71,7 @@ public class PlayerSceneTransition : MonoBehaviour
         float rightExitX = levelRightEdgeX - transitionExitPadding;
         float leftExitX = levelLeftEdgeX + transitionExitPadding;
 
-        if (activeSceneName == level01SceneName && transform.position.x >= rightExitX)
-        {
-            LoadLinkedScene(level02SceneName, levelLeftEdgeX + transitionEntryPadding, 1f);
-        }
-        else if (activeSceneName == level02SceneName && transform.position.x <= leftExitX)
-        {
-            LoadLinkedScene(level01SceneName, levelRightEdgeX - transitionEntryPadding, -1f);
-        }
+        
     }
 
     private void LoadLinkedScene(string sceneName, float spawnX, float facingDirection)

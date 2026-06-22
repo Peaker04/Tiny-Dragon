@@ -1,4 +1,4 @@
-using TinyDragon.Data;
+﻿using TinyDragon.Data;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
@@ -265,7 +265,7 @@ public class PlayerAttack : MonoBehaviour
     {
         if (audioSource != null && clip != null)
         {
-            audioSource.PlayOneShot(clip);
+            audioSource.PlayOneShot(clip, TinyDragon.UI.SettingsManager.GlobalSFXVolume);
         }
     }
 }
