@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &7620781613243225900
 GameObject:
@@ -218,7 +218,6 @@ MonoBehaviour:
   rangeAttackRange: 4.5
   rangeAttackCooldown: 2
   rangeAttackDamage: 15
-  rangedAttackMode: 1
   projectileSpeed: 5
   projectileLifetime: 3
   projectileScale: 0.35
@@ -334,7 +333,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c37a7f9e2d3b4af7a8d1972f4d5e6c02, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level03BossShield
   phaseTwoMovementMultiplier: 1.15
   phaseTwoAttackIntervalMultiplier: 0.85
