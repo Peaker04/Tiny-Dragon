@@ -8,17 +8,20 @@ public class PlayerInputReader : MonoBehaviour
     [SerializeField] private bool jumpInputEnabled = true;
     [SerializeField] private bool attackInputEnabled = true;
     [SerializeField] private bool powerShotInputEnabled = true;
+    [SerializeField] public bool inventoryInputEnabled = true;
 
     public float Horizontal { get; private set; }
     public bool JumpPressed { get; private set; }
     public bool AttackPressed { get; private set; }
     public bool PowerShotPressed { get; private set; }
 
+    private System.Collections.Generic.HashSet<string> customEnabledFeatures = new System.Collections.Generic.HashSet<string>();
+
     private void Update()
     {
         Horizontal = movementInputEnabled ? ReadHorizontalInput() : 0f;
 
-        if (jumpInputEnabled && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space)))
+        if (jumpInputEnabled && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)))
         {
             JumpPressed = true;
         }
@@ -34,37 +37,44 @@ public class PlayerInputReader : MonoBehaviour
         }
     }
 
-    public void SetInputEnabled(bool movement, bool jump, bool attack, bool powerShot)
-    {
-        movementInputEnabled = movement;
-        jumpInputEnabled = jump;
-        attackInputEnabled = attack;
-        powerShotInputEnabled = powerShot;
-
-        if (!movementInputEnabled)
-        {
-            Horizontal = 0f;
-        }
-
-        if (!jumpInputEnabled)
-        {
-            JumpPressed = false;
-        }
-
-        if (!attackInputEnabled)
-        {
-            AttackPressed = false;
-        }
-
-        if (!powerShotInputEnabled)
-        {
-            PowerShotPressed = false;
-        }
-    }
-
     public void ResetInputRestrictions()
     {
-        SetInputEnabled(true, true, true, true);
+        EnableAll();
+    }
+
+    public void EnableMovement(bool enable) { movementInputEnabled = enable; if (!enable) Horizontal = 0f; }
+    public void EnableJump(bool enable) { jumpInputEnabled = enable; if (!enable) JumpPressed = false; }
+    public void EnableAttack(bool enable) { attackInputEnabled = enable; if (!enable) AttackPressed = false; }
+    public void EnablePowerShot(bool enable) { powerShotInputEnabled = enable; if (!enable) PowerShotPressed = false; }
+    public void EnableInventory(bool enable) { inventoryInputEnabled = enable; }
+    
+    public void EnableAll() 
+    { 
+        EnableMovement(true);
+        EnableJump(true);
+        EnableAttack(true);
+        EnablePowerShot(true);
+        EnableInventory(true);
+    }
+
+    public void EnableCustomFeature(string featureName)
+    {
+        customEnabledFeatures.Add(featureName);
+    }
+
+    public void DisableCustomFeature(string featureName)
+    {
+        customEnabledFeatures.Remove(featureName);
+    }
+
+    public bool IsFeatureEnabled(string featureName)
+    {
+        return customEnabledFeatures.Contains(featureName);
+    }
+
+    public void ClearCustomFeatures()
+    {
+        customEnabledFeatures.Clear();
     }
 
     public bool ConsumeJumpPressed()

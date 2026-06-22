@@ -52,7 +52,7 @@ public class PlayerDeathSceneHandler : MonoBehaviour
         health.Revive();
         if (showGameOverOutsideGuide)
         {
-            GameOver resolvedGameOver = gameOverUI != null ? gameOverUI : GameOver.Ensure();
+            GameOver resolvedGameOver = gameOverUI != null ? gameOverUI : FindAnyObjectByType<GameOver>(FindObjectsInactive.Include);
             if (resolvedGameOver != null)
             {
                 resolvedGameOver.GameOverActive();

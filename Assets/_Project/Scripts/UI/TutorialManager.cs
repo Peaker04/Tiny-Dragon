@@ -1,66 +1,72 @@
 using UnityEngine;
+using TMPro;
 
 namespace TinyDragon.UI
 {
+    [System.Serializable]
+    public struct TutorialStepData
+    {
+        [TextArea(3, 5)]
+        public string instructionText;
+        public KeyCode[] requiredKeys;
+        
+        [Header("Player Input Permissions")]
+        public bool enableAll;
+        public bool enableMovement;
+        public bool enableJump;
+        public bool enableAttack;
+        public bool enablePowerShot;
+        public bool enableInventory;
+
+        [Header("Custom Enables (Text)")]
+        public string[] customEnables;
+
+        [Header("Extra Actions")]
+        public UnityEngine.Events.UnityEvent onStepStart;
+
+        [HideInInspector] public bool _previousEnableAll;
+    }
+
     public class TutorialManager : MonoBehaviour
     {
-        [Header("UI References")]
-        [Tooltip("Hình nền đen mờ bao phủ toàn màn hình")]
-        public GameObject darkBackground; 
-        
-        [Tooltip("Danh sách các GameObject chứa nội dung từng bước hướng dẫn (bảng chữ)")]
-        public GameObject[] tutorialSteps; 
+        [Header("UI Components")]
+        public GameObject darkBackground;
+        public TextMeshProUGUI displayText;
 
-        [Header("Layout")]
-        [SerializeField] private bool applyRuntimeLayout = false;
-        [SerializeField] private Vector2 topRightPadding = new Vector2(24f, 14f);
-        [SerializeField] private Vector2 textPadding = new Vector2(10f, 0f);
-        [SerializeField] private Vector2 stepSize = new Vector2(500f, 34f);
-        [SerializeField] private float stepSpacing = 4f;
-        [SerializeField] private float fontSize = 22f;
-        [Header("Step Gating")]
-        [SerializeField] private bool advanceStepsWithInput = false;
-        [SerializeField] private bool gatePlayerActions = false;
-        [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
-        [SerializeField] private KeyCode moveRightKey = KeyCode.D;
-        [SerializeField] private KeyCode jumpKey = KeyCode.Space;
-        [SerializeField] private KeyCode attackKey = KeyCode.J;
+        [Header("Tutorial Data")]
+        public TutorialStepData[] tutorialSteps;
 
-        private int currentStepIndex;
+        [Header("Developer Options")]
+        [SerializeField] private bool forceShowTutorial = false;
+
+        private int currentStepIndex = 0;
         private PlayerInputReader playerInput;
-
-        void Awake()
-        {
-            ApplyLayoutIfEnabled();
-            if (!advanceStepsWithInput)
-            {
-                ShowAllSteps();
-            }
-        }
 
         void Start()
         {
-            if (advanceStepsWithInput)
+            if (darkBackground == null || displayText == null || tutorialSteps == null || tutorialSteps.Length == 0)
             {
-                BeginStepTutorial();
+                Debug.LogWarning("Chưa cấu hình Tutorial Manager!");
+                this.enabled = false;
                 return;
             }
 
-            if (darkBackground != null)
+            playerInput = FindFirstObjectByType<PlayerInputReader>();
+
+            if (!forceShowTutorial && PlayerPrefs.GetInt("HasSeenTutorial", 0) == 1)
             {
-                darkBackground.SetActive(false);
+                SkipTutorialLogic();
+                return;
             }
 
-            ApplyLayoutIfEnabled();
-            ShowAllSteps();
+            darkBackground.SetActive(true);
+            displayText.gameObject.SetActive(true);
+            ShowStep(0);
         }
 
         void Update()
         {
-            if (!advanceStepsWithInput || tutorialSteps == null || currentStepIndex >= tutorialSteps.Length)
-            {
-                return;
-            }
+            if (currentStepIndex >= tutorialSteps.Length) return;
 
             if (WasCurrentStepInputPressed())
             {
@@ -68,216 +74,99 @@ namespace TinyDragon.UI
             }
         }
 
-        void OnDisable()
-        {
-            if (gatePlayerActions && playerInput != null)
-            {
-                playerInput.ResetInputRestrictions();
-            }
-        }
-
-        void ApplyLayoutIfEnabled()
-        {
-            if (!applyRuntimeLayout)
-            {
-                return;
-            }
-
-            FixTutorialLayout();
-        }
-
-        void FixTutorialLayout()
-        {
-            Canvas canvas = GetComponentInParent<Canvas>();
-            if (canvas == null && tutorialSteps != null)
-            {
-                for (int i = 0; i < tutorialSteps.Length; i++)
-                {
-                    if (tutorialSteps[i] == null)
-                    {
-                        continue;
-                    }
-
-                    canvas = tutorialSteps[i].GetComponentInParent<Canvas>();
-                    if (canvas != null)
-                    {
-                        break;
-                    }
-                }
-            }
-
-            if (canvas != null)
-            {
-                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-                canvas.worldCamera = null;
-            }
-
-            if (tutorialSteps == null)
-            {
-                return;
-            }
-
-            float currentY = topRightPadding.y;
-            for (int i = 0; i < tutorialSteps.Length; i++)
-            {
-                if (tutorialSteps[i] == null)
-                {
-                    continue;
-                }
-
-                RectTransform rectTransform = tutorialSteps[i].GetComponent<RectTransform>();
-                if (rectTransform == null)
-                {
-                    continue;
-                }
-
-                rectTransform.anchorMin = new Vector2(1f, 1f);
-                rectTransform.anchorMax = new Vector2(1f, 1f);
-                rectTransform.pivot = new Vector2(1f, 1f);
-                rectTransform.anchoredPosition = new Vector2(-topRightPadding.x, -currentY);
-                rectTransform.sizeDelta = stepSize;
-                FixStepChildren(rectTransform);
-                currentY += rectTransform.sizeDelta.y + stepSpacing;
-            }
-        }
-
-        void FixStepChildren(RectTransform stepRoot)
-        {
-            for (int i = 0; i < stepRoot.childCount; i++)
-            {
-                RectTransform child = stepRoot.GetChild(i) as RectTransform;
-                if (child == null)
-                {
-                    continue;
-                }
-
-                child.anchorMin = new Vector2(0.5f, 0.5f);
-                child.anchorMax = new Vector2(0.5f, 0.5f);
-                child.pivot = new Vector2(0.5f, 0.5f);
-                child.anchoredPosition = textPadding.y * Vector2.up;
-                child.sizeDelta = new Vector2(
-                    Mathf.Max(0f, stepRoot.sizeDelta.x - textPadding.x * 2f),
-                    stepRoot.sizeDelta.y
-                );
-
-                TMPro.TMP_Text text = child.GetComponent<TMPro.TMP_Text>();
-                if (text != null)
-                {
-                    text.alignment = TMPro.TextAlignmentOptions.Center;
-                    text.fontSize = fontSize;
-                    text.enableAutoSizing = true;
-                    text.fontSizeMin = 18f;
-                    text.fontSizeMax = fontSize;
-                    text.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
-                }
-            }
-        }
-
-        void ShowAllSteps()
-        {
-            if (tutorialSteps == null)
-            {
-                return;
-            }
-
-            for (int i = 0; i < tutorialSteps.Length; i++)
-            {
-                if (tutorialSteps[i] == null)
-                {
-                    continue;
-                }
-
-                tutorialSteps[i].SetActive(true);
-            }
-        }
-
-        void BeginStepTutorial()
-        {
-            if (tutorialSteps == null || tutorialSteps.Length == 0)
-            {
-                Debug.LogWarning("TutorialManager is missing tutorial steps.", this);
-                enabled = false;
-                return;
-            }
-
-            playerInput = FindAnyObjectByType<PlayerInputReader>();
-            currentStepIndex = 0;
-
-            if (darkBackground != null)
-            {
-                darkBackground.SetActive(true);
-            }
-
-            ApplyLayoutIfEnabled();
-            ShowStep(currentStepIndex);
-        }
-
         bool WasCurrentStepInputPressed()
         {
-            if (currentStepIndex == 0)
+            var keys = tutorialSteps[currentStepIndex].requiredKeys;
+            if (keys == null || keys.Length == 0)
             {
-                return Input.GetKeyDown(moveLeftKey)
-                    || Input.GetKeyDown(moveRightKey)
-                    || Input.GetKeyDown(KeyCode.LeftArrow)
-                    || Input.GetKeyDown(KeyCode.RightArrow);
+                // Nếu bước này không yêu cầu phím đặc biệt, nhấn chuột trái hoặc phím Space để qua bước
+                return Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return);
             }
 
-            if (currentStepIndex == 1)
+            foreach (var key in keys)
             {
-                return Input.GetKeyDown(jumpKey) || Input.GetButtonDown("Jump");
+                if (Input.GetKeyDown(key))
+                {
+                    return true;
+                }
             }
+            return false;
+        }
 
-            if (currentStepIndex == 2)
+        void ShowStep(int index)
+        {
+            if (index < tutorialSteps.Length)
             {
-                return Input.GetKeyDown(attackKey);
-            }
+                displayText.text = tutorialSteps[index].instructionText;
 
-            return Input.anyKeyDown;
+                if (playerInput != null)
+                {
+                    var step = tutorialSteps[index];
+                    if (step.enableAll)
+                    {
+                        playerInput.EnableAll();
+                    }
+                    else
+                    {
+                        playerInput.EnableMovement(step.enableMovement);
+                        playerInput.EnableJump(step.enableJump);
+                        playerInput.EnableAttack(step.enableAttack);
+                        playerInput.EnablePowerShot(step.enablePowerShot);
+                        playerInput.EnableInventory(step.enableInventory);
+                    }
+
+                    // Only clear custom features at the very start of the tutorial (step 0).
+                    // This allows custom features from previous steps to carry over to subsequent steps.
+                    if (index == 0)
+                    {
+                        playerInput.ClearCustomFeatures();
+                    }
+
+                    if (step.customEnables != null)
+                    {
+                        foreach (string customFeature in step.customEnables)
+                        {
+                            if (!string.IsNullOrWhiteSpace(customFeature))
+                            {
+                                playerInput.EnableCustomFeature(customFeature);
+                            }
+                        }
+                    }
+                }
+
+                tutorialSteps[index].onStepStart?.Invoke();
+            }
         }
 
         void NextStep()
         {
             currentStepIndex++;
+
             if (currentStepIndex < tutorialSteps.Length)
             {
                 ShowStep(currentStepIndex);
-                return;
             }
-
-            CompleteTutorial();
-        }
-
-        void ShowStep(int index)
-        {
-            HideAllSteps();
-
-            if (index >= 0 && index < tutorialSteps.Length && tutorialSteps[index] != null)
+            else
             {
-                tutorialSteps[index].SetActive(true);
-            }
-
-            ApplyPlayerInputForStep(index);
-        }
-
-        void HideAllSteps()
-        {
-            if (tutorialSteps == null)
-            {
-                return;
-            }
-
-            for (int i = 0; i < tutorialSteps.Length; i++)
-            {
-                if (tutorialSteps[i] != null)
-                {
-                    tutorialSteps[i].SetActive(false);
-                }
+                CompleteTutorial();
             }
         }
 
         void CompleteTutorial()
         {
-            HideAllSteps();
+            PlayerPrefs.SetInt("HasSeenTutorial", 1);
+            PlayerPrefs.Save();
+
+            SkipTutorialLogic();
+            Debug.Log("Kết thúc hướng dẫn, vào game!");
+        }
+
+        void SkipTutorialLogic()
+        {
+            if (displayText != null)
+            {
+                displayText.gameObject.SetActive(false);
+            }
 
             if (darkBackground != null)
             {
@@ -286,33 +175,60 @@ namespace TinyDragon.UI
 
             if (playerInput != null)
             {
-                playerInput.ResetInputRestrictions();
+                playerInput.EnableAll();
             }
 
-            enabled = false;
-            Debug.Log("Tutorial completed.");
+            this.enabled = false;
         }
 
-        void ApplyPlayerInputForStep(int index)
+#if UNITY_EDITOR
+        private void OnValidate()
         {
-            if (!gatePlayerActions)
+            if (tutorialSteps != null)
             {
-                return;
+                for (int i = 0; i < tutorialSteps.Length; i++)
+                {
+                    // Nếu giá trị của ô enableAll vừa bị người dùng thay đổi
+                    if (tutorialSteps[i].enableAll != tutorialSteps[i]._previousEnableAll)
+                    {
+                        if (tutorialSteps[i].enableAll)
+                        {
+                            // Người dùng vừa tick vào Enable All -> Tự động tick tất cả ô con
+                            tutorialSteps[i].enableMovement = true;
+                            tutorialSteps[i].enableJump = true;
+                            tutorialSteps[i].enableAttack = true;
+                            tutorialSteps[i].enablePowerShot = true;
+                            tutorialSteps[i].enableInventory = true;
+                        }
+                        else
+                        {
+                            // Người dùng vừa bỏ tick Enable All -> Tự động bỏ tick tất cả ô con
+                            tutorialSteps[i].enableMovement = false;
+                            tutorialSteps[i].enableJump = false;
+                            tutorialSteps[i].enableAttack = false;
+                            tutorialSteps[i].enablePowerShot = false;
+                            tutorialSteps[i].enableInventory = false;
+                        }
+                        // Cập nhật lại trạng thái previous
+                        tutorialSteps[i]._previousEnableAll = tutorialSteps[i].enableAll;
+                    }
+                    else
+                    {
+                        // Nếu enableAll KHÔNG bị thay đổi, tức là người dùng vừa click vào một ô con bất kỳ.
+                        // Kiểm tra xem tất cả các ô con có đang được tick hay không
+                        bool allEnabled = tutorialSteps[i].enableMovement && 
+                                          tutorialSteps[i].enableJump && 
+                                          tutorialSteps[i].enableAttack && 
+                                          tutorialSteps[i].enablePowerShot && 
+                                          tutorialSteps[i].enableInventory;
+                        
+                        // Tự động điều chỉnh ô Enable All dựa theo các ô con
+                        tutorialSteps[i].enableAll = allEnabled;
+                        tutorialSteps[i]._previousEnableAll = allEnabled;
+                    }
+                }
             }
-
-            if (playerInput == null)
-            {
-                playerInput = FindAnyObjectByType<PlayerInputReader>();
-            }
-
-            if (playerInput == null)
-            {
-                return;
-            }
-
-            bool allowJump = index >= 1;
-            bool allowAttack = index >= 2;
-            playerInput.SetInputEnabled(true, allowJump, allowAttack, allowAttack);
         }
+#endif
     }
 }

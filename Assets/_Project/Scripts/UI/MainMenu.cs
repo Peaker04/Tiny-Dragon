@@ -15,7 +15,6 @@ namespace TinyDragon.UI
 
         public void QuitGame()
         {
-            // Thoát game (Chỉ hoạt động khi đã build ra game thật, trên editor sẽ in log)
             Debug.Log("Đã bấm Quit!");
             Application.Quit();
         }

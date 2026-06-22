@@ -31,6 +31,7 @@ namespace TinyDragon.UI
         private PlayerAttack playerAttack;
         private EnemyHealth selectedEnemy;
         private bool isVisibleInCurrentScene = true;
+        private bool isFirstScene = true;
         private Image frameImage;
         private Image healthBarImage;
         private Image kiBarImage;
@@ -100,6 +101,7 @@ namespace TinyDragon.UI
         {
             Bind(FindAnyObjectByType<PlayerHealth>());
             ApplySceneVisibility(SceneManager.GetActiveScene());
+            isFirstScene = false;
         }
 
         private void Update()
@@ -142,6 +144,17 @@ namespace TinyDragon.UI
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             ApplySceneVisibility(scene);
+
+            Canvas canvas = GetComponent<Canvas>();
+            if (canvas != null && (canvas.renderMode == RenderMode.ScreenSpaceCamera || canvas.renderMode == RenderMode.WorldSpace))
+            {
+                canvas.worldCamera = Camera.main;
+            }
+
+            if (!isFirstScene)
+            {
+                BindHudButtons();
+            }
         }
 
         private void UnbindHealth()
@@ -171,19 +184,18 @@ namespace TinyDragon.UI
             if (canvas == null)
             {
                 canvas = gameObject.AddComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             }
-
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            
             canvas.sortingOrder = 1000;
 
             CanvasScaler scaler = GetComponent<CanvasScaler>();
             if (scaler == null)
             {
                 scaler = gameObject.AddComponent<CanvasScaler>();
+                scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
+                scaler.scaleFactor = 1f;
             }
-
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
-            scaler.scaleFactor = 1f;
 
             if (GetComponent<GraphicRaycaster>() == null)
             {
@@ -251,24 +263,85 @@ namespace TinyDragon.UI
         private bool CacheExistingHud()
         {
             Transform panel = transform.Find("Panel");
-            Transform frame = panel != null ? panel.Find("Frame") : null;
+            RectTransform frame = panel != null ? panel.Find("Frame") as RectTransform : null;
             if (frame == null)
             {
                 return false;
             }
 
             frameImage = frame.GetComponent<Image>();
+            
+            // HP Bar
             Transform healthBar = frame.Find("HP Bar");
-            Transform kiBar = frame.Find("Ki Bar");
-            Transform targetHealthBar = frame.Find("Target HP Bar");
-            Transform targetInfo = frame.Find("Target Info");
-            healthBarImage = healthBar != null ? healthBar.GetComponent<Image>() : null;
-            kiBarImage = kiBar != null ? kiBar.GetComponent<Image>() : null;
-            targetHealthBarImage = targetHealthBar != null ? targetHealthBar.GetComponent<Image>() : null;
-            targetNameText = targetInfo != null && targetInfo.Find("Name") != null ? targetInfo.Find("Name").GetComponent<Text>() : null;
-            targetHpText = targetInfo != null && targetInfo.Find("HP") != null ? targetInfo.Find("HP").GetComponent<Text>() : null;
+            if (healthBar == null)
+            {
+                healthBarImage = CreateStatusBar("HP Bar", frame, HealthSpritePath, HealthSpriteName, healthBarPosition, healthBarSize);
+            }
+            else
+            {
+                healthBarImage = healthBar.GetComponent<Image>();
+            }
 
-            return frameImage != null && healthBarImage != null && kiBarImage != null && targetNameText != null && targetHpText != null;
+            // Ki Bar
+            Transform kiBar = frame.Find("Ki Bar");
+            if (kiBar == null)
+            {
+                kiBarImage = CreateStatusBar("Ki Bar", frame, KiSpritePath, KiSpriteName, kiBarPosition, kiBarSize);
+            }
+            else
+            {
+                kiBarImage = kiBar.GetComponent<Image>();
+            }
+
+            // Target HP Bar
+            Transform targetHealthBar = frame.Find("Target HP Bar");
+            if (targetHealthBar == null)
+            {
+                targetHealthBarImage = CreateStatusBar("Target HP Bar", frame, HealthSpritePath, HealthSpriteName, targetHealthBarPosition, targetHealthBarSize);
+                targetHealthBarImage.gameObject.SetActive(false);
+            }
+            else
+            {
+                targetHealthBarImage = targetHealthBar.GetComponent<Image>();
+            }
+
+            // Target Info
+            Transform targetInfo = frame.Find("Target Info");
+            if (targetInfo == null)
+            {
+                BuildTargetInfo(frame);
+            }
+            else
+            {
+                Transform nameTrans = targetInfo.Find("Name");
+                targetNameText = nameTrans != null ? nameTrans.GetComponent<Text>() : null;
+                
+                Transform hpTrans = targetInfo.Find("HP");
+                targetHpText = hpTrans != null ? hpTrans.GetComponent<Text>() : null;
+
+                if (targetNameText == null || targetHpText == null)
+                {
+                    // Rebuild target info if it was somehow incomplete
+                    for (int i = targetInfo.childCount - 1; i >= 0; i--)
+                    {
+                        Destroy(targetInfo.GetChild(i).gameObject);
+                    }
+                    targetNameText = CreateText("Name", targetInfo, 17, FontStyle.Bold, new Color32(22, 87, 33, 255));
+                    targetNameText.alignment = TextAnchor.MiddleCenter;
+                    targetNameText.resizeTextForBestFit = true;
+                    targetNameText.resizeTextMinSize = 10;
+                    targetNameText.resizeTextMaxSize = 17;
+                    AddTextShadow(targetNameText.gameObject);
+                    SetTextRect(targetNameText.rectTransform, new Vector2(2f, -2f), new Vector2(targetInfoSize.x - 4f, 22f));
+
+                    targetHpText = CreateText("HP", targetInfo, 17, FontStyle.Bold, new Color32(24, 81, 32, 255));
+                    targetHpText.alignment = TextAnchor.MiddleCenter;
+                    AddTextShadow(targetHpText.gameObject);
+                    SetTextRect(targetHpText.rectTransform, new Vector2(2f, -22f), new Vector2(targetInfoSize.x - 4f, 20f));
+                }
+            }
+
+            return true;
         }
 
         private void BuildTargetInfo(RectTransform frame)
@@ -514,6 +587,42 @@ namespace TinyDragon.UI
             }
 
             image.fillAmount = Mathf.Clamp01(percent);
+        }
+
+        private void BindHudButtons()
+        {
+            PauseManager pauseManager = FindFirstObjectByType<PauseManager>();
+            SettingsManager settingsManager = FindFirstObjectByType<SettingsManager>();
+
+            Button pauseBtn = FindButtonByName(transform, "EnablePause");
+            if (pauseBtn != null && pauseManager != null)
+            {
+                pauseBtn.onClick.RemoveAllListeners();
+                pauseBtn.onClick.AddListener(() => pauseManager.TogglePause());
+            }
+
+            Button settingBtn = FindButtonByName(transform, "EnableSetting");
+            if (settingBtn != null && settingsManager != null)
+            {
+                settingBtn.onClick.RemoveAllListeners();
+                settingBtn.onClick.AddListener(() => settingsManager.ToggleSettings());
+            }
+        }
+
+        private Button FindButtonByName(Transform parent, string name)
+        {
+            if (parent.name == name)
+            {
+                return parent.GetComponent<Button>();
+            }
+
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                Button btn = FindButtonByName(parent.GetChild(i), name);
+                if (btn != null) return btn;
+            }
+
+            return null;
         }
     }
 }

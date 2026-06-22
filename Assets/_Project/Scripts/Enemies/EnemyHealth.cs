@@ -21,7 +21,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private float healthBarHeight = 0.08f;
     [SerializeField] private Color healthBarBackColor = new Color(0.12f, 0.02f, 0.02f, 0.9f);
     [SerializeField] private Color healthBarFillColor = new Color(1f, 0.05f, 0.02f, 1f);
-    [SerializeField] private int healthBarSortingOrder = 999;
+    [SerializeField] private int healthBarSortingOrder = 10;
 
     private int currentHealth;
     private Transform healthBarRoot;

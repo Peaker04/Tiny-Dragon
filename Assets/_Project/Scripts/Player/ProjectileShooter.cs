@@ -43,7 +43,7 @@ public class ProjectileShooter : MonoBehaviour
             return;
         }
 
-        ShootProjectile(
+        SpawnProjectile(
             projectileDamage,
             projectileSpeed,
             projectileLifetime,
@@ -59,7 +59,7 @@ public class ProjectileShooter : MonoBehaviour
 
     public void ShootPower()
     {
-        ShootProjectile(
+        SpawnProjectile(
             powerShotDamage,
             powerShotSpeed,
             powerShotLifetime,
@@ -89,7 +89,7 @@ public class ProjectileShooter : MonoBehaviour
         powerShotDamage = Mathf.Max(damage, 1);
     }
 
-    private void ShootProjectile(
+    private void SpawnProjectile(
         int damage,
         float speed,
         float lifetime,
