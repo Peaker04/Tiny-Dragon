@@ -186,22 +186,11 @@ namespace TinyDragon.UI
             {
                 SetVisible(false);
             }
-
-            if (canvas != null && (canvas.renderMode == RenderMode.ScreenSpaceCamera || canvas.renderMode == RenderMode.WorldSpace))
-            {
-                canvas.worldCamera = Camera.main;
-            }
         }
 
         private bool CanOpenInventory()
         {
-            var playerInput = FindAnyObjectByType<PlayerInputReader>();
-            if (playerInput != null && !playerInput.inventoryInputEnabled)
-            {
-                return false;
-            }
-
-            if (SceneManager.GetActiveScene().name == "Level_01_Origin")
+            if (SceneManager.GetActiveScene().name == "Level_01_Original")
             {
                 return false;
             }
@@ -281,50 +270,44 @@ namespace TinyDragon.UI
 
         private void EnsureCanvasComponents()
         {
-            if (GetComponent<Canvas>() != null || gameObject.name == "InventoryCanvas")
+            Transform canvasTransform = transform.Find("InventoryCanvas");
+            if (canvasTransform == null)
             {
-                canvasRoot = transform as RectTransform;
+                canvasRoot = CreateRect("InventoryCanvas", transform, Vector2.zero);
             }
             else
             {
-                Transform canvasTransform = transform.Find("InventoryCanvas");
-                if (canvasTransform == null)
+                canvasRoot = canvasTransform as RectTransform;
+                if (canvasRoot == null)
                 {
+                    DestroyImmediate(canvasTransform.gameObject);
                     canvasRoot = CreateRect("InventoryCanvas", transform, Vector2.zero);
                 }
-                else
-                {
-                    canvasRoot = canvasTransform as RectTransform;
-                    if (canvasRoot == null)
-                    {
-                        DestroyImmediate(canvasTransform.gameObject);
-                        canvasRoot = CreateRect("InventoryCanvas", transform, Vector2.zero);
-                    }
-                }
-
-                canvasRoot.anchorMin = Vector2.zero;
-                canvasRoot.anchorMax = Vector2.one;
-                canvasRoot.pivot = new Vector2(0.5f, 0.5f);
-                canvasRoot.anchoredPosition = Vector2.zero;
-                canvasRoot.sizeDelta = Vector2.zero;
             }
+
+            canvasRoot.anchorMin = Vector2.zero;
+            canvasRoot.anchorMax = Vector2.one;
+            canvasRoot.pivot = new Vector2(0.5f, 0.5f);
+            canvasRoot.anchoredPosition = Vector2.zero;
+            canvasRoot.sizeDelta = Vector2.zero;
 
             canvas = canvasRoot.GetComponent<Canvas>();
             if (canvas == null)
             {
                 canvas = canvasRoot.gameObject.AddComponent<Canvas>();
-                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             }
 
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = 1600;
 
             CanvasScaler scaler = canvasRoot.GetComponent<CanvasScaler>();
             if (scaler == null)
             {
                 scaler = canvasRoot.gameObject.AddComponent<CanvasScaler>();
-                scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
-                scaler.scaleFactor = 1f;
             }
+
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
+            scaler.scaleFactor = 1f;
 
             if (canvasRoot.GetComponent<GraphicRaycaster>() == null)
             {

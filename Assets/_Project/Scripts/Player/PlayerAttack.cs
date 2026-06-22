@@ -6,7 +6,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private PlayerInputReader inputReader;
     [SerializeField] private PlayerAnimatorDriver animatorDriver;
     [SerializeField] private ProjectileShooter projectileShooter;
-    [SerializeField] private float attackCooldown = 0.35f;
+    [SerializeField] private float attackCooldown = 0.2f;
     [Header("Power Shot")]
     [SerializeField] private float powerShotCooldown = GameplayBalanceDefaults.PowerShotCooldown;
     [SerializeField] private float powerShotManaCostRatio = GameplayBalanceDefaults.PowerShotManaCostRatio;
@@ -21,6 +21,12 @@ public class PlayerAttack : MonoBehaviour
     private float nextAttackTime;
     private float nextPowerShotTime;
     private float currentMana;
+    
+    private int punchComboStep = 0;
+    private float lastPunchTime = 0f;
+    private int kickComboStep = 0;
+    private float lastKickTime = 0f;
+    [SerializeField] private float comboWindow = 0.5f;
 
     private static bool hasSyncedMana;
     private static float syncedMana;
@@ -78,8 +84,53 @@ public class PlayerAttack : MonoBehaviour
 
         if (!TryHandlePowerShot())
         {
-            HandleNormalAttack();
+            if (!TryHandlePunch() && !TryHandleKick())
+            {
+                HandleNormalAttack();
+            }
         }
+    }
+
+    private bool TryHandlePunch()
+    {
+        if (!inputReader.ConsumePunchPressed()) return false;
+        if (Time.time < nextAttackTime) return false;
+
+        if (Time.time - lastPunchTime > comboWindow)
+        {
+            punchComboStep = 1;
+        }
+        else
+        {
+            punchComboStep = punchComboStep == 1 ? 2 : 1;
+        }
+
+        animatorDriver?.TriggerPunch(punchComboStep);
+        PlaySound(attackSound);
+        nextAttackTime = Time.time + attackCooldown;
+        lastPunchTime = Time.time;
+        return true;
+    }
+
+    private bool TryHandleKick()
+    {
+        if (!inputReader.ConsumeKickPressed()) return false;
+        if (Time.time < nextAttackTime) return false;
+
+        if (Time.time - lastKickTime > comboWindow)
+        {
+            kickComboStep = 1;
+        }
+        else
+        {
+            kickComboStep = kickComboStep == 1 ? 2 : 1;
+        }
+
+        animatorDriver?.TriggerKick(kickComboStep);
+        PlaySound(attackSound);
+        nextAttackTime = Time.time + attackCooldown;
+        lastKickTime = Time.time;
+        return true;
     }
 
     private void HandleNormalAttack()

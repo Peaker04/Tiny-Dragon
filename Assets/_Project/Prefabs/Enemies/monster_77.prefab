@@ -1,0 +1,343 @@
+﻿%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7620781613243225900
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 214149976032124535}
+  - component: {fileID: 4040173902045298011}
+  - component: {fileID: 5911032965367392057}
+  - component: {fileID: 5250014041268841425}
+  - component: {fileID: 8653309279417990117}
+  - component: {fileID: 6187413806477217690}
+  - component: {fileID: 5791910548343334350}
+  - component: {fileID: 5858059153072833711}
+  - component: {fileID: 7000000000000000001}
+  m_Layer: 0
+  m_Name: monster_77
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &214149976032124535
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7620781613243225900}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &4040173902045298011
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7620781613243225900}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 0
+  m_SpriteSortPoint: 0
+--- !u!50 &5911032965367392057
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7620781613243225900}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 3
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 4
+--- !u!61 &5250014041268841425
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7620781613243225900}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 1.45}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 2.1, y: 2.9}
+  m_EdgeRadius: 0
+--- !u!95 &8653309279417990117
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7620781613243225900}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a90cf65be29afdc46890e60f0112438b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6187413806477217690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7620781613243225900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1de2930e846a94384adec8bdf19121, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyPatrol
+  moveSpeed: 1.2
+  leftDistance: 1.5
+  rightDistance: 1.5
+  pointReachDistance: 0.05
+  attackRange: 2.5
+  verticalAttackTolerance: 1
+  attackCooldown: 1.5
+  attackDamage: 15
+  attackTriggerName: attack
+  attackStateName: Attack
+  rangeAttackRange: 4.5
+  rangeAttackCooldown: 2
+  rangeAttackDamage: 15
+  rangedAttackMode: 1
+  projectileSpeed: 5
+  projectileLifetime: 3
+  projectileScale: 0.35
+  projectileSpawnOffset: {x: 1.5, y: 1.8}
+  projectilePrefab: {fileID: 0}
+  projectilePoolPrewarmCount: 2
+  projectileSprite: {fileID: 0}
+  projectileFacesRightByDefault: 1
+  rangeAttackTriggerName: rangeAttack
+  rangeAttackStateName: rangeAttack
+  startMovingRight: 1
+  flipWithDirection: 1
+  facesRightByDefault: 1
+--- !u!114 &5791910548343334350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7620781613243225900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd29a62ea73a4b7a8fd929ce427fc234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  displayName: Mob 77
+  balanceEnemyId: enemy_boss_act_1
+  maxHealth: 120
+  damagePopupPrefab: {fileID: 0}
+  damagePopupPoolPrewarmCount: 4
+  damagePopupOffset: {x: 0, y: 1, z: 0}
+  damagePopupColor: {r: 1, g: 0.85, b: 0.05, a: 1}
+  showHealthBar: 1
+  healthBarOffset: {x: 0, y: 3.4, z: 0}
+  healthBarWidth: 0.8
+  healthBarHeight: 0.08
+  healthBarBackColor: {r: 0.12, g: 0.02, b: 0.02, a: 0.9}
+  healthBarFillColor: {r: 1, g: 0.05, b: 0.02, a: 1}
+  healthBarSortingOrder: 10
+--- !u!114 &5858059153072833711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7620781613243225900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8c918f4aebfeea42957ef91e98e8c7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Mob77JsonAnimationBridge
+  texture: {fileID: 2800000, guid: 1319ac1dc394da5468ed45cae97a5199, type: 3}
+  jsonFile: {fileID: 4900000, guid: 848672f6866b79c4cb3b7dd89f6be3d8, type: 3}
+  frameRate: 12
+  pixelsPerUnit: 100
+  scale: 3.5
+  parentSR: {fileID: 4040173902045298011}
+  useUnlitMaterial: 1
+  suppressParentSpriteRenderer: 1
+  ignoreTinyPlaceholderParts: 1
+  customMappings:
+  - animatorStateName: Idle
+    jsonActionName: Stand
+  - animatorStateName: Stand
+    jsonActionName: Stand
+  - animatorStateName: Boss_idle
+    jsonActionName: Stand
+  - animatorStateName: mob_idle
+    jsonActionName: Stand
+  - animatorStateName: Walk
+    jsonActionName: Move
+  - animatorStateName: Move
+    jsonActionName: Move
+  - animatorStateName: Run
+    jsonActionName: Move
+  - animatorStateName: Boss_move_dash
+    jsonActionName: Move
+  - animatorStateName: MoveDash
+    jsonActionName: Move
+  - animatorStateName: Attack
+    jsonActionName: Attack1
+  - animatorStateName: Attack1
+    jsonActionName: Attack1
+  - animatorStateName: SlashAttack
+    jsonActionName: Attack1
+  - animatorStateName: Boss_slash_attack
+    jsonActionName: Attack1
+  - animatorStateName: rangeAttack
+    jsonActionName: Attack2
+  - animatorStateName: EnergyBlast
+    jsonActionName: Attack2
+  - animatorStateName: Boss_energy_blast
+    jsonActionName: Attack2
+  - animatorStateName: ComboSlashBlast
+    jsonActionName: Attack3
+  - animatorStateName: Boss_combo_slash_blast
+    jsonActionName: Attack3
+  - animatorStateName: Hurt
+    jsonActionName: Hurt
+  - animatorStateName: Hit
+    jsonActionName: Hurt
+  - animatorStateName: Boss_hit_or_special
+    jsonActionName: Hurt
+  - animatorStateName: Die
+    jsonActionName: Die
+--- !u!114 &7000000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7620781613243225900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c37a7f9e2d3b4af7a8d1972f4d5e6c02, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Level03BossShield
+  phaseTwoMovementMultiplier: 1.15
+  phaseTwoAttackIntervalMultiplier: 0.85
+  shieldFlashColor: {r: 0.35, g: 0.9, b: 1, a: 1}
+  phaseTwoTint: {r: 1, g: 0.72, b: 0.72, a: 1}
+  shieldPopupCooldown: 0.2

@@ -193,6 +193,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 512fd064676f40e0a7ecc16d3c8f5071, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileShooter
+  projectilePrefab: {fileID: 0}
+  projectilePoolPrewarmCount: 4
   projectileDamage: 12
   projectileSpeed: 8
   projectileLifetime: 2
@@ -202,6 +204,15 @@ MonoBehaviour:
   projectileFacesRightByDefault: 1
   projectileSortingLayerName: Default
   projectileSortingOrder: 100
+  powerShotDamage: 36
+  powerShotSpeed: 6
+  powerShotLifetime: 3
+  powerShotScale: 1
+  powerShotSpawnOffset: {x: 0.8, y: 0.2}
+  powerShotSprite: {fileID: 21300000, guid: 0b11dc408440d4440a3c4cfc6566c580, type: 3}
+  powerShotFacesRightByDefault: 1
+  powerShotSortingLayerName: Default
+  powerShotSortingOrder: 100
 --- !u!114 &956085414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,7 +227,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   inputReader: {fileID: 956085410}
   animatorDriver: {fileID: 956085412}
+  projectileShooter: {fileID: 956085413}
   attackCooldown: 0.35
+  powerShotCooldown: 1.2
+  powerShotManaCostRatio: 0.5
+  maxMana: 100
+  manaRegenRate: 10
+  auraEffect: {fileID: 1676606902}
+  audioSource: {fileID: 0}
+  attackSound: {fileID: 0}
+  powerShotSound: {fileID: 0}
 --- !u!114 &956085415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,7 +250,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSceneTransition
   enableSceneTransitions: 1
-  level01SceneName: LangAru
+  level01SceneName: Level_01_guide
   level02SceneName: Level_02
   transitionExitPadding: 0.35
   transitionEntryPadding: 1
@@ -268,7 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd33263cd244f06a9f91642a6dda7a7, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDeathSceneHandler
-  guideSceneName: LangAru
+  guideSceneName: Level_01_guide
   immortalInGuideScene: 1
 --- !u!95 &956085406
 Animator:
@@ -308,7 +328,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1676606903
 Transform:
   m_ObjectHideFlags: 0
@@ -399,7 +419,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &421456022
 Transform:
   m_ObjectHideFlags: 0
@@ -500,7 +520,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0952, y: -0.109, z: -0.4399974}
-  m_LocalScale: {x: 0.9416, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2147400101}
@@ -524,7 +544,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2147400101
 Transform:
   m_ObjectHideFlags: 0
@@ -625,8 +645,8 @@ Transform:
   m_GameObject: {fileID: 1889000014}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.18, z: 0}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1481163815}
@@ -680,12 +700,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 11
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: a6edada68f92b4d9f71484122fdf3ad5, type: 3}
+  m_Sprite: {fileID: 1398893948369281781, guid: 4da1837848eb47f42b69ef04d93b9318, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.72, y: 0.48}
+  m_Size: {x: 0.96, y: 1.92}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -706,7 +726,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1432590105
 Transform:
   m_ObjectHideFlags: 0

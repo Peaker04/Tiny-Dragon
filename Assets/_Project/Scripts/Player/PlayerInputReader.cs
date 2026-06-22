@@ -4,18 +4,21 @@ public class PlayerInputReader : MonoBehaviour
 {
     [SerializeField] private KeyCode attackKey = KeyCode.J;
     [SerializeField] private KeyCode powerShotKey = KeyCode.K;
+    [SerializeField] private KeyCode punchKey = KeyCode.L;
+    [SerializeField] private KeyCode kickKey = KeyCode.I;
     [SerializeField] private bool movementInputEnabled = true;
     [SerializeField] private bool jumpInputEnabled = true;
     [SerializeField] private bool attackInputEnabled = true;
     [SerializeField] private bool powerShotInputEnabled = true;
-    [SerializeField] public bool inventoryInputEnabled = true;
+    [SerializeField] private bool punchInputEnabled = true;
+    [SerializeField] private bool kickInputEnabled = true;
 
     public float Horizontal { get; private set; }
     public bool JumpPressed { get; private set; }
     public bool AttackPressed { get; private set; }
     public bool PowerShotPressed { get; private set; }
-
-    private System.Collections.Generic.HashSet<string> customEnabledFeatures = new System.Collections.Generic.HashSet<string>();
+    public bool PunchPressed { get; private set; }
+    public bool KickPressed { get; private set; }
 
     private void Update()
     {
@@ -35,46 +38,38 @@ public class PlayerInputReader : MonoBehaviour
         {
             PowerShotPressed = true;
         }
+
+        if (punchInputEnabled && Input.GetKeyDown(punchKey))
+        {
+            PunchPressed = true;
+        }
+
+        if (kickInputEnabled && Input.GetKeyDown(kickKey))
+        {
+            KickPressed = true;
+        }
+    }
+
+    public void SetInputEnabled(bool movement, bool jump, bool attack, bool powerShot, bool punch, bool kick)
+    {
+        movementInputEnabled = movement;
+        jumpInputEnabled = jump;
+        attackInputEnabled = attack;
+        powerShotInputEnabled = powerShot;
+        punchInputEnabled = punch;
+        kickInputEnabled = kick;
+
+        if (!movementInputEnabled) Horizontal = 0f;
+        if (!jumpInputEnabled) JumpPressed = false;
+        if (!attackInputEnabled) AttackPressed = false;
+        if (!powerShotInputEnabled) PowerShotPressed = false;
+        if (!punchInputEnabled) PunchPressed = false;
+        if (!kickInputEnabled) KickPressed = false;
     }
 
     public void ResetInputRestrictions()
     {
-        EnableAll();
-    }
-
-    public void EnableMovement(bool enable) { movementInputEnabled = enable; if (!enable) Horizontal = 0f; }
-    public void EnableJump(bool enable) { jumpInputEnabled = enable; if (!enable) JumpPressed = false; }
-    public void EnableAttack(bool enable) { attackInputEnabled = enable; if (!enable) AttackPressed = false; }
-    public void EnablePowerShot(bool enable) { powerShotInputEnabled = enable; if (!enable) PowerShotPressed = false; }
-    public void EnableInventory(bool enable) { inventoryInputEnabled = enable; }
-    
-    public void EnableAll() 
-    { 
-        EnableMovement(true);
-        EnableJump(true);
-        EnableAttack(true);
-        EnablePowerShot(true);
-        EnableInventory(true);
-    }
-
-    public void EnableCustomFeature(string featureName)
-    {
-        customEnabledFeatures.Add(featureName);
-    }
-
-    public void DisableCustomFeature(string featureName)
-    {
-        customEnabledFeatures.Remove(featureName);
-    }
-
-    public bool IsFeatureEnabled(string featureName)
-    {
-        return customEnabledFeatures.Contains(featureName);
-    }
-
-    public void ClearCustomFeatures()
-    {
-        customEnabledFeatures.Clear();
+        SetInputEnabled(true, true, true, true, true, true);
     }
 
     public bool ConsumeJumpPressed()
@@ -95,6 +90,20 @@ public class PlayerInputReader : MonoBehaviour
     {
         bool wasPressed = PowerShotPressed;
         PowerShotPressed = false;
+        return wasPressed;
+    }
+
+    public bool ConsumePunchPressed()
+    {
+        bool wasPressed = PunchPressed;
+        PunchPressed = false;
+        return wasPressed;
+    }
+
+    public bool ConsumeKickPressed()
+    {
+        bool wasPressed = KickPressed;
+        KickPressed = false;
         return wasPressed;
     }
 

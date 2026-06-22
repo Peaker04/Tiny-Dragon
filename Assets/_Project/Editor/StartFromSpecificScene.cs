@@ -8,7 +8,7 @@ public class StartFromSpecificScene
     static StartFromSpecificScene()
     {
         // Tên scene bạn muốn luôn bắt đầu
-        string sceneName = "Intro";
+        string sceneName = "Level_01_Original";
 
         // Tìm scene trong project
         string[] guids = AssetDatabase.FindAssets("t:Scene " + sceneName);

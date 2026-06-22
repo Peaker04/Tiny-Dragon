@@ -10,11 +10,12 @@ namespace TinyDragon.UI
         {
             PlayerAttack.ResetManaForNewRun();
             TinyDragonSaveManager.Instance.ResetCurrentKiToMax();
-            SceneManager.LoadScene("LangAru");
+            SceneManager.LoadScene("Level_01_guide");
         }
 
         public void QuitGame()
         {
+            // Thoát game (Chỉ hoạt động khi đã build ra game thật, trên editor sẽ in log)
             Debug.Log("Đã bấm Quit!");
             Application.Quit();
         }

@@ -10,8 +10,6 @@ namespace TinyDragon.Data
     {
         private const string DefaultPlayerId = "player_default";
         private const string DefaultSaveSlotId = "save_slot_1";
-        private const float MaximumRestorablePlayerFallDistance = 10f;
-        private const float MaximumRestorablePlayerHorizontalDistance = 100f;
 
         private static TinyDragonSaveManager instance;
 
@@ -301,12 +299,11 @@ namespace TinyDragon.Data
                 return;
             }
 
-            Vector3 sceneSpawnPosition = playerHealth.transform.position;
             InventoryViewData inventory = LoadInventory();
             playerHealth.RestoreHealth(snapshot.CurrentHealth, Mathf.Max(snapshot.MaxHealth, GetTotalMaxHealth(inventory)));
             ApplyRuntimeStats(playerHealth.gameObject, inventory);
 
-            if (snapshot.SceneName != SceneManager.GetActiveScene().name || !IsRestorablePlayerPosition(snapshot.Position, sceneSpawnPosition))
+            if (snapshot.SceneName != SceneManager.GetActiveScene().name)
             {
                 SaveCurrentPlayer();
                 return;
@@ -323,18 +320,6 @@ namespace TinyDragon.Data
                 playerHealth.transform.localScale.y,
                 playerHealth.transform.localScale.z
             );
-        }
-
-        private static bool IsRestorablePlayerPosition(Vector3 savedPosition, Vector3 sceneSpawnPosition)
-        {
-            if (float.IsNaN(savedPosition.x) || float.IsNaN(savedPosition.y) ||
-                float.IsInfinity(savedPosition.x) || float.IsInfinity(savedPosition.y))
-            {
-                return false;
-            }
-
-            return Mathf.Abs(savedPosition.x - sceneSpawnPosition.x) <= MaximumRestorablePlayerHorizontalDistance &&
-                   savedPosition.y >= sceneSpawnPosition.y - MaximumRestorablePlayerFallDistance;
         }
 
         private void ApplyRuntimeStats(GameObject playerObject, InventoryViewData inventory)
@@ -464,7 +449,7 @@ namespace TinyDragon.Data
             string sceneName = SceneManager.GetActiveScene().name;
             if (string.IsNullOrWhiteSpace(sceneName))
             {
-                sceneName = "LangAru";
+                sceneName = "Level_01_guide";
             }
 
             string stageId = GetStageIdForScene(sceneName) ?? "stage_guide";
