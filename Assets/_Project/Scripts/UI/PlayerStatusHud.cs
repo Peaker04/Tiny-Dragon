@@ -25,7 +25,7 @@ namespace TinyDragon.UI
         [SerializeField] private Vector2 targetInfoSize = new Vector2(90f, 43f);
         [SerializeField] private Vector2 targetHealthBarPosition = new Vector2(121f, -8f);
         [SerializeField] private Vector2 targetHealthBarSize = new Vector2(98f, 15f);
-        [SerializeField] private string[] hiddenScenes = { "Level_01_Original" };
+        [SerializeField] private string[] hiddenScenes = { "Level_01_Origin" };
 
         private PlayerHealth playerHealth;
         private PlayerAttack playerAttack;

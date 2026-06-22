@@ -60061,7 +60061,7 @@ MonoBehaviour:
   targetHealthBarPosition: {x: 121, y: -8}
   targetHealthBarSize: {x: 98, y: 15}
   hiddenScenes:
-  - Level_01_Original
+  - Level_01_Origin
 --- !u!1 &2120000010
 GameObject:
   m_ObjectHideFlags: 0

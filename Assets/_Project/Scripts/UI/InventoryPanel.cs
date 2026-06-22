@@ -201,7 +201,7 @@ namespace TinyDragon.UI
                 return false;
             }
 
-            if (SceneManager.GetActiveScene().name == "Level_01_Original")
+            if (SceneManager.GetActiveScene().name == "Level_01_Origin")
             {
                 return false;
             }

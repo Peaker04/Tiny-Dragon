@@ -737,7 +737,7 @@ MonoBehaviour:
   pauseCanvas: {fileID: 8411772824523936434}
   settingsCanvas: {fileID: 0}
   pauseKey: 112
-  mainMenuSceneName: Level_01_Original
+  mainMenuSceneName: Level_01_Origin
 --- !u!1 &7767274927932567839
 GameObject:
   m_ObjectHideFlags: 0
