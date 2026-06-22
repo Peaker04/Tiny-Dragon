@@ -33,6 +33,9 @@ public class EnemyHealth : MonoBehaviour
     public int MaxHealth => maxHealth;
     public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
 
+    /// <summary>Fired when this enemy's HP reaches zero, just before the GameObject is destroyed.</summary>
+    public event System.Action<EnemyHealth> Died;
+
     private void Awake()
     {
         ApplyDatabaseBalanceIfAvailable();
@@ -111,7 +114,21 @@ public class EnemyHealth : MonoBehaviour
     private void Die()
     {
         Debug.Log("Enemy died.", this);
+        Died?.Invoke(this);
         Destroy(gameObject);
+    }
+
+    /// <summary>Shows a short text popup over this enemy (e.g. "Shielded!") using the damage popup pool.</summary>
+    public void ShowStatusPopup(string message, Color color)
+    {
+        EnsureDamagePopupPool();
+        if (damagePopupPool == null)
+        {
+            return;
+        }
+
+        FloatingDamageText floatingText = damagePopupPool.Get(transform.position + damagePopupOffset, Quaternion.identity);
+        floatingText.Initialize(message, color, damagePopupPool.Release);
     }
 
     private void ApplyDatabaseBalanceIfAvailable()

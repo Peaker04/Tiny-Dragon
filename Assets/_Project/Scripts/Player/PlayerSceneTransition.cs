@@ -98,6 +98,24 @@ public class PlayerSceneTransition : MonoBehaviour
         SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
 
+    /// <summary>
+    /// Static helper used by SceneExitOnPlayerContact to load a scene and
+    /// set a specific world-space spawn position for the player on arrival.
+    /// </summary>
+    public static void LoadSceneWithPlayerSpawn(string sceneName, Vector3 spawnPosition, float facingDirection = 1f)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            return;
+        }
+
+        globalTransitionInProgress = true;
+        hasPendingSpawn = true;
+        pendingSpawnPosition = spawnPosition;
+        pendingFacingDirection = facingDirection;
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+    }
+
     private void ApplyPendingSpawn()
     {
         if (!hasPendingSpawn)

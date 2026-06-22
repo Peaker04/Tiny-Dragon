@@ -220,6 +220,14 @@ public class EnemyPatrol : MonoBehaviour
         rangeAttackCooldown = Mathf.Max(rangedCooldown, 0.01f);
     }
 
+    /// <summary>Scale movement speed and attack intervals by the given multipliers (Phase 2 transition).</summary>
+    public void ApplyPhaseMultipliers(float movementMultiplier, float attackIntervalMultiplier)
+    {
+        moveSpeed = Mathf.Max(moveSpeed * movementMultiplier, 0.1f);
+        attackCooldown = Mathf.Max(attackCooldown * attackIntervalMultiplier, 0.01f);
+        rangeAttackCooldown = Mathf.Max(rangeAttackCooldown * attackIntervalMultiplier, 0.01f);
+    }
+
     public void SetPatrolBounds(float minimumX, float maximumX)
     {
         patrolMinX = Mathf.Min(minimumX, maximumX);

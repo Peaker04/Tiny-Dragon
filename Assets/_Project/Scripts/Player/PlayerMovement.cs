@@ -16,6 +16,9 @@ public class PlayerMovement : MonoBehaviour
     public float HorizontalInput => inputReader != null ? inputReader.Horizontal : 0f;
     public float FacingDirection => transform.localScale.x >= 0f ? 1f : -1f;
 
+    /// <summary>Fired the moment the player leaves the ground via a jump.</summary>
+    public event System.Action JumpPerformed;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -36,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
         if (inputReader != null && inputReader.ConsumeJumpPressed() && IsGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            JumpPerformed?.Invoke();
         }
 
         Flip(horizontalInput);

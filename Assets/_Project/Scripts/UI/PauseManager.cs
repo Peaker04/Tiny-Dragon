@@ -31,10 +31,10 @@ namespace TinyDragon.UI
         private void Update()
         {
             // Restrict pause input during tutorial steps
-            TutorialManager tutorial = FindFirstObjectByType<TutorialManager>();
+            TutorialManager tutorial = FindAnyObjectByType<TutorialManager>();
             if (tutorial != null && tutorial.enabled)
             {
-                var inputReader = FindFirstObjectByType<PlayerInputReader>();
+                var inputReader = FindAnyObjectByType<PlayerInputReader>();
                 if (inputReader != null && !inputReader.IsFeatureEnabled("Pause"))
                 {
                     return; // Ignore pause input during this tutorial step

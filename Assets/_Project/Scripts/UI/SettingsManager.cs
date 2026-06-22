@@ -37,10 +37,10 @@ namespace TinyDragon.UI
         private void Update()
         {
             // Restrict settings input during tutorial steps
-            TutorialManager tutorial = FindFirstObjectByType<TutorialManager>();
+            TutorialManager tutorial = FindAnyObjectByType<TutorialManager>();
             if (tutorial != null && tutorial.enabled)
             {
-                var inputReader = FindFirstObjectByType<PlayerInputReader>();
+                var inputReader = FindAnyObjectByType<PlayerInputReader>();
                 if (inputReader != null && !inputReader.IsFeatureEnabled("Settings"))
                 {
                     return; // Ignore settings input during this tutorial step
