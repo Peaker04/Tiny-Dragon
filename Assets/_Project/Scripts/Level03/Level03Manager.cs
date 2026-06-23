@@ -48,6 +48,7 @@ public class Level03Manager : MonoBehaviour
     private DragonGemEffectPlayer mergeEffect;
     private SpriteRenderer completeGemRenderer;
     private Coroutine platformTransition;
+    private CameraFollow sceneCamera;
     private bool isGroupAActive = true;
     private int collectedFragments;
     private string announcement;
@@ -129,6 +130,7 @@ public class Level03Manager : MonoBehaviour
 
     private bool ResolveSceneActors()
     {
+        sceneCamera = FindAnyObjectByType<CameraFollow>();
         playerMovement = FindAnyObjectByType<PlayerMovement>();
         if (playerMovement != null)
         {
@@ -370,6 +372,11 @@ public class Level03Manager : MonoBehaviour
         ShowAnnouncement("Đang ghép Ngọc Rồng...", 1.2f);
         SetPlayerControls(false);
 
+        if (sceneCamera != null && completeGemRenderer != null)
+        {
+            sceneCamera.SetTarget(completeGemRenderer.transform);
+        }
+
         if (bossPatrol != null)
         {
             bossPatrol.enabled = false;
@@ -433,6 +440,10 @@ public class Level03Manager : MonoBehaviour
 
         CurrentState = Level03State.BossVulnerable;
         SetPlayerControls(true);
+        if (sceneCamera != null)
+        {
+            sceneCamera.ClearTarget();
+        }
         ShowAnnouncement("Boss Shield Broken! Phase 2 bắt đầu!", 2f);
 
         yield return new WaitForSeconds(1.5f);

@@ -38,6 +38,7 @@ public class EnemyHealth : MonoBehaviour
 
     private void Awake()
     {
+        if (!Application.isPlaying) return;
         ApplyDatabaseBalanceIfAvailable();
         EnsureDamagePopupPool();
         ResetHealth();
@@ -45,6 +46,7 @@ public class EnemyHealth : MonoBehaviour
 
     private void OnEnable()
     {
+        if (!Application.isPlaying) return;
         ResetHealth();
         SetHealthBarActive(showHealthBar);
     }
