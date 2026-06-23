@@ -43825,9 +43825,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c7d8e9f0124a3b9c8d7e6f5a4b3c2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneExitOnPlayerContact
-  targetSceneName: ThungLungTre
+  targetSceneName: Level_03
   useTargetSpawnPosition: 1
-  targetSpawnPosition: {x: 49.5171, y: -11.8078, z: 0}
+  targetSpawnPosition: {x: -4.61, y: -3.38, z: 0}
   targetFacingDirection: 1
 --- !u!1 &2122252365
 GameObject:
