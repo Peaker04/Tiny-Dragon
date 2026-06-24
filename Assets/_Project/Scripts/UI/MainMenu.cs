@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using TinyDragon.Data;
 
@@ -6,11 +6,14 @@ namespace TinyDragon.UI
 {
     public class MainMenu : MonoBehaviour
     {
+        [Header("Debug / Settings")]
+        [SerializeField] private string nextSceneName = "LangAru";
+
         public void PlayGame()
         {
             PlayerAttack.ResetManaForNewRun();
             TinyDragonSaveManager.Instance.ResetCurrentKiToMax();
-            SceneManager.LoadScene("LangAru");
+            SceneManager.LoadScene(nextSceneName);
         }
 
         public void QuitGame()
