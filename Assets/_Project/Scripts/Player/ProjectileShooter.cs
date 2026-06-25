@@ -1,32 +1,45 @@
+using TinyDragon.Combat;
 using TinyDragon.Data;
 using TinyDragon.Config;
 using TinyDragon.Shared.Unity;
 using UnityEngine;
 
+/// <summary>
+/// Manages player projectile spawning and pooling.
+/// Normal shot and power shot are configured via ProjectileSpec structs,
+/// replacing the previous long parameter lists.
+/// </summary>
 public class ProjectileShooter : MonoBehaviour
 {
     [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private PlayerProjectile projectilePrefab;
     [SerializeField] private int projectilePoolPrewarmCount = 4;
-    [SerializeField] private int projectileDamage = GameplayBalanceDefaults.PlayerBaseAttack;
-    [SerializeField] private float projectileSpeed = 8f;
-    [SerializeField] private float projectileLifetime = 2f;
-    [SerializeField] private float projectileScale = 1.2f;
-    [SerializeField] private Vector2 projectileSpawnOffset = new Vector2(0.6f, 0.15f);
-    [SerializeField] private Sprite projectileSprite;
-    [SerializeField] private bool projectileFacesRightByDefault = true;
-    [SerializeField] private string projectileSortingLayerName = "Default";
-    [SerializeField] private int projectileSortingOrder = 100;
+
+    [Header("Normal Shot")]
+    [SerializeField] private ProjectileSpec normalShot = new ProjectileSpec
+    {
+        damage = GameplayBalanceDefaults.PlayerBaseAttack,
+        speed = 8f,
+        lifetime = 2f,
+        scale = 1.2f,
+        spawnOffset = new Vector2(0.6f, 0.15f),
+        facesRightByDefault = true,
+        sortingLayerName = "Default",
+        sortingOrder = 100
+    };
+
     [Header("Power Shot")]
-    [SerializeField] private int powerShotDamage = GameplayBalanceDefaults.PlayerPowerShotDamage;
-    [SerializeField] private float powerShotSpeed = 6f;
-    [SerializeField] private float powerShotLifetime = 3f;
-    [SerializeField] private float powerShotScale = 1f;
-    [SerializeField] private Vector2 powerShotSpawnOffset = new Vector2(0.8f, 0.2f);
-    [SerializeField] private Sprite powerShotSprite;
-    [SerializeField] private bool powerShotFacesRightByDefault = true;
-    [SerializeField] private string powerShotSortingLayerName = "Default";
-    [SerializeField] private int powerShotSortingOrder = 100;
+    [SerializeField] private ProjectileSpec powerShot = new ProjectileSpec
+    {
+        damage = GameplayBalanceDefaults.PlayerPowerShotDamage,
+        speed = 6f,
+        lifetime = 3f,
+        scale = 1f,
+        spawnOffset = new Vector2(0.8f, 0.2f),
+        facesRightByDefault = true,
+        sortingLayerName = "Default",
+        sortingOrder = 100
+    };
 
     private ComponentPool<PlayerProjectile> projectilePool;
     private bool suppressNextShot;
@@ -45,34 +58,15 @@ public class ProjectileShooter : MonoBehaviour
             return;
         }
 
-        ShootProjectile(
-            projectileDamage,
-            projectileSpeed,
-            projectileLifetime,
-            projectileScale,
-            projectileSpawnOffset,
-            projectileSprite,
-            projectileFacesRightByDefault,
-            projectileSortingLayerName,
-            projectileSortingOrder,
-            true
-        );
+        ShootProjectile(normalShot, true);
     }
 
     public void ShootPower()
     {
-        ShootProjectile(
-            powerShotDamage,
-            powerShotSpeed,
-            powerShotLifetime,
-            powerShotScale,
-            powerShotSpawnOffset,
-            powerShotSprite != null ? powerShotSprite : projectileSprite,
-            powerShotFacesRightByDefault,
-            powerShotSortingLayerName,
-            powerShotSortingOrder,
-            false
-        );
+        Sprite resolvedSprite = powerShot.sprite != null ? powerShot.sprite : normalShot.sprite;
+        ProjectileSpec resolved = powerShot;
+        resolved.sprite = resolvedSprite;
+        ShootProjectile(resolved, false);
     }
 
     public void SuppressNextShot(float duration)
@@ -83,34 +77,23 @@ public class ProjectileShooter : MonoBehaviour
 
     public void ApplyProjectileDamage(int damage)
     {
-        projectileDamage = Mathf.Max(damage, 1);
+        normalShot.damage = Mathf.Max(damage, 1);
     }
 
     public void ApplyPowerShotDamage(int damage)
     {
-        powerShotDamage = Mathf.Max(damage, 1);
+        powerShot.damage = Mathf.Max(damage, 1);
     }
 
-    private void ShootProjectile(
-        int damage,
-        float speed,
-        float lifetime,
-        float scale,
-        Vector2 spawnOffset,
-        Sprite sprite,
-        bool facesRightByDefault,
-        string sortingLayerName,
-        int sortingOrder,
-        bool warnIfSpriteMissing
-    )
+    private void ShootProjectile(ProjectileSpec spec, bool warnIfSpriteMissing)
     {
-        if (sprite == null && warnIfSpriteMissing)
+        if (spec.sprite == null && warnIfSpriteMissing)
         {
             Debug.LogWarning("Player projectile sprite is missing. Assign a sprite to ProjectileShooter.", this);
         }
 
         float facingDirection = transform.localScale.x >= 0f ? 1f : -1f;
-        Vector3 scaledSpawnOffset = new Vector3(spawnOffset.x * facingDirection, spawnOffset.y, 0f);
+        Vector3 scaledSpawnOffset = new Vector3(spec.spawnOffset.x * facingDirection, spec.spawnOffset.y, 0f);
         Vector3 spawnPosition = transform.position + scaledSpawnOffset;
         Vector2 projectileDirection = new Vector2(facingDirection, 0f);
 
@@ -124,14 +107,14 @@ public class ProjectileShooter : MonoBehaviour
         PlayerProjectile projectile = projectilePool.Get(spawnPosition, Quaternion.identity);
         projectile.Initialize(
             projectileDirection,
-            speed,
-            damage,
-            lifetime,
-            sprite,
-            scale,
-            facesRightByDefault,
-            sortingLayerName,
-            sortingOrder,
+            spec.speed,
+            spec.damage,
+            spec.lifetime,
+            spec.sprite,
+            spec.scale,
+            spec.facesRightByDefault,
+            spec.sortingLayerName,
+            spec.sortingOrder,
             projectilePool.Release
         );
     }

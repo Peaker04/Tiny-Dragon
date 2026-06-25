@@ -7,8 +7,7 @@ using TinyDragon.Shared.Unity;
 public class PlayerSceneTransition : MonoBehaviour
 {
     [SerializeField] private bool enableSceneTransitions = true;
-    
-    
+
     [SerializeField] private float transitionExitPadding = 0.35f;
     [SerializeField] private float transitionEntryPadding = 1f;
     [SerializeField] private float transitionCooldown = 0.75f;
@@ -56,6 +55,12 @@ public class PlayerSceneTransition : MonoBehaviour
         CheckSceneTransition();
     }
 
+    /// <summary>
+    /// Edge-based transition is intentionally disabled.
+    /// Scene transitions use trigger-based SceneExitOnPlayerContact instead.
+    /// This method is kept as the guard-only stub so the Update loop
+    /// can be reactivated if edge-based flow is needed in the future.
+    /// </summary>
     private void CheckSceneTransition()
     {
         if (!enableSceneTransitions || isTransitioning || globalTransitionInProgress || Time.time < transitionsLockedUntil)
@@ -68,11 +73,7 @@ public class PlayerSceneTransition : MonoBehaviour
             return;
         }
 
-        string activeSceneName = SceneNavigator.ActiveSceneName;
-        float rightExitX = levelRightEdgeX - transitionExitPadding;
-        float leftExitX = levelLeftEdgeX + transitionExitPadding;
-
-        
+        // Edge-based transition body removed — use SceneExitOnPlayerContact triggers.
     }
 
     private void LoadLinkedScene(string sceneName, float spawnX, float facingDirection)

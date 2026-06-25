@@ -4,6 +4,9 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(PlayerAnimatorDriver))]
 [RequireComponent(typeof(PlayerAttack))]
+[RequireComponent(typeof(PlayerMana))]
+[RequireComponent(typeof(PlayerMeleeHitbox))]
+[RequireComponent(typeof(PlayerComboAttack))]
 [RequireComponent(typeof(ProjectileShooter))]
 [RequireComponent(typeof(PlayerSceneTransition))]
 public class PlayerController : MonoBehaviour

@@ -44,6 +44,20 @@ public class PlayerDeathSceneHandler : MonoBehaviour
 
     private void HandlePlayerDied(PlayerHealth health)
     {
+        // Check immortal scene first — player stays alive at 1 HP
+        string configuredImmortalScene = Config.Scenes.playerImmortalSceneName;
+        string resolvedImmortalScene = string.IsNullOrWhiteSpace(configuredImmortalScene)
+            ? guideSceneName
+            : configuredImmortalScene;
+
+        if (immortalInGuideScene && SceneNavigator.ActiveSceneName == resolvedImmortalScene)
+        {
+            Debug.Log("Player is out of HP but stays alive in immortal scene.");
+            health.Revive();
+            return;
+        }
+
+        // Check guide scene — full revive
         string configuredGuideScene = Config.Scenes.guideSceneName;
         string resolvedGuideScene = string.IsNullOrWhiteSpace(configuredGuideScene) ? guideSceneName : configuredGuideScene;
         if (immortalInGuideScene && SceneNavigator.ActiveSceneName == resolvedGuideScene)

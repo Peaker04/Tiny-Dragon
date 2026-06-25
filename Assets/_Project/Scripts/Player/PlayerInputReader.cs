@@ -183,6 +183,28 @@ public class PlayerInputReader : MonoBehaviour
         };
     }
 
+    /// <summary>
+    /// Type-safe overload using PlayerInputFeature enum.
+    /// Prefer this over the string-based version to catch typos at compile time.
+    /// </summary>
+    public bool IsFeatureEnabled(PlayerInputFeature feature)
+    {
+        return feature switch
+        {
+            PlayerInputFeature.Movement  => movementInputEnabled,
+            PlayerInputFeature.Jump      => jumpInputEnabled,
+            PlayerInputFeature.Attack    => attackInputEnabled,
+            PlayerInputFeature.PowerShot => powerShotInputEnabled,
+            PlayerInputFeature.Punch     => punchInputEnabled,
+            PlayerInputFeature.Kick      => kickInputEnabled,
+            PlayerInputFeature.Inventory => inventoryInputEnabled,
+            PlayerInputFeature.Pause     => pauseInputEnabled,
+            PlayerInputFeature.Settings  => settingsInputEnabled,
+            _                            => true,
+        };
+    }
+
+
     public bool ConsumeJumpPressed()
     {
         bool wasPressed = JumpPressed;

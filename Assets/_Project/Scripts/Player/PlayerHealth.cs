@@ -2,7 +2,6 @@ using System;
 using TinyDragon.Data;
 using TinyDragon.Config;
 using TinyDragon.Shared.Unity;
-using TinyDragon.UI;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
@@ -14,9 +13,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private Vector3 damagePopupOffset = new Vector3(0f, 1.1f, 0f);
     [SerializeField] private Color damagePopupColor = new Color(1f, 0.15f, 0.05f);
 
-    [Header("Guide Scene Logic")]
-    [SerializeField] private string guideSceneName = "LangAru";
-    [SerializeField] private bool immortalInGuideScene = true;
+    // Guide-scene immortality is handled exclusively by PlayerDeathSceneHandler.
 
     private int currentHealth;
     private int flatDamageReduction;
@@ -57,16 +54,7 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= effectiveDamage;
         if (currentHealth <= 0)
         {
-            string configuredImmortalScene = Config.Scenes.playerImmortalSceneName;
-            string immortalScene = string.IsNullOrWhiteSpace(configuredImmortalScene) ? guideSceneName : configuredImmortalScene;
-            if (immortalInGuideScene && SceneNavigator.ActiveSceneName == immortalScene)
-            {
-                currentHealth = 1;
-            }
-            else
-            {
-                currentHealth = 0;
-            }
+            currentHealth = 0;
         }
 
         TinyDragonSaveManager.Instance.SaveCurrentHealth(currentHealth, maxHealth);
@@ -78,11 +66,6 @@ public class PlayerHealth : MonoBehaviour
         {
             isDead = true;
             Died?.Invoke(this);
-            GameOver foundGameOver = ObjectLookup.InactiveAny<GameOver>();
-            if (foundGameOver != null)
-            {
-                foundGameOver.GameOverActive();
-            }
         }
     }
 
