@@ -1,13 +1,13 @@
 using System;
 using TinyDragon.Data;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using TinyDragon.UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
-    private const string DefaultDamagePopupPrefabPath = "Combat/DamagePopup";
-
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private int maxHealth = GameplayBalanceDefaults.PlayerBaseHealth;
     [SerializeField] private FloatingDamageText damagePopupPrefab;
     [SerializeField] private int damagePopupPoolPrewarmCount = 4;
@@ -23,6 +23,7 @@ public class PlayerHealth : MonoBehaviour
     private int damageReductionPercent;
     private bool isDead;
     private ComponentPool<FloatingDamageText> damagePopupPool;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     public static event Action<PlayerHealth> PlayerAvailable;
 
@@ -56,7 +57,9 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= effectiveDamage;
         if (currentHealth <= 0)
         {
-            if (immortalInGuideScene && SceneManager.GetActiveScene().name == guideSceneName)
+            string configuredImmortalScene = Config.Scenes.playerImmortalSceneName;
+            string immortalScene = string.IsNullOrWhiteSpace(configuredImmortalScene) ? guideSceneName : configuredImmortalScene;
+            if (immortalInGuideScene && SceneNavigator.ActiveSceneName == immortalScene)
             {
                 currentHealth = 1;
             }
@@ -75,7 +78,7 @@ public class PlayerHealth : MonoBehaviour
         {
             isDead = true;
             Died?.Invoke(this);
-            GameOver foundGameOver = FindAnyObjectByType<GameOver>(FindObjectsInactive.Include);
+            GameOver foundGameOver = ObjectLookup.InactiveAny<GameOver>();
             if (foundGameOver != null)
             {
                 foundGameOver.GameOverActive();
@@ -136,7 +139,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (damagePopupPrefab == null)
         {
-            GameObject damagePopupPrefabObject = Resources.Load<GameObject>(DefaultDamagePopupPrefabPath);
+            GameObject damagePopupPrefabObject = ResourceLoader.Load<GameObject>(Config.Resources.damagePopupPrefabPath);
             if (damagePopupPrefabObject != null)
             {
                 damagePopupPrefab = damagePopupPrefabObject.GetComponent<FloatingDamageText>();

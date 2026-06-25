@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 
 namespace TinyDragon.UI
 {
@@ -7,6 +8,7 @@ namespace TinyDragon.UI
     {
         private static GameOver instance;
 
+        [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
         [SerializeField] private string menuSceneName = "Level_01_Origin";
         [SerializeField] private GameObject gameOverPanel;
 
@@ -46,14 +48,13 @@ namespace TinyDragon.UI
             else
                 gameObject.SetActive(false);
 
-            PlayerHealth playerHealth = FindAnyObjectByType<PlayerHealth>();
+            PlayerHealth playerHealth = ObjectLookup.Any<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.Revive();
             }
 
-            int currentScene = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(currentScene);
+            SceneNavigator.ReloadActiveScene();
         }
 
         public void Menu()
@@ -65,13 +66,14 @@ namespace TinyDragon.UI
             else
                 gameObject.SetActive(false);
 
-            PlayerHealth playerHealth = FindAnyObjectByType<PlayerHealth>();
+            PlayerHealth playerHealth = ObjectLookup.Any<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.Revive();
             }
 
-            SceneManager.LoadScene(menuSceneName);
+            string configuredScene = TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig).Scenes.gameOverMenuSceneName;
+            SceneNavigator.LoadSceneIfSet(string.IsNullOrWhiteSpace(configuredScene) ? menuSceneName : configuredScene);
         }
     }
 }

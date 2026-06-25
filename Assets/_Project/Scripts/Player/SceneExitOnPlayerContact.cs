@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using TinyDragon.Shared.Unity;
 
 [RequireComponent(typeof(Collider2D))]
 public sealed class SceneExitOnPlayerContact : MonoBehaviour
@@ -56,6 +56,6 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
+        SceneNavigator.LoadSceneIfSet(targetSceneName);
     }
 }

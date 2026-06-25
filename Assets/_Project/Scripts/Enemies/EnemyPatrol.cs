@@ -1,4 +1,6 @@
 using TinyDragon.Data;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
@@ -9,8 +11,7 @@ public class EnemyPatrol : MonoBehaviour
         DirectHit = 1
     }
 
-    private const string DefaultProjectilePrefabPath = "Combat/EnemyProjectile";
-
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private float moveSpeed = GameplayBalanceDefaults.NormalEnemySpeed;
     [SerializeField] private float leftDistance = 1.5f;
     [SerializeField] private float rightDistance = 1.5f;
@@ -52,6 +53,7 @@ public class EnemyPatrol : MonoBehaviour
     private bool hasPatrolBounds;
     private float patrolMinX;
     private float patrolMaxX;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     private void Awake()
     {
@@ -74,7 +76,7 @@ public class EnemyPatrol : MonoBehaviour
         patrolOrigin = transform.position;
         direction = startMovingRight ? 1 : -1;
 
-        PlayerController playerController = FindAnyObjectByType<PlayerController>();
+        PlayerController playerController = ObjectLookup.Any<PlayerController>();
         if (playerController != null)
         {
             player = playerController.transform;
@@ -310,7 +312,7 @@ public class EnemyPatrol : MonoBehaviour
 
         if (projectilePrefab == null)
         {
-            GameObject projectilePrefabObject = Resources.Load<GameObject>(DefaultProjectilePrefabPath);
+            GameObject projectilePrefabObject = ResourceLoader.Load<GameObject>(Config.Resources.enemyProjectilePrefabPath);
             if (projectilePrefabObject != null)
             {
                 projectilePrefab = projectilePrefabObject.GetComponent<EnemyProjectile>();

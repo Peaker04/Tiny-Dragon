@@ -1,4 +1,5 @@
 using TinyDragon.Data;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -71,7 +72,7 @@ public class BossAI : MonoBehaviour
     {
         if (player == null)
         {
-            PlayerController playerController = FindAnyObjectByType<PlayerController>();
+            PlayerController playerController = ObjectLookup.Any<PlayerController>();
             if (playerController != null)
             {
                 player = playerController.transform;

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+using TinyDragon.Shared.Unity;
 
 namespace TinyDragon.UI
 {
@@ -27,6 +27,8 @@ namespace TinyDragon.UI
 
         public static float GlobalSFXVolume { get; private set; } = 1f;
 
+        private PlayerInputReader inputReader;
+
         private void Awake()
         {
             if (instance != null && instance != this)
@@ -44,7 +46,7 @@ namespace TinyDragon.UI
             if (settingsCanvas == null) settingsCanvas = GetComponent<Canvas>();
             if (pauseCanvas == null)
             {
-                PauseManager pm = FindFirstObjectByType<PauseManager>();
+                PauseManager pm = ObjectLookup.Any<PauseManager>();
                 if (pm != null) pauseCanvas = pm.GetComponent<Canvas>();
             }
 
@@ -58,7 +60,10 @@ namespace TinyDragon.UI
 
         private void Update()
         {
-            PlayerInputReader inputReader = FindAnyObjectByType<PlayerInputReader>();
+            if (inputReader == null)
+            {
+                inputReader = ObjectLookup.Any<PlayerInputReader>();
+            }
 
             if (inputReader != null && inputReader.ConsumeSettingsPressed())
             {
@@ -169,7 +174,7 @@ namespace TinyDragon.UI
 
         private void ApplyBGMVolume(float volume)
         {
-            GameObject bgmPlayer = GameObject.Find("BackgroundMusicPlayer");
+            GameObject bgmPlayer = ObjectLookup.SceneObject("BackgroundMusicPlayer");
             if (bgmPlayer != null)
             {
                 AudioSource source = bgmPlayer.GetComponent<AudioSource>();
@@ -183,7 +188,7 @@ namespace TinyDragon.UI
         private void ApplySFXVolume(float volume)
         {
             GlobalSFXVolume = volume;
-            AudioSource[] allSources = Object.FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            AudioSource[] allSources = ObjectLookup.AllIncludingInactive<AudioSource>();
             foreach (var source in allSources)
             {
                 if (source.gameObject.name == "BackgroundMusicPlayer") continue;

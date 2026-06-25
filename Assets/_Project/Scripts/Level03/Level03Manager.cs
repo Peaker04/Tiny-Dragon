@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 
 public enum Level03State
 {
@@ -14,15 +16,12 @@ public enum Level03State
 [DisallowMultipleComponent]
 public class Level03Manager : MonoBehaviour
 {
-    private sealed class PlatformGroupRuntime
-    {
-        public readonly List<SpriteRenderer> renderers = new List<SpriteRenderer>();
-        public readonly List<Collider2D> colliders = new List<Collider2D>();
-    }
-
     [Header("Level 02 Platform Visual")]
     [SerializeField] private Sprite platformBlockSprite;
     [SerializeField] private Color platformColor = Color.white;
+
+    [Header("Config")]
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
 
     [Header("Dragon Gem Assets")]
     [SerializeField] private Texture2D fragmentTexture;
@@ -38,8 +37,8 @@ public class Level03Manager : MonoBehaviour
     [SerializeField] private Vector3 mergePoint = new Vector3(0f, 15.0f, 0f);
 
     private readonly List<Level03DragonFragment> fragments = new List<Level03DragonFragment>();
-    private PlatformGroupRuntime platformGroupA;
-    private PlatformGroupRuntime platformGroupB;
+    private Level03PlatformGroupRuntime platformGroupA;
+    private Level03PlatformGroupRuntime platformGroupB;
     private PlayerMovement playerMovement;
     private PlayerInputReader playerInput;
     private EnemyHealth bossHealth;
@@ -56,10 +55,17 @@ public class Level03Manager : MonoBehaviour
     private GUIStyle counterStyle;
     private GUIStyle announcementStyle;
     private Material spriteUnlitMaterial;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
+    private Level03EncounterConfig EncounterConfig => Config.Level03;
 
     public Level03State CurrentState { get; private set; } = Level03State.BossShielded;
     public bool CanCollectFragments => CurrentState == Level03State.BossShielded
         || CurrentState == Level03State.CollectingFragments;
+
+    private void Awake()
+    {
+        ApplyConfigDefaults();
+    }
 
     private IEnumerator Start()
     {
@@ -77,8 +83,8 @@ public class Level03Manager : MonoBehaviour
         playerMovement.JumpPerformed += HandlePlayerJumpPerformed;
 
         CurrentState = Level03State.BossShielded;
-        ShowAnnouncement("Boss đang được bảo vệ - hãy tìm 2 mảnh Ngọc Rồng!", 2f);
-        yield return new WaitForSeconds(0.8f);
+        ShowAnnouncement($"Boss đang được bảo vệ - hãy tìm {requiredFragments} mảnh Ngọc Rồng!", 2f);
+        yield return new WaitForSeconds(EncounterConfig.shieldIntroDelay);
 
         if (CurrentState == Level03State.BossShielded)
         {
@@ -108,7 +114,7 @@ public class Level03Manager : MonoBehaviour
     {
         if (CanCollectFragments)
         {
-            ShowAnnouncement("Shielded! Thu thập đủ 2 mảnh Ngọc Rồng.", 0.75f);
+            ShowAnnouncement($"Shielded! Thu thập đủ {requiredFragments} mảnh Ngọc Rồng.", EncounterConfig.shieldHitAnnouncementDuration);
         }
     }
 
@@ -120,7 +126,7 @@ public class Level03Manager : MonoBehaviour
         }
 
         collectedFragments = Mathf.Min(collectedFragments + 1, requiredFragments);
-        ShowAnnouncement($"Dragon Fragment: {collectedFragments}/{requiredFragments}", 1f);
+        ShowAnnouncement($"Dragon Fragment: {collectedFragments}/{requiredFragments}", EncounterConfig.fragmentAnnouncementDuration);
 
         if (collectedFragments >= requiredFragments)
         {
@@ -130,14 +136,14 @@ public class Level03Manager : MonoBehaviour
 
     private bool ResolveSceneActors()
     {
-        sceneCamera = FindAnyObjectByType<CameraFollow>();
-        playerMovement = FindAnyObjectByType<PlayerMovement>();
+        sceneCamera = ObjectLookup.Any<CameraFollow>();
+        playerMovement = ObjectLookup.Any<PlayerMovement>();
         if (playerMovement != null)
         {
             playerInput = playerMovement.GetComponent<PlayerInputReader>();
         }
 
-        Mob77JsonAnimationBridge mob77 = FindAnyObjectByType<Mob77JsonAnimationBridge>();
+        Mob77JsonAnimationBridge mob77 = ObjectLookup.Any<Mob77JsonAnimationBridge>();
         if (mob77 != null)
         {
             bossHealth = mob77.GetComponent<EnemyHealth>();
@@ -158,59 +164,60 @@ public class Level03Manager : MonoBehaviour
         return true;
     }
 
+    private void ApplyConfigDefaults()
+    {
+        Level03EncounterConfig config = EncounterConfig;
+        requiredFragments = Mathf.Max(1, config.requiredFragments);
+        platformFadeDelay = config.platformFadeDelay;
+        platformTransitionDuration = config.platformTransitionDuration;
+        fragmentPixelsPerUnit = config.fragmentPixelsPerUnit;
+        mergePoint = config.mergePoint;
+    }
+
     private void BuildEncounterHierarchy()
     {
-        Transform flyingPlatforms = CreateRoot("FlyingPlatforms", transform);
-        Transform groupARoot = CreateRoot("PlatformGroup_A", flyingPlatforms);
-        Transform groupBRoot = CreateRoot("PlatformGroup_B", flyingPlatforms);
+        Transform flyingPlatforms = Level03SceneFactory.CreateRoot("FlyingPlatforms", transform);
+        Transform groupARoot = Level03SceneFactory.CreateRoot("PlatformGroup_A", flyingPlatforms);
+        Transform groupBRoot = Level03SceneFactory.CreateRoot("PlatformGroup_B", flyingPlatforms);
 
-        platformGroupA = new PlatformGroupRuntime();
-        platformGroupB = new PlatformGroupRuntime();
+        platformGroupA = new Level03PlatformGroupRuntime();
+        platformGroupB = new Level03PlatformGroupRuntime();
 
-        Vector3 platformA1 = new Vector3(-3.5f, -2.5f, 0f);
-        Vector3 platformA2 = new Vector3(3.0f, 1.0f, 0f);
-        Vector3 platformA3 = new Vector3(-4.0f, 5.0f, 0f);
-        Vector3 platformA4 = new Vector3(3.5f, 9.0f, 0f);
-        Vector3 platformA5 = new Vector3(-2.5f, 13.0f, 0f);
+        Vector3[] platformsA = EncounterConfig.platformGroupA;
+        Vector3[] platformsB = EncounterConfig.platformGroupB;
 
-        Vector3 platformB1 = new Vector3(0.0f, -1.0f, 0f);
-        Vector3 platformB2 = new Vector3(-1.0f, 3.0f, 0f);
-        Vector3 platformB3 = new Vector3(0.0f, 7.0f, 0f);
-        Vector3 platformB4 = new Vector3(1.0f, 11.0f, 0f);
-        Vector3 platformB5 = new Vector3(1.0f, 15.0f, 0f);
+        CreatePlatform("Platform_A1", platformsA[0], groupARoot, platformGroupA);
+        CreatePlatform("Platform_A2", platformsA[1], groupARoot, platformGroupA);
+        CreatePlatform("Platform_A3", platformsA[2], groupARoot, platformGroupA);
+        CreatePlatform("Platform_A4", platformsA[3], groupARoot, platformGroupA);
+        CreatePlatform("Platform_A5", platformsA[4], groupARoot, platformGroupA);
 
-        CreatePlatform("Platform_A1", platformA1, groupARoot, platformGroupA);
-        CreatePlatform("Platform_A2", platformA2, groupARoot, platformGroupA);
-        CreatePlatform("Platform_A3", platformA3, groupARoot, platformGroupA);
-        CreatePlatform("Platform_A4", platformA4, groupARoot, platformGroupA);
-        CreatePlatform("Platform_A5", platformA5, groupARoot, platformGroupA);
+        CreatePlatform("Platform_B1", platformsB[0], groupBRoot, platformGroupB);
+        CreatePlatform("Platform_B2", platformsB[1], groupBRoot, platformGroupB);
+        CreatePlatform("Platform_B3", platformsB[2], groupBRoot, platformGroupB);
+        CreatePlatform("Platform_B4", platformsB[3], groupBRoot, platformGroupB);
+        CreatePlatform("Platform_B5", platformsB[4], groupBRoot, platformGroupB);
 
-        CreatePlatform("Platform_B1", platformB1, groupBRoot, platformGroupB);
-        CreatePlatform("Platform_B2", platformB2, groupBRoot, platformGroupB);
-        CreatePlatform("Platform_B3", platformB3, groupBRoot, platformGroupB);
-        CreatePlatform("Platform_B4", platformB4, groupBRoot, platformGroupB);
-        CreatePlatform("Platform_B5", platformB5, groupBRoot, platformGroupB);
+        Level03PlatformGroupRuntime.SetState(platformGroupA, 1f, true);
+        Level03PlatformGroupRuntime.SetState(platformGroupB, 0f, false);
 
-        SetPlatformGroupState(platformGroupA, 1f, true);
-        SetPlatformGroupState(platformGroupB, 0f, false);
-
-        Transform fragmentRoot = CreateRoot("DragonFragments", transform);
+        Transform fragmentRoot = Level03SceneFactory.CreateRoot("DragonFragments", transform);
         CreateFragments(
             fragmentRoot,
-            new Vector3[] { platformA1, platformA2, platformA3, platformA4, platformA5 },
-            new Vector3[] { platformB1, platformB2, platformB3, platformB4, platformB5 });
+            platformsA,
+            platformsB);
 
-        Transform completeRoot = CreateRoot("DragonGemComplete", transform);
+        Transform completeRoot = Level03SceneFactory.CreateRoot("DragonGemComplete", transform);
         completeRoot.position = mergePoint;
         completeGemRenderer = completeRoot.gameObject.AddComponent<SpriteRenderer>();
-        completeGemRenderer.sprite = CreateFullTextureSprite(completeGemTexture, fragmentPixelsPerUnit);
+        completeGemRenderer.sprite = Level03SpriteFactory.CreateFullTextureSprite(completeGemTexture, fragmentPixelsPerUnit);
         completeGemRenderer.sharedMaterial = GetSpriteUnlitMaterial();
         completeGemRenderer.sortingOrder = 25;
         completeGemRenderer.transform.localScale = Vector3.one * 0.65f;
         completeGemRenderer.enabled = false;
 
-        Transform effectsRoot = CreateRoot("Effects", transform);
-        Transform mergeEffectRoot = CreateRoot("MergeEffect", effectsRoot);
+        Transform effectsRoot = Level03SceneFactory.CreateRoot("Effects", transform);
+        Transform mergeEffectRoot = Level03SceneFactory.CreateRoot("MergeEffect", effectsRoot);
         mergeEffectRoot.position = mergePoint;
         mergeEffect = mergeEffectRoot.gameObject.AddComponent<DragonGemEffectPlayer>();
         mergeEffect.Configure(mergeEffectTexture, mergeEffectData);
@@ -229,20 +236,20 @@ public class Level03Manager : MonoBehaviour
 
         int halfWidth = fragmentTexture.width / 2;
         Color32[] pixels = fragmentTexture.GetPixels32();
-        Sprite leftFragment = CreateTrimmedSprite(
+        Sprite leftFragment = Level03SpriteFactory.CreateTrimmedSprite(
             fragmentTexture,
             pixels,
             0,
             halfWidth,
             fragmentPixelsPerUnit);
-        Sprite rightFragment = CreateTrimmedSprite(
+        Sprite rightFragment = Level03SpriteFactory.CreateTrimmedSprite(
             fragmentTexture,
             pixels,
             halfWidth,
             fragmentTexture.width,
             fragmentPixelsPerUnit);
 
-        Vector3 fragmentStandOffset = new Vector3(0f, 0.06f, 0f);
+        Vector3 fragmentStandOffset = EncounterConfig.fragmentStandOffset;
 
         Vector3[] pathOne =
         {
@@ -283,7 +290,7 @@ public class Level03Manager : MonoBehaviour
         string objectName,
         Vector3 position,
         Transform parent,
-        PlatformGroupRuntime group)
+        Level03PlatformGroupRuntime group)
     {
         GameObject platform = new GameObject(objectName);
         platform.layer = LayerMask.NameToLayer("Ground");
@@ -291,8 +298,8 @@ public class Level03Manager : MonoBehaviour
         platform.transform.position = position;
 
         BoxCollider2D collider = platform.AddComponent<BoxCollider2D>();
-        collider.size = new Vector2(2.6f, 0.15f);
-        collider.offset = new Vector2(0f, -0.075f);
+        collider.size = EncounterConfig.platformColliderSize;
+        collider.offset = EncounterConfig.platformColliderOffset;
         group.colliders.Add(collider);
 
         GameObject visual = new GameObject("BlockVisual");
@@ -304,7 +311,7 @@ public class Level03Manager : MonoBehaviour
         renderer.color = platformColor;
         renderer.sortingOrder = 2;
 
-        Vector3 visualScale = new Vector3(1.35f, 0.22f, 1f);
+        Vector3 visualScale = EncounterConfig.platformVisualScale;
         visual.transform.localScale = visualScale;
         if (platformBlockSprite != null)
         {
@@ -341,9 +348,9 @@ public class Level03Manager : MonoBehaviour
         }
     }
 
-    private IEnumerator TransitionPlatforms(PlatformGroupRuntime outgoing, PlatformGroupRuntime incoming)
+    private IEnumerator TransitionPlatforms(Level03PlatformGroupRuntime outgoing, Level03PlatformGroupRuntime incoming)
     {
-        SetColliderState(incoming, true);
+        Level03PlatformGroupRuntime.SetColliderState(incoming, true);
         float elapsed = 0f;
         float duration = Mathf.Max(platformTransitionDuration, 0.01f);
 
@@ -351,25 +358,25 @@ public class Level03Manager : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            SetRendererAlpha(incoming, t);
+            Level03PlatformGroupRuntime.SetRendererAlpha(incoming, t);
 
             float outgoingAlpha = t <= platformFadeDelay / duration
                 ? 1f
                 : 1f - Mathf.InverseLerp(platformFadeDelay / duration, 1f, t);
-            SetRendererAlpha(outgoing, outgoingAlpha);
+            Level03PlatformGroupRuntime.SetRendererAlpha(outgoing, outgoingAlpha);
             yield return null;
         }
 
-        SetRendererAlpha(incoming, 1f);
-        SetRendererAlpha(outgoing, 0f);
-        SetColliderState(outgoing, false);
+        Level03PlatformGroupRuntime.SetRendererAlpha(incoming, 1f);
+        Level03PlatformGroupRuntime.SetRendererAlpha(outgoing, 0f);
+        Level03PlatformGroupRuntime.SetColliderState(outgoing, false);
         platformTransition = null;
     }
 
     private IEnumerator MergeDragonGem()
     {
         CurrentState = Level03State.DragonGemMerging;
-        ShowAnnouncement("Đang ghép Ngọc Rồng...", 1.2f);
+        ShowAnnouncement("Đang ghép Ngọc Rồng...", EncounterConfig.mergeAnnouncementDuration);
         SetPlayerControls(false);
 
         if (sceneCamera != null && completeGemRenderer != null)
@@ -382,14 +389,14 @@ public class Level03Manager : MonoBehaviour
             bossPatrol.enabled = false;
         }
 
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(EncounterConfig.preMergeDelay);
 
         for (int i = 0; i < fragments.Count; i++)
         {
             fragments[i]?.PrepareForMerge();
         }
 
-        float mergeDuration = 0.75f;
+        float mergeDuration = EncounterConfig.mergeDuration;
         Vector3[] starts = new Vector3[fragments.Count];
         for (int i = 0; i < fragments.Count; i++)
         {
@@ -430,7 +437,7 @@ public class Level03Manager : MonoBehaviour
         }
 
         mergeEffect?.PlayOnce();
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(EncounterConfig.postMergeEffectDelay);
 
         bossShield.BreakShield();
         if (bossPatrol != null)
@@ -444,9 +451,9 @@ public class Level03Manager : MonoBehaviour
         {
             sceneCamera.ClearTarget();
         }
-        ShowAnnouncement("Boss Shield Broken! Phase 2 bắt đầu!", 2f);
+        ShowAnnouncement("Boss Shield Broken! Phase 2 bắt đầu!", EncounterConfig.bossVulnerableAnnouncementDuration);
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(EncounterConfig.hideCompleteGemDelay);
         if (completeGemRenderer != null)
         {
             completeGemRenderer.enabled = false;
@@ -488,8 +495,8 @@ public class Level03Manager : MonoBehaviour
 
     private void OnGUI()
     {
-        counterStyle ??= CreateGuiStyle(18, new Color(1f, 0.85f, 0.1f), FontStyle.Bold);
-        announcementStyle ??= CreateGuiStyle(24, Color.white, FontStyle.Bold);
+        counterStyle ??= Level03GuiStyles.Create(18, new Color(1f, 0.85f, 0.1f), FontStyle.Bold);
+        announcementStyle ??= Level03GuiStyles.Create(24, Color.white, FontStyle.Bold);
 
         GUI.Label(
             new Rect(Screen.width * 0.5f - 170f, 12f, 340f, 32f),
@@ -503,17 +510,6 @@ public class Level03Manager : MonoBehaviour
                 announcement,
                 announcementStyle);
         }
-    }
-
-    private static GUIStyle CreateGuiStyle(int fontSize, Color color, FontStyle fontStyle)
-    {
-        return new GUIStyle(GUI.skin.label)
-        {
-            alignment = TextAnchor.MiddleCenter,
-            fontSize = fontSize,
-            fontStyle = fontStyle,
-            normal = { textColor = color }
-        };
     }
 
     private Material GetSpriteUnlitMaterial()
@@ -537,115 +533,4 @@ public class Level03Manager : MonoBehaviour
         return spriteUnlitMaterial;
     }
 
-    private static Transform CreateRoot(string rootName, Transform parent)
-    {
-        GameObject root = new GameObject(rootName);
-        root.transform.SetParent(parent, false);
-        return root.transform;
-    }
-
-    private static Sprite CreateFullTextureSprite(Texture2D texture, float pixelsPerUnit)
-    {
-        return texture == null
-            ? null
-            : Sprite.Create(
-                texture,
-                new Rect(0f, 0f, texture.width, texture.height),
-                new Vector2(0.5f, 0.5f),
-                pixelsPerUnit);
-    }
-
-    private static Sprite CreateTrimmedSprite(
-        Texture2D texture,
-        Color32[] pixels,
-        int startX,
-        int endX,
-        float pixelsPerUnit)
-    {
-        int minX = endX;
-        int maxX = startX - 1;
-        int minY = texture.height;
-        int maxY = -1;
-
-        for (int y = 0; y < texture.height; y++)
-        {
-            int rowStart = y * texture.width;
-            for (int x = startX; x < endX; x++)
-            {
-                if (pixels[rowStart + x].a <= 8)
-                {
-                    continue;
-                }
-
-                minX = Mathf.Min(minX, x);
-                maxX = Mathf.Max(maxX, x);
-                minY = Mathf.Min(minY, y);
-                maxY = Mathf.Max(maxY, y);
-            }
-        }
-
-        if (maxX < minX || maxY < minY)
-        {
-            return Sprite.Create(
-                texture,
-                new Rect(startX, 0f, endX - startX, texture.height),
-                new Vector2(0.5f, 0f),
-                pixelsPerUnit);
-        }
-
-        const int padding = 2;
-        minX = Mathf.Max(startX, minX - padding);
-        maxX = Mathf.Min(endX - 1, maxX + padding);
-        minY = Mathf.Max(0, minY - padding);
-        maxY = Mathf.Min(texture.height - 1, maxY + padding);
-
-        return Sprite.Create(
-            texture,
-            new Rect(minX, minY, maxX - minX + 1, maxY - minY + 1),
-            new Vector2(0.5f, 0f),
-            pixelsPerUnit);
-    }
-
-    private static void SetPlatformGroupState(PlatformGroupRuntime group, float alpha, bool collidersEnabled)
-    {
-        SetRendererAlpha(group, alpha);
-        SetColliderState(group, collidersEnabled);
-    }
-
-    private static void SetRendererAlpha(PlatformGroupRuntime group, float alpha)
-    {
-        if (group == null)
-        {
-            return;
-        }
-
-        for (int i = 0; i < group.renderers.Count; i++)
-        {
-            SpriteRenderer renderer = group.renderers[i];
-            if (renderer == null)
-            {
-                continue;
-            }
-
-            Color color = renderer.color;
-            color.a = Mathf.Clamp01(alpha);
-            renderer.color = color;
-        }
-    }
-
-    private static void SetColliderState(PlatformGroupRuntime group, bool enabledState)
-    {
-        if (group == null)
-        {
-            return;
-        }
-
-        for (int i = 0; i < group.colliders.Count; i++)
-        {
-            if (group.colliders[i] != null)
-            {
-                group.colliders[i].enabled = enabledState;
-            }
-        }
-    }
 }

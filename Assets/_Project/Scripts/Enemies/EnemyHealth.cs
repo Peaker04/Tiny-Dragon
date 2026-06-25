@@ -1,13 +1,14 @@
 using TinyDragon.Data;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    private const string DefaultDamagePopupPrefabPath = "Combat/DamagePopup";
-
     private static Sprite healthBarSprite;
     private static Material healthBarMaterial;
 
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private string displayName = "Khủng long";
     [SerializeField] private string balanceEnemyId;
     [SerializeField] private int maxHealth = GameplayBalanceDefaults.NormalEnemyHealth;
@@ -28,6 +29,7 @@ public class EnemyHealth : MonoBehaviour
     private SpriteRenderer healthBarBack;
     private SpriteRenderer healthBarFill;
     private ComponentPool<FloatingDamageText> damagePopupPool;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     public int CurrentHealth => currentHealth;
     public int MaxHealth => maxHealth;
@@ -298,7 +300,7 @@ public class EnemyHealth : MonoBehaviour
 
         if (damagePopupPrefab == null)
         {
-            GameObject damagePopupPrefabObject = Resources.Load<GameObject>(DefaultDamagePopupPrefabPath);
+            GameObject damagePopupPrefabObject = ResourceLoader.Load<GameObject>(Config.Resources.damagePopupPrefabPath);
             if (damagePopupPrefabObject != null)
             {
                 damagePopupPrefab = damagePopupPrefabObject.GetComponent<FloatingDamageText>();

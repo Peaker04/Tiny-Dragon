@@ -3,6 +3,8 @@ using System.Data;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 
 namespace TinyDragon.Data
 {
@@ -15,12 +17,14 @@ namespace TinyDragon.Data
 
         [SerializeField] private TextAsset schemaSql;
         [SerializeField] private TextAsset seedSql;
+        [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
         [SerializeField] private string databaseFileName = "tiny_dragon.db";
         [SerializeField] private bool saveOnSceneChange = true;
         [SerializeField] private bool saveOnApplicationQuit = true;
 
         private SqliteDatabase database;
         private bool isReady;
+        private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
         public static TinyDragonSaveManager Instance
         {
@@ -54,7 +58,7 @@ namespace TinyDragon.Data
                 return;
             }
 
-            instance = FindAnyObjectByType<TinyDragonSaveManager>();
+            instance = ObjectLookup.Any<TinyDragonSaveManager>();
             if (instance != null)
             {
                 return;
@@ -141,7 +145,7 @@ namespace TinyDragon.Data
                 return;
             }
 
-            PlayerHealth playerHealth = FindAnyObjectByType<PlayerHealth>();
+            PlayerHealth playerHealth = ObjectLookup.Any<PlayerHealth>();
             if (playerHealth == null)
             {
                 return;
@@ -307,8 +311,11 @@ namespace TinyDragon.Data
             }
 
             InventoryViewData inventory = LoadInventory();
-            playerHealth.RestoreHealth(snapshot.CurrentHealth, Mathf.Max(snapshot.MaxHealth, GetTotalMaxHealth(inventory)));
-            ApplyRuntimeStats(playerHealth.gameObject, inventory);
+            playerHealth.RestoreHealth(
+                snapshot.CurrentHealth,
+                Mathf.Max(snapshot.MaxHealth, PlayerRuntimeStatApplier.GetTotalMaxHealth(inventory))
+            );
+            PlayerRuntimeStatApplier.Apply(playerHealth.gameObject, inventory);
 
             if (snapshot.SceneName != SceneManager.GetActiveScene().name)
             {
@@ -327,62 +334,6 @@ namespace TinyDragon.Data
                 playerHealth.transform.localScale.y,
                 playerHealth.transform.localScale.z
             );
-        }
-
-        private void ApplyRuntimeStats(GameObject playerObject, InventoryViewData inventory)
-        {
-            if (playerObject == null || inventory == null || string.IsNullOrWhiteSpace(inventory.DisplayName))
-            {
-                return;
-            }
-
-            int totalMaxHealth = inventory.BaseHP;
-            int totalMaxKi = inventory.BaseKi;
-            int totalAtk = inventory.BaseAtk;
-            int totalDefense = inventory.BaseDef;
-            int totalDamageReduction = inventory.BaseDamageReductionPercent;
-            float totalSpeed = inventory.BaseSpd;
-            foreach (InventoryItemViewData item in inventory.Items)
-            {
-                totalMaxHealth += item.BonusHP;
-                totalMaxKi += item.BonusKi;
-                totalAtk += item.BonusAtk;
-                totalDefense += item.BonusDef;
-                totalDamageReduction += item.BonusDamageReductionPercent;
-                totalSpeed += item.BonusSpd;
-            }
-
-            PlayerHealth playerHealth = playerObject.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                playerHealth.ApplyRuntimeStats(totalMaxHealth, totalDefense, totalDamageReduction);
-            }
-
-            PlayerMovement movement = playerObject.GetComponent<PlayerMovement>();
-            if (movement != null)
-            {
-                movement.ApplyMoveSpeed(totalSpeed);
-            }
-
-            ProjectileShooter projectileShooter = playerObject.GetComponent<ProjectileShooter>();
-            if (projectileShooter != null)
-            {
-                projectileShooter.ApplyProjectileDamage(totalAtk);
-                projectileShooter.ApplyPowerShotDamage(
-                    Mathf.RoundToInt(totalAtk * GameplayBalanceDefaults.PowerShotDamageMultiplier)
-                );
-            }
-
-            PlayerAttack playerAttack = playerObject.GetComponent<PlayerAttack>();
-            if (playerAttack != null)
-            {
-                playerAttack.ApplyAttackCooldown(1f / Mathf.Max(inventory.BaseAttackSpeed, 0.1f));
-                playerAttack.ApplyPowerShotTuning(
-                    GameplayBalanceDefaults.PowerShotCooldown,
-                    GameplayBalanceDefaults.PowerShotManaCostRatio
-                );
-                playerAttack.RestoreMana(inventory.CurrentKi, totalMaxKi);
-            }
         }
 
         public bool TryLoadEnemyBalance(string enemyId, out EnemyBalanceData balance)
@@ -649,22 +600,6 @@ namespace TinyDragon.Data
             );
         }
 
-        private int GetTotalMaxHealth(InventoryViewData inventory)
-        {
-            if (inventory == null || string.IsNullOrWhiteSpace(inventory.DisplayName))
-            {
-                return 0;
-            }
-
-            int totalMaxHealth = inventory.BaseHP;
-            foreach (InventoryItemViewData item in inventory.Items)
-            {
-                totalMaxHealth += item.BonusHP;
-            }
-
-            return Mathf.Max(totalMaxHealth, 1);
-        }
-
         private void LoadPlayerInventoryHeader(InventoryViewData inventory)
         {
             using (IDbCommand command = database.CreateCommand(
@@ -809,85 +744,41 @@ namespace TinyDragon.Data
                 }
             }
 
-            int cost = 0;
-            int increment = 0;
-            string updateColumn = "";
-
-            if (statType == "HP")
-            {
-                cost = hp * 10;
-                increment = 20;
-                updateColumn = "baseHP";
-            }
-            else if (statType == "KI")
-            {
-                cost = ki * 10;
-                increment = 20;
-                updateColumn = "baseKi";
-            }
-            else if (statType == "ATK")
-            {
-                cost = atk * 100;
-                increment = 1;
-                updateColumn = "baseAtk";
-            }
-            else if (statType == "DEF")
-            {
-                cost = (def + 1) * 500000;
-                increment = 1;
-                updateColumn = "baseDef";
-            }
-            else if (statType == "CRIT")
-            {
-                cost = (crit + 1) * 50000000;
-                increment = 1;
-                updateColumn = "baseCritPercent";
-            }
-            else
+            if (!PlayerStatUpgradeRules.TryCreate(statType, hp, ki, atk, def, crit, out PlayerStatUpgradeRule upgradeRule))
             {
                 return false;
             }
 
-            if (exp < cost)
+            if (exp < upgradeRule.Cost)
             {
-                Debug.LogWarning($"Not enough potential points. Required: {cost}, Available: {exp}");
+                Debug.LogWarning($"Not enough potential points. Required: {upgradeRule.Cost}, Available: {exp}");
                 return false;
             }
 
             ExecuteNonQuery(
-                $"UPDATE Player SET exp = exp - @cost, {updateColumn} = {updateColumn} + @increment WHERE id = @playerId;",
+                $"UPDATE Player SET exp = exp - @cost, {upgradeRule.ColumnName} = {upgradeRule.ColumnName} + @increment WHERE id = @playerId;",
                 cmd =>
                 {
-                    SqliteDatabase.AddParameter(cmd, "@cost", cost);
-                    SqliteDatabase.AddParameter(cmd, "@increment", increment);
+                    SqliteDatabase.AddParameter(cmd, "@cost", upgradeRule.Cost);
+                    SqliteDatabase.AddParameter(cmd, "@increment", upgradeRule.Increment);
                     SqliteDatabase.AddParameter(cmd, "@playerId", DefaultPlayerId);
                 }
             );
 
-            if (statType == "HP")
+            if (upgradeRule.IncreasesCurrentValue)
             {
+                string currentValueColumn = PlayerStatUpgradeRules.CurrentValueColumnFor(statType);
                 ExecuteNonQuery(
-                    "UPDATE Player SET currentHP = currentHP + @increment WHERE id = @playerId;",
+                    $"UPDATE Player SET {currentValueColumn} = {currentValueColumn} + @increment WHERE id = @playerId;",
                     cmd =>
                     {
-                        SqliteDatabase.AddParameter(cmd, "@increment", increment);
-                        SqliteDatabase.AddParameter(cmd, "@playerId", DefaultPlayerId);
-                    }
-                );
-            }
-            else if (statType == "KI")
-            {
-                ExecuteNonQuery(
-                    "UPDATE Player SET currentKi = currentKi + @increment WHERE id = @playerId;",
-                    cmd =>
-                    {
-                        SqliteDatabase.AddParameter(cmd, "@increment", increment);
+                        SqliteDatabase.AddParameter(cmd, "@increment", upgradeRule.Increment);
                         SqliteDatabase.AddParameter(cmd, "@playerId", DefaultPlayerId);
                     }
                 );
             }
 
-            Debug.Log($"Upgraded {statType} by {increment}. Spent {cost} potential.");
+            Debug.Log($"Upgraded {statType} by {upgradeRule.Increment}. Spent {upgradeRule.Cost} potential.");
             return true;
         }
 
@@ -964,7 +855,7 @@ namespace TinyDragon.Data
 
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            PlayerHealth playerHealth = FindAnyObjectByType<PlayerHealth>();
+            PlayerHealth playerHealth = ObjectLookup.Any<PlayerHealth>();
             if (playerHealth != null)
             {
                 ApplyLoadedPlayer(playerHealth);
@@ -983,12 +874,12 @@ namespace TinyDragon.Data
         {
             if (schemaSql == null)
             {
-                schemaSql = Resources.Load<TextAsset>("Database/tiny_dragon_schema");
+                schemaSql = ResourceLoader.Load<TextAsset>(Config.Resources.databaseSchemaPath);
             }
 
             if (seedSql == null)
             {
-                seedSql = Resources.Load<TextAsset>("Database/tiny_dragon_seed");
+                seedSql = ResourceLoader.Load<TextAsset>(Config.Resources.databaseSeedPath);
             }
 
             if (schemaSql == null)
@@ -998,63 +889,4 @@ namespace TinyDragon.Data
         }
     }
 
-    public struct EnemyBalanceData
-    {
-        public EnemyBalanceData(
-            string id,
-            string displayName,
-            int baseHP,
-            int baseAtk,
-            int baseDef,
-            float baseSpd,
-            int expReward,
-            int goldReward,
-            int bossGemReward
-        )
-        {
-            Id = id;
-            DisplayName = displayName;
-            BaseHP = baseHP;
-            BaseAtk = baseAtk;
-            BaseDef = baseDef;
-            BaseSpd = baseSpd;
-            ExpReward = expReward;
-            GoldReward = goldReward;
-            BossGemReward = bossGemReward;
-        }
-
-        public string Id { get; }
-        public string DisplayName { get; }
-        public int BaseHP { get; }
-        public int BaseAtk { get; }
-        public int BaseDef { get; }
-        public float BaseSpd { get; }
-        public int ExpReward { get; }
-        public int GoldReward { get; }
-        public int BossGemReward { get; }
-    }
-
-    public static class GameplayBalanceDefaults
-    {
-        public const int PlayerBaseHealth = 230;
-        public const int PlayerBaseKi = 100;
-        public const int PlayerBaseAttack = 12;
-        public const float PlayerBaseSpeed = 5f;
-        public const int PlayerPowerShotDamage = 36;
-        public const float PowerShotDamageMultiplier = 3f;
-        public const float PowerShotCooldown = 1.2f;
-        public const float PowerShotManaCostRatio = 0.5f;
-
-        public const int NormalEnemyHealth = 36;
-        public const int NormalEnemyDamage = 15;
-        public const float NormalEnemySpeed = 1.5f;
-        public const float NormalEnemyAttackCooldown = 1f;
-        public const float NormalEnemyRangeAttackCooldown = 2f;
-
-        public const int BossHealth = 180;
-        public const int BossMeleeDamage = 25;
-        public const int BossEnergyDamage = 20;
-        public const float BossSpeed = 2f;
-        public const int BossGoldReward = 20;
-    }
 }

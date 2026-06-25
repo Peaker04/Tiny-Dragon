@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using TinyDragon.Data;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -33,6 +35,7 @@ namespace TinyDragon.UI
         }
 
         [Header("UI Elements")]
+        [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
         [SerializeField] private Canvas canvas;
         [SerializeField] private GameObject panel;
         [SerializeField] private Text nameText;
@@ -63,6 +66,7 @@ namespace TinyDragon.UI
         private int initialSlotsCount;
         private int selectedItemIndex = -1;
         private int selectedSkillIndex = -1;
+        private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
         private void Awake()
         {
@@ -151,7 +155,7 @@ namespace TinyDragon.UI
                 return;
             }
 
-            PlayerInputReader inputReader = FindAnyObjectByType<PlayerInputReader>();
+            PlayerInputReader inputReader = ObjectLookup.Any<PlayerInputReader>();
             
             // Check if inventory should be forcibly closed
             if (panel != null && panel.activeSelf && !ShouldInventoryBeOpenable())
@@ -210,10 +214,11 @@ namespace TinyDragon.UI
 
         private void UpdateTabVisuals()
         {
-            Color32 activeTabColor = new Color32(151, 238, 159, 255);
-            Color32 inactiveTabColor = new Color32(255, 238, 205, 255);
-            Color32 activeTabTextColor = new Color32(24, 91, 43, 255);
-            Color32 inactiveTabTextColor = new Color32(91, 74, 58, 255);
+            UiTheme uiTheme = Config.Ui;
+            Color32 activeTabColor = uiTheme.inventoryActiveTabColor;
+            Color32 inactiveTabColor = uiTheme.inventoryInactiveTabColor;
+            Color32 activeTabTextColor = uiTheme.inventoryActiveTabTextColor;
+            Color32 inactiveTabTextColor = uiTheme.inventoryInactiveTabTextColor;
 
             for (int i = 0; i < tabButtons.Count; i++)
             {
@@ -262,7 +267,7 @@ namespace TinyDragon.UI
                 return false;
             }
 
-            return FindAnyObjectByType<PlayerHealth>() != null;
+            return ObjectLookup.Any<PlayerHealth>() != null;
         }
 
         private void Refresh()
@@ -346,7 +351,7 @@ namespace TinyDragon.UI
             {
                 if (!string.IsNullOrEmpty(data.AvatarPath))
                 {
-                    Sprite sprite = Resources.Load<Sprite>(data.AvatarPath);
+                    Sprite sprite = ResourceLoader.Load<Sprite>(data.AvatarPath);
                     if (sprite != null)
                     {
                         avatarImage.sprite = sprite;
@@ -528,7 +533,7 @@ namespace TinyDragon.UI
                     {
                         var skill = data.CombatSkills[skillIdx];
                         string statText = skill.SkillLevel == 0 ? "Chưa học (Bấm để học)" : $"Cấp {skill.SkillLevel}";
-                        string skillIconPath = string.IsNullOrEmpty(skill.IconKey) ? "res/x4/mainimage/myTexture2dMP" : skill.IconKey;
+                        string skillIconPath = string.IsNullOrEmpty(skill.IconKey) ? Config.Resources.hudKiSpritePath : skill.IconKey;
                         ApplySkillSlot(i, skill.Name, statText, skillIconPath, new Color32(155, 89, 182, 255));
                     }
                     else
@@ -589,14 +594,14 @@ namespace TinyDragon.UI
             int currentKi = data.CurrentKi;
             if (Application.isPlaying)
             {
-                PlayerHealth playerHealth = FindAnyObjectByType<PlayerHealth>();
+                PlayerHealth playerHealth = ObjectLookup.Any<PlayerHealth>();
                 if (playerHealth != null)
                 {
                     currentHP = playerHealth.CurrentHealth;
                     totalHP = playerHealth.MaxHealth;
                 }
 
-                PlayerAttack playerAttack = FindAnyObjectByType<PlayerAttack>();
+                PlayerAttack playerAttack = ObjectLookup.Any<PlayerAttack>();
                 if (playerAttack != null)
                 {
                     currentKi = Mathf.RoundToInt(playerAttack.CurrentMana);
@@ -644,7 +649,7 @@ namespace TinyDragon.UI
                 slot.iconImage.enabled = true;
                 if (!string.IsNullOrEmpty(item.SpritePath))
                 {
-                    Sprite sprite = Resources.Load<Sprite>(item.SpritePath);
+                    Sprite sprite = ResourceLoader.Load<Sprite>(item.SpritePath);
                     if (sprite != null)
                     {
                         slot.iconImage.sprite = sprite;
@@ -653,13 +658,13 @@ namespace TinyDragon.UI
                     else
                     {
                         slot.iconImage.sprite = null;
-                        slot.iconImage.color = GetIconColor(item);
+                        slot.iconImage.color = InventoryPanelFormatting.GetIconColor(item);
                     }
                 }
                 else
                 {
                     slot.iconImage.sprite = null;
-                    slot.iconImage.color = GetIconColor(item);
+                    slot.iconImage.color = InventoryPanelFormatting.GetIconColor(item);
                 }
             }
 
@@ -670,7 +675,7 @@ namespace TinyDragon.UI
 
             if (slot.statText != null && slot.statText)
             {
-                slot.statText.text = BuildItemStat(item);
+                slot.statText.text = InventoryPanelFormatting.BuildItemStat(item);
             }
         }
 
@@ -694,7 +699,7 @@ namespace TinyDragon.UI
                 slot.iconImage.enabled = true;
                 if (!string.IsNullOrEmpty(spritePath))
                 {
-                    Sprite sprite = Resources.Load<Sprite>(spritePath);
+                    Sprite sprite = ResourceLoader.Load<Sprite>(spritePath);
                     if (sprite != null)
                     {
                         slot.iconImage.sprite = sprite;
@@ -735,7 +740,7 @@ namespace TinyDragon.UI
                     if (itemStatsText != null)
                     {
                         itemStatsText.text = $"{item.Name}\n" +
-                                             $"{GetItemStatsDescription(item)}\n" +
+                                             $"{InventoryPanelFormatting.BuildItemStatsDescription(item)}\n" +
                                              $"Số lượng: {item.Quantity}\n" +
                                              $"Cấp nâng cấp: {item.UpgradeLevel}";
                     }
@@ -759,83 +764,14 @@ namespace TinyDragon.UI
         {
             if (currentInventoryData == null || skillStatsText == null) return;
 
-            if (index == 0)
-            {
-                int hp = currentInventoryData.BaseHP;
-                int cost = hp * 10;
-                skillStatsText.text = $"[HP GỐC]\n" +
-                                     $"Tăng lượng HP tối đa cơ bản.\n" +
-                                     $"Cấp hiện tại: {hp}\n" +
-                                     $"Chi phí nâng cấp: {cost:N0} tiềm năng (Tăng +20 HP)\n" +
-                                     $"Bấm lần nữa để xác nhận Nâng Cấp.";
-            }
-            else if (index == 1)
-            {
-                int ki = currentInventoryData.BaseKi;
-                int cost = ki * 10;
-                skillStatsText.text = $"[KI GỐC]\n" +
-                                     $"Tăng lượng KI tối đa cơ bản.\n" +
-                                     $"Cấp hiện tại: {ki}\n" +
-                                     $"Chi phí nâng cấp: {cost:N0} tiềm năng (Tăng +20 KI)\n" +
-                                     $"Bấm lần nữa để xác nhận Nâng Cấp.";
-            }
-            else if (index == 2)
-            {
-                int atk = currentInventoryData.BaseAtk;
-                int cost = atk * 100;
-                skillStatsText.text = $"[SỨC ĐÁNH GỐC]\n" +
-                                     $"Tăng sức đánh cơ bản.\n" +
-                                     $"Cấp hiện tại: {atk}\n" +
-                                     $"Chi phí nâng cấp: {cost:N0} tiềm năng (Tăng +1 sức đánh)\n" +
-                                     $"Bấm lần nữa để xác nhận Nâng Cấp.";
-            }
-            else if (index == 3)
-            {
-                int def = currentInventoryData.BaseDef;
-                int cost = (def + 1) * 500000;
-                skillStatsText.text = $"[GIÁP GỐC]\n" +
-                                     $"Tăng giáp phòng thủ cơ bản.\n" +
-                                     $"Cấp hiện tại: {def}\n" +
-                                     $"Chi phí nâng cấp: {cost:N0} tiềm năng (Tăng +1 giáp)\n" +
-                                     $"Bấm lần nữa để xác nhận Nâng Cấp.";
-            }
-            else if (index == 4)
-            {
-                int crit = currentInventoryData.BaseCritPercent;
-                int cost = (crit + 1) * 50000000;
-                skillStatsText.text = $"[CHÍ MẠNG GỐC]\n" +
-                                     $"Tăng tỷ lệ chí mạng cơ bản.\n" +
-                                     $"Cấp hiện tại: {crit}%\n" +
-                                     $"Chi phí nâng cấp: {cost:N0} tiềm năng (Tăng +1% chí mạng)\n" +
-                                     $"Bấm lần nữa để xác nhận Nâng Cấp.";
-            }
-            else if (index >= 5)
-            {
-                int skillIdx = index - 5;
-                if (skillIdx < currentInventoryData.CombatSkills.Count)
-                {
-                    var skill = currentInventoryData.CombatSkills[skillIdx];
-                    int cost = (skill.SkillLevel + 1) * 5000;
-                    skillStatsText.text = $"[{skill.Name.ToUpper()} - CẤP {skill.SkillLevel}]\n" +
-                                         $"Mô tả: {skill.Description}\n" +
-                                         $"KI hao tổn: {skill.KiCost} | Hồi chiêu: {skill.CooldownSec}s\n" +
-                                         $"Sát thương: {skill.DamageMultiplier * 100}%\n" +
-                                         $"Chi phí nâng cấp: {cost:N0} tiềm năng\n" +
-                                         $"Bấm lần nữa để nâng cấp.";
-                }
-            }
+            skillStatsText.text = InventoryPanelFormatting.BuildSkillDetails(index, currentInventoryData);
         }
 
         private void PerformSkillUpgrade(int index)
         {
             if (currentInventoryData == null) return;
 
-            string statType = null;
-            if (index == 0) statType = "HP";
-            else if (index == 1) statType = "KI";
-            else if (index == 2) statType = "ATK";
-            else if (index == 3) statType = "DEF";
-            else if (index == 4) statType = "CRIT";
+            string statType = InventoryPanelFormatting.GetUpgradeableBaseStat(index);
 
             if (statType != null)
             {
@@ -860,57 +796,6 @@ namespace TinyDragon.UI
                     skillStatsText.text += "\n<color=orange>Tính năng nâng cấp chiêu thức này đang phát triển!</color>";
                 }
             }
-        }
-
-        private string BuildItemStat(InventoryItemViewData item)
-        {
-            if (item.UpgradeLevel > 0)
-            {
-                return $"Giáp+{item.UpgradeLevel}";
-            }
-
-            if (item.BonusHP != 0)
-            {
-                return $"HP+{item.BonusHP}";
-            }
-
-            if (item.BonusAtk != 0)
-            {
-                return $"Sức đánh+{item.BonusAtk}";
-            }
-
-            return item.Quantity > 1 ? $"x{item.Quantity}" : item.ItemType;
-        }
-
-        private string GetItemStatsDescription(InventoryItemViewData item)
-        {
-            var parts = new List<string>();
-            if (item.BonusHP != 0) parts.Add($"HP +{item.BonusHP}");
-            if (item.BonusKi != 0) parts.Add($"KI +{item.BonusKi}");
-            if (item.BonusAtk != 0) parts.Add($"Sức đánh +{item.BonusAtk}");
-            if (item.BonusDef != 0) parts.Add($"Giáp +{item.BonusDef}");
-            if (item.BonusCritPercent != 0) parts.Add($"Chí mạng +{item.BonusCritPercent}%");
-            if (item.BonusDamageReductionPercent != 0) parts.Add($"Giảm ST +{item.BonusDamageReductionPercent}%");
-            if (item.BonusCritDamagePercent != 0) parts.Add($"Sát thương CM +{item.BonusCritDamagePercent}%");
-            if (item.BonusSpd != 0) parts.Add($"Tốc độ +{item.BonusSpd}");
-            
-            if (parts.Count == 0) return "Không có thuộc tính cộng thêm.";
-            return string.Join("\n", parts);
-        }
-
-        private Color32 GetIconColor(InventoryItemViewData item)
-        {
-            if (item.SlotType == "LEG")
-            {
-                return new Color32(49, 61, 78, 255);
-            }
-
-            if (item.SlotType == "BODY")
-            {
-                return new Color32(195, 199, 200, 255);
-            }
-
-            return new Color32(118, 132, 146, 255);
         }
 
         private T FindComponent<T>(Transform root, string path) where T : Component

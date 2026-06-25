@@ -1,10 +1,11 @@
 using TinyDragon.Data;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 
 public class ProjectileShooter : MonoBehaviour
 {
-    private const string DefaultProjectilePrefabPath = "Combat/PlayerProjectile";
-
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private PlayerProjectile projectilePrefab;
     [SerializeField] private int projectilePoolPrewarmCount = 4;
     [SerializeField] private int projectileDamage = GameplayBalanceDefaults.PlayerBaseAttack;
@@ -30,6 +31,7 @@ public class ProjectileShooter : MonoBehaviour
     private ComponentPool<PlayerProjectile> projectilePool;
     private bool suppressNextShot;
     private float suppressNextShotUntil;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     private void Awake()
     {
@@ -154,7 +156,7 @@ public class ProjectileShooter : MonoBehaviour
 
         if (projectilePrefab == null)
         {
-            GameObject projectilePrefabObject = Resources.Load<GameObject>(DefaultProjectilePrefabPath);
+            GameObject projectilePrefabObject = ResourceLoader.Load<GameObject>(Config.Resources.playerProjectilePrefabPath);
             if (projectilePrefabObject != null)
             {
                 projectilePrefab = projectilePrefabObject.GetComponent<PlayerProjectile>();

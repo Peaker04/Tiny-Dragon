@@ -1,9 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TinyDragon.Config;
+using TinyDragon.Shared.Gameplay;
+using TinyDragon.Shared.Unity;
 
 public class EnemySpawner : MonoBehaviour
 {
+    [Header("Config")]
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
+
     [Header("Normal Enemies")]
     [SerializeField] private EnemyPatrol enemyTemplate;
     [SerializeField] private Collider2D groundCollider;
@@ -31,6 +37,7 @@ public class EnemySpawner : MonoBehaviour
     private int defeatedEnemyCount;
     private bool bossSpawned;
     private int nextFixedSpawnPointIndex;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     private void OnValidate()
     {
@@ -44,7 +51,7 @@ public class EnemySpawner : MonoBehaviour
 
         if (enemyTemplate == null)
         {
-            enemyTemplate = FindAnyObjectByType<EnemyPatrol>();
+            enemyTemplate = ObjectLookup.Any<EnemyPatrol>();
         }
 
         hideSceneTemplate = enemyTemplate != null && enemyTemplate.gameObject.scene.IsValid();
@@ -57,7 +64,7 @@ public class EnemySpawner : MonoBehaviour
 
         if (bossTemplate == null)
         {
-            bossTemplate = FindAnyObjectByType<BossAI>();
+            bossTemplate = ObjectLookup.Any<BossAI>();
         }
 
         hideBossTemplate = bossTemplate != null && bossTemplate.gameObject.scene.IsValid();
@@ -73,7 +80,7 @@ public class EnemySpawner : MonoBehaviour
 
         if (spawnCamera == null)
         {
-            spawnCamera = UnityEngine.Camera.main != null ? UnityEngine.Camera.main : FindAnyObjectByType<UnityEngine.Camera>();
+            spawnCamera = UnityEngine.Camera.main != null ? UnityEngine.Camera.main : ObjectLookup.Any<UnityEngine.Camera>();
         }
 
         if (enemyParent == null)
@@ -99,15 +106,16 @@ public class EnemySpawner : MonoBehaviour
 
     private void ApplySceneDefaults()
     {
-        if (SceneManager.GetActiveScene().name != "Level_02")
+        TinyDragonRuntimeConfig config = Config;
+        if (SceneManager.GetActiveScene().name != config.Scenes.level02SceneName)
         {
             return;
         }
 
-        maxEnemiesOnGround = 2;
-        respawnKilledEnemies = false;
-        totalEnemiesBeforeBoss = 2;
-        spawnBossAfterNormalEnemies = true;
+        maxEnemiesOnGround = config.Gameplay.level02MaxEnemiesOnGround;
+        respawnKilledEnemies = config.Gameplay.level02RespawnKilledEnemies;
+        totalEnemiesBeforeBoss = config.Gameplay.level02TotalEnemiesBeforeBoss;
+        spawnBossAfterNormalEnemies = config.Gameplay.level02SpawnBossAfterNormalEnemies;
     }
 
     private void Update()
@@ -244,7 +252,7 @@ public class EnemySpawner : MonoBehaviour
 
         Bounds groundBounds = groundCollider.bounds;
         float spawnX = spawnCamera != null
-            ? GetCameraBounds(spawnCamera).max.x - spawnXPadding
+            ? SpawnGeometry2D.GetCameraBounds(spawnCamera, groundBounds).max.x - spawnXPadding
             : groundBounds.max.x - spawnXPadding;
 
         spawnX = Mathf.Clamp(spawnX, groundBounds.min.x + spawnXPadding, groundBounds.max.x - spawnXPadding);
@@ -271,7 +279,7 @@ public class EnemySpawner : MonoBehaviour
         }
 
         Bounds groundBounds = groundCollider.bounds;
-        GetSpawnXBounds(groundBounds, out float minX, out float maxX);
+        SpawnGeometry2D.GetSpawnXBounds(groundBounds, spawnCamera, spawnXPadding, out float minX, out float maxX);
 
         return new Vector3(
             Random.Range(minX, maxX),
@@ -321,44 +329,6 @@ public class EnemySpawner : MonoBehaviour
                 sceneEnemy.gameObject.SetActive(false);
             }
         }
-    }
-
-    private void GetSpawnXBounds(Bounds groundBounds, out float minX, out float maxX)
-    {
-        minX = groundBounds.min.x + spawnXPadding;
-        maxX = groundBounds.max.x - spawnXPadding;
-
-        if (spawnCamera != null)
-        {
-            Bounds cameraBounds = GetCameraBounds(spawnCamera);
-            minX = Mathf.Max(minX, cameraBounds.min.x + spawnXPadding);
-            maxX = Mathf.Min(maxX, cameraBounds.max.x - spawnXPadding);
-        }
-
-        if (minX <= maxX)
-        {
-            return;
-        }
-
-        minX = groundBounds.min.x;
-        maxX = groundBounds.max.x;
-    }
-
-    private Bounds GetCameraBounds(UnityEngine.Camera camera)
-    {
-        if (camera.orthographic)
-        {
-            float height = camera.orthographicSize * 2f;
-            float width = height * camera.aspect;
-            return new Bounds(camera.transform.position, new Vector3(width, height, 0f));
-        }
-
-        float depth = Mathf.Abs(camera.transform.position.z - groundCollider.bounds.center.z);
-        Vector3 bottomLeft = camera.ViewportToWorldPoint(new Vector3(0f, 0f, depth));
-        Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1f, 1f, depth));
-        Bounds bounds = new Bounds();
-        bounds.SetMinMax(bottomLeft, topRight);
-        return bounds;
     }
 
     private void PlaceEnemyOnGround(EnemyPatrol enemy)
@@ -424,7 +394,7 @@ public class EnemySpawner : MonoBehaviour
 
     private Collider2D FindGroundCollider()
     {
-        GameObject groundObject = GameObject.Find("Ground_Main_Collider");
+        GameObject groundObject = ObjectLookup.SceneObject("Ground_Main_Collider");
         if (groundObject != null && groundObject.TryGetComponent(out Collider2D foundGroundCollider))
         {
             return foundGroundCollider;

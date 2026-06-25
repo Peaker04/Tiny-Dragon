@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using TinyDragon.Shared.Unity;
 
 namespace TinyDragon.UI
 {
@@ -55,7 +56,7 @@ namespace TinyDragon.UI
                 return;
             }
 
-            playerInput = FindAnyObjectByType<PlayerInputReader>();
+            playerInput = ObjectLookup.Any<PlayerInputReader>();
 
             if (!forceShowTutorial && PlayerPrefs.GetInt("HasSeenTutorial", 0) == 1)
             {

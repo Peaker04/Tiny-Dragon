@@ -1,5 +1,6 @@
 using UnityEngine;
 using TinyDragon.Camera;
+using TinyDragon.Shared.Unity;
 
 public sealed class CameraFollow : MonoBehaviour
 {
@@ -89,7 +90,7 @@ public sealed class CameraFollow : MonoBehaviour
     {
         if (mapBounds == null)
         {
-            mapBounds = Object.FindAnyObjectByType<MapBounds2D>();
+            mapBounds = ObjectLookup.Any<MapBounds2D>();
         }
     }
 

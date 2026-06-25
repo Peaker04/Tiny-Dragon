@@ -1,16 +1,20 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using TinyDragon.UI;
 
 [RequireComponent(typeof(PlayerHealth))]
 public class PlayerDeathSceneHandler : MonoBehaviour
 {
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private string guideSceneName = "Level_01_guide";
     [SerializeField] private bool immortalInGuideScene = true;
     [SerializeField] private bool showGameOverOutsideGuide = true;
     [SerializeField] private GameOver gameOverUI;
 
     private PlayerHealth playerHealth;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     private void Awake()
     {
@@ -40,7 +44,9 @@ public class PlayerDeathSceneHandler : MonoBehaviour
 
     private void HandlePlayerDied(PlayerHealth health)
     {
-        if (immortalInGuideScene && SceneManager.GetActiveScene().name == guideSceneName)
+        string configuredGuideScene = Config.Scenes.guideSceneName;
+        string resolvedGuideScene = string.IsNullOrWhiteSpace(configuredGuideScene) ? guideSceneName : configuredGuideScene;
+        if (immortalInGuideScene && SceneNavigator.ActiveSceneName == resolvedGuideScene)
         {
             Debug.Log("Player is out of HP but stays alive in guide level.");
             health.Revive();
@@ -51,7 +57,7 @@ public class PlayerDeathSceneHandler : MonoBehaviour
 
         if (showGameOverOutsideGuide)
         {
-            GameOver resolvedGameOver = gameOverUI != null ? gameOverUI : FindAnyObjectByType<GameOver>(FindObjectsInactive.Include);
+            GameOver resolvedGameOver = gameOverUI != null ? gameOverUI : ObjectLookup.InactiveAny<GameOver>();
             if (resolvedGameOver != null)
             {
                 resolvedGameOver.GameOverActive();
@@ -59,9 +65,6 @@ public class PlayerDeathSceneHandler : MonoBehaviour
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(guideSceneName))
-        {
-            SceneManager.LoadScene(guideSceneName, LoadSceneMode.Single);
-        }
+        SceneNavigator.LoadSceneIfSet(resolvedGuideScene, LoadSceneMode.Single);
     }
 }

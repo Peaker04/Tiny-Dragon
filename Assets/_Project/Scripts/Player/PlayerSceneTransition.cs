@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TinyDragon.Data;
+using TinyDragon.Shared.Unity;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerSceneTransition : MonoBehaviour
@@ -62,12 +63,12 @@ public class PlayerSceneTransition : MonoBehaviour
             return;
         }
 
-        if (gameObject.scene != SceneManager.GetActiveScene())
+        if (!SceneNavigator.IsActiveScene(gameObject.scene))
         {
             return;
         }
 
-        string activeSceneName = SceneManager.GetActiveScene().name;
+        string activeSceneName = SceneNavigator.ActiveSceneName;
         float rightExitX = levelRightEdgeX - transitionExitPadding;
         float leftExitX = levelLeftEdgeX + transitionExitPadding;
 
@@ -85,10 +86,15 @@ public class PlayerSceneTransition : MonoBehaviour
         globalTransitionInProgress = true;
         transitionsLockedUntil = Time.time + transitionCooldown;
         hasPendingSpawn = true;
-        pendingSpawnPosition = new Vector3(spawnX, transitionSpawnY, transform.position.z);
-        pendingFacingDirection = facingDirection;
+        float resolvedFacingDirection = Mathf.Approximately(facingDirection, 0f) ? 1f : Mathf.Sign(facingDirection);
+        pendingSpawnPosition = new Vector3(
+            spawnX + transitionEntryPadding * resolvedFacingDirection,
+            transitionSpawnY,
+            transform.position.z
+        );
+        pendingFacingDirection = resolvedFacingDirection;
         TinyDragonSaveManager.Instance.SaveCurrentPlayer();
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        SceneNavigator.LoadSceneIfSet(sceneName, LoadSceneMode.Single);
     }
 
     /// <summary>
@@ -106,7 +112,7 @@ public class PlayerSceneTransition : MonoBehaviour
         hasPendingSpawn = true;
         pendingSpawnPosition = spawnPosition;
         pendingFacingDirection = facingDirection;
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        SceneNavigator.LoadSceneIfSet(sceneName, LoadSceneMode.Single);
     }
 
     private void ApplyPendingSpawn()
