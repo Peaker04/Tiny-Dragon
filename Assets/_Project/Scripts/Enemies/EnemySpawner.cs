@@ -13,7 +13,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float spawnInterval = 2f;
     [SerializeField] private float spawnXPadding = 1f;
     [SerializeField] private float spawnYOffset = 0.02f;
-    [SerializeField] private Camera spawnCamera;
+    [SerializeField] private UnityEngine.Camera spawnCamera;
     [SerializeField] private Transform enemyParent;
     [SerializeField] private Transform[] fixedSpawnPoints;
     [Header("Boss Spawn")]
@@ -73,7 +73,7 @@ public class EnemySpawner : MonoBehaviour
 
         if (spawnCamera == null)
         {
-            spawnCamera = Camera.main != null ? Camera.main : FindAnyObjectByType<Camera>();
+            spawnCamera = UnityEngine.Camera.main != null ? UnityEngine.Camera.main : FindAnyObjectByType<UnityEngine.Camera>();
         }
 
         if (enemyParent == null)
@@ -344,7 +344,7 @@ public class EnemySpawner : MonoBehaviour
         maxX = groundBounds.max.x;
     }
 
-    private Bounds GetCameraBounds(Camera camera)
+    private Bounds GetCameraBounds(UnityEngine.Camera camera)
     {
         if (camera.orthographic)
         {

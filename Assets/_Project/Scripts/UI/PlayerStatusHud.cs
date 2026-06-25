@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -167,14 +167,21 @@ namespace TinyDragon.UI
         {
             ClearExistingChildren();
 
+            bool canvasWasNew = GetComponent<Canvas>() == null;
             Canvas canvas = GetComponent<Canvas>();
             if (canvas == null)
             {
                 canvas = gameObject.AddComponent<Canvas>();
             }
 
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 1000;
+            // Only override renderMode & sortingOrder when the Canvas is brand-new.
+            // If it already existed (set up in Inspector), leave it alone so the
+            // user's Screen Space – Camera setting is preserved after scene loads.
+            if (canvasWasNew)
+            {
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                canvas.sortingOrder = 1000;
+            }
 
             CanvasScaler scaler = GetComponent<CanvasScaler>();
             if (scaler == null)
@@ -220,9 +227,10 @@ namespace TinyDragon.UI
 
         private void ClearExistingChildren()
         {
-            for (int i = transform.childCount - 1; i >= 0; i--)
+            Transform panel = transform.Find("Panel");
+            if (panel != null)
             {
-                Destroy(transform.GetChild(i).gameObject);
+                Destroy(panel.gameObject);
             }
 
             frameImage = null;
@@ -515,6 +523,24 @@ namespace TinyDragon.UI
             }
 
             image.fillAmount = Mathf.Clamp01(percent);
+        }
+
+        public void OnPauseClicked()
+        {
+            PauseManager pauseManager = FindFirstObjectByType<PauseManager>();
+            if (pauseManager != null)
+            {
+                pauseManager.TogglePause();
+            }
+        }
+
+        public void OnSettingsClicked()
+        {
+            SettingsManager settingsManager = FindFirstObjectByType<SettingsManager>();
+            if (settingsManager != null)
+            {
+                settingsManager.ToggleSettings();
+            }
         }
     }
 }

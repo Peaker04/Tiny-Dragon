@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -49,11 +49,7 @@ public class IntroManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        if (!forceShowIntro && PlayerPrefs.GetInt("HasSeenIntro", 0) == 1)
-        {
-            LoadNextLevel();
-            return;
-        }
+        bool hasSeenIntro = !forceShowIntro && PlayerPrefs.GetInt("HasSeenIntro", 0) == 1;
 
         // Find global background music player and pause it during intro
         GameObject bgmPlayer = GameObject.Find("BackgroundMusicPlayer");
@@ -95,10 +91,16 @@ public class IntroManager : MonoBehaviour
                 audioSource.Play();
             }
 
-            StartCoroutine(PosterSequence());
+            StartCoroutine(PosterSequence(hasSeenIntro));
         }
         else
         {
+            if (hasSeenIntro)
+            {
+                LoadNextLevel();
+                return;
+            }
+
             if (storyCanvasGroup != null)
             {
                 storyCanvasGroup.alpha = 1f;
@@ -134,7 +136,7 @@ public class IntroManager : MonoBehaviour
         }
     }
 
-    private IEnumerator PosterSequence()
+    private IEnumerator PosterSequence(bool skipStory)
     {
         isTransitioning = true;
 
@@ -166,6 +168,12 @@ public class IntroManager : MonoBehaviour
         if (audioSource != null)
         {
             audioSource.Stop();
+        }
+
+        if (skipStory)
+        {
+            FinishIntro();
+            yield break;
         }
 
         // Enable story elements and skip button

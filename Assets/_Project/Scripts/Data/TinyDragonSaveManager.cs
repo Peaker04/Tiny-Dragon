@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.IO;
 using UnityEngine;
@@ -34,6 +34,12 @@ namespace TinyDragon.Data
         public bool IsReady => isReady;
 
         public string DatabasePath => Path.Combine(Application.persistentDataPath, databaseFileName);
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatic()
+        {
+            instance = null;
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -217,6 +223,7 @@ namespace TinyDragon.Data
 
             LoadPlayerInventoryHeader(inventory);
             LoadPlayerInventoryItems(inventory);
+            LoadPlayerSkills(inventory);
             return inventory;
         }
 
@@ -449,7 +456,7 @@ namespace TinyDragon.Data
             string sceneName = SceneManager.GetActiveScene().name;
             if (string.IsNullOrWhiteSpace(sceneName))
             {
-                sceneName = "Level_01_Origin";
+                sceneName = "Level_01_guide";
             }
 
             string stageId = GetStageIdForScene(sceneName) ?? "stage_guide";
@@ -481,6 +488,14 @@ namespace TinyDragon.Data
         {
             ExecuteNonQuery(
                 "UPDATE Player SET displayName = CASE WHEN displayName = 'Player' THEN 'DragonBoy250' ELSE displayName END, " +
+                "currentSceneName = CASE WHEN currentSceneName = 'Level_01' THEN 'Level_01_guide' ELSE currentSceneName END, " +
+                "avatarPath = 'UI/Currency/gem_green' " +
+                "WHERE id = @playerId;",
+                command => SqliteDatabase.AddParameter(command, "@playerId", DefaultPlayerId)
+            );
+
+            ExecuteNonQuery(
+                "UPDATE Player SET " +
                 "gold = CASE WHEN gold < 2000 THEN 2000 ELSE gold END, premiumCoin = CASE WHEN premiumCoin < 20 THEN 20 ELSE premiumCoin END, " +
                 "currentHP = CASE WHEN baseHP < 230 AND currentHP < 230 THEN 230 ELSE currentHP END, " +
                 "baseHP = CASE WHEN baseHP < 230 THEN 230 ELSE baseHP END, " +
@@ -503,7 +518,7 @@ namespace TinyDragon.Data
                 null
             );
             ExecuteNonQuery(
-                "UPDATE Item SET baseBonusDef = 2, maxUpgrade = 2 WHERE id = 'item_cloth_shirt';",
+                "UPDATE Item SET baseBonusDef = 2, maxUpgrade = 2, spritePath = 'UI/Currency/coin_stack' WHERE id = 'item_cloth_shirt';",
                 null
             );
 
@@ -514,7 +529,7 @@ namespace TinyDragon.Data
                 null
             );
             ExecuteNonQuery(
-                "UPDATE Item SET baseBonusHP = 30 WHERE id = 'item_black_cloth_pants';",
+                "UPDATE Item SET baseBonusHP = 30, spritePath = 'UI/Currency/gem_green' WHERE id = 'item_black_cloth_pants';",
                 null
             );
 
@@ -654,7 +669,7 @@ namespace TinyDragon.Data
         {
             using (IDbCommand command = database.CreateCommand(
                 "SELECT displayName, level, gold, premiumCoin, bossGem, currentHP, baseHP, currentKi, baseKi, baseAtk, baseDef, " +
-                "baseCritPercent, baseDamageReductionPercent, baseCritDamagePercent, baseAttackSpeed, baseSpd " +
+                "baseCritPercent, baseDamageReductionPercent, baseCritDamagePercent, baseAttackSpeed, baseSpd, avatarPath, exp " +
                 "FROM Player WHERE id = @playerId LIMIT 1;"
             ))
             {
@@ -682,6 +697,8 @@ namespace TinyDragon.Data
                     inventory.BaseCritDamagePercent = reader.GetInt32(13);
                     inventory.BaseAttackSpeed = Convert.ToSingle(reader.GetDouble(14));
                     inventory.BaseSpd = Convert.ToSingle(reader.GetDouble(15));
+                    inventory.AvatarPath = reader.IsDBNull(16) ? null : reader.GetString(16);
+                    inventory.Exp = reader.GetInt32(17);
                 }
             }
         }
@@ -691,7 +708,7 @@ namespace TinyDragon.Data
             using (IDbCommand command = database.CreateCommand(
                 "SELECT pi.id, i.id, i.name, i.itemType, i.slotType, i.rarity, pi.quantity, pi.upgradeLevel, " +
                 "i.baseBonusHP, i.baseBonusKi, i.baseBonusAtk, i.baseBonusDef, " +
-                "i.baseBonusCritPercent, i.baseBonusDamageReductionPercent, i.baseBonusCritDamagePercent, i.baseBonusSpd " +
+                "i.baseBonusCritPercent, i.baseBonusDamageReductionPercent, i.baseBonusCritDamagePercent, i.baseBonusSpd, i.spritePath " +
                 "FROM PlayerItem pi INNER JOIN Item i ON i.id = pi.itemId " +
                 "WHERE pi.playerId = @playerId ORDER BY pi.acquiredAt, i.name;"
             ))
@@ -718,11 +735,160 @@ namespace TinyDragon.Data
                             BonusCritPercent = reader.GetInt32(12),
                             BonusDamageReductionPercent = reader.GetInt32(13),
                             BonusCritDamagePercent = reader.GetInt32(14),
-                            BonusSpd = Convert.ToSingle(reader.GetDouble(15))
+                            BonusSpd = Convert.ToSingle(reader.GetDouble(15)),
+                            SpritePath = reader.IsDBNull(16) ? null : reader.GetString(16)
                         });
                     }
                 }
             }
+        }
+
+        private void LoadPlayerSkills(InventoryViewData inventory)
+        {
+            using (IDbCommand command = database.CreateCommand(
+                "SELECT s.id, s.name, s.description, s.skillType, COALESCE(ps.skillLevel, 0), s.kiCost, s.cooldownSec, s.damageMultiplier, s.iconKey " +
+                "FROM Skill s " +
+                "LEFT JOIN PlayerSkill ps ON s.id = ps.skillId AND ps.playerId = @playerId " +
+                "WHERE s.skillType IN ('ACTIVE', 'ULTIMATE') " +
+                "ORDER BY s.id;"
+            ))
+            {
+                SqliteDatabase.AddParameter(command, "@playerId", DefaultPlayerId);
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        inventory.CombatSkills.Add(new InventorySkillViewData
+                        {
+                            SkillId = reader.GetString(0),
+                            Name = reader.GetString(1),
+                            Description = reader.IsDBNull(2) ? string.Empty : reader.GetString(2),
+                            SkillType = reader.GetString(3),
+                            SkillLevel = reader.GetInt32(4),
+                            KiCost = reader.GetInt32(5),
+                            CooldownSec = Convert.ToSingle(reader.GetDouble(6)),
+                            DamageMultiplier = Convert.ToSingle(reader.GetDouble(7)),
+                            IconKey = reader.IsDBNull(8) ? null : reader.GetString(8)
+                        });
+                    }
+                }
+            }
+        }
+
+        public bool UpgradePlayerStat(string statType)
+        {
+            if (!EnsureReady()) return false;
+
+            int exp = 0;
+            int hp = 0;
+            int ki = 0;
+            int atk = 0;
+            int def = 0;
+            int crit = 0;
+
+            using (IDbCommand command = database.CreateCommand(
+                "SELECT exp, baseHP, baseKi, baseAtk, baseDef, baseCritPercent FROM Player WHERE id = @playerId LIMIT 1;"
+            ))
+            {
+                SqliteDatabase.AddParameter(command, "@playerId", DefaultPlayerId);
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        exp = reader.GetInt32(0);
+                        hp = reader.GetInt32(1);
+                        ki = reader.GetInt32(2);
+                        atk = reader.GetInt32(3);
+                        def = reader.GetInt32(4);
+                        crit = reader.GetInt32(5);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            int cost = 0;
+            int increment = 0;
+            string updateColumn = "";
+
+            if (statType == "HP")
+            {
+                cost = hp * 10;
+                increment = 20;
+                updateColumn = "baseHP";
+            }
+            else if (statType == "KI")
+            {
+                cost = ki * 10;
+                increment = 20;
+                updateColumn = "baseKi";
+            }
+            else if (statType == "ATK")
+            {
+                cost = atk * 100;
+                increment = 1;
+                updateColumn = "baseAtk";
+            }
+            else if (statType == "DEF")
+            {
+                cost = (def + 1) * 500000;
+                increment = 1;
+                updateColumn = "baseDef";
+            }
+            else if (statType == "CRIT")
+            {
+                cost = (crit + 1) * 50000000;
+                increment = 1;
+                updateColumn = "baseCritPercent";
+            }
+            else
+            {
+                return false;
+            }
+
+            if (exp < cost)
+            {
+                Debug.LogWarning($"Not enough potential points. Required: {cost}, Available: {exp}");
+                return false;
+            }
+
+            ExecuteNonQuery(
+                $"UPDATE Player SET exp = exp - @cost, {updateColumn} = {updateColumn} + @increment WHERE id = @playerId;",
+                cmd =>
+                {
+                    SqliteDatabase.AddParameter(cmd, "@cost", cost);
+                    SqliteDatabase.AddParameter(cmd, "@increment", increment);
+                    SqliteDatabase.AddParameter(cmd, "@playerId", DefaultPlayerId);
+                }
+            );
+
+            if (statType == "HP")
+            {
+                ExecuteNonQuery(
+                    "UPDATE Player SET currentHP = currentHP + @increment WHERE id = @playerId;",
+                    cmd =>
+                    {
+                        SqliteDatabase.AddParameter(cmd, "@increment", increment);
+                        SqliteDatabase.AddParameter(cmd, "@playerId", DefaultPlayerId);
+                    }
+                );
+            }
+            else if (statType == "KI")
+            {
+                ExecuteNonQuery(
+                    "UPDATE Player SET currentKi = currentKi + @increment WHERE id = @playerId;",
+                    cmd =>
+                    {
+                        SqliteDatabase.AddParameter(cmd, "@increment", increment);
+                        SqliteDatabase.AddParameter(cmd, "@playerId", DefaultPlayerId);
+                    }
+                );
+            }
+
+            Debug.Log($"Upgraded {statType} by {increment}. Spent {cost} potential.");
+            return true;
         }
 
         private void EnsureDatabaseColumns()
@@ -731,9 +897,11 @@ namespace TinyDragon.Data
             AddColumnIfMissing("Player", "baseDamageReductionPercent", "INTEGER NOT NULL DEFAULT 0 CHECK(baseDamageReductionPercent >= 0)");
             AddColumnIfMissing("Player", "baseCritDamagePercent", "INTEGER NOT NULL DEFAULT 0 CHECK(baseCritDamagePercent >= 0)");
             AddColumnIfMissing("Player", "baseAttackSpeed", "REAL NOT NULL DEFAULT 1.0 CHECK(baseAttackSpeed > 0)");
+            AddColumnIfMissing("Player", "avatarPath", "TEXT");
             AddColumnIfMissing("Item", "baseBonusCritPercent", "INTEGER NOT NULL DEFAULT 0");
             AddColumnIfMissing("Item", "baseBonusDamageReductionPercent", "INTEGER NOT NULL DEFAULT 0");
             AddColumnIfMissing("Item", "baseBonusCritDamagePercent", "INTEGER NOT NULL DEFAULT 0");
+            AddColumnIfMissing("Item", "spritePath", "TEXT");
         }
 
         private void AddColumnIfMissing(string tableName, string columnName, string columnDefinition)

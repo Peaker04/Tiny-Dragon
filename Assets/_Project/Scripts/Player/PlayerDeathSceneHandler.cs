@@ -5,7 +5,7 @@ using TinyDragon.UI;
 [RequireComponent(typeof(PlayerHealth))]
 public class PlayerDeathSceneHandler : MonoBehaviour
 {
-    [SerializeField] private string guideSceneName = "Level_01_Origin";
+    [SerializeField] private string guideSceneName = "Level_01_guide";
     [SerializeField] private bool immortalInGuideScene = true;
     [SerializeField] private bool showGameOverOutsideGuide = true;
     [SerializeField] private GameOver gameOverUI;
@@ -49,10 +49,9 @@ public class PlayerDeathSceneHandler : MonoBehaviour
 
         Debug.Log("Player died.");
 
-        health.Revive();
         if (showGameOverOutsideGuide)
         {
-            GameOver resolvedGameOver = gameOverUI != null ? gameOverUI : GameOver.Ensure();
+            GameOver resolvedGameOver = gameOverUI != null ? gameOverUI : FindAnyObjectByType<GameOver>(FindObjectsInactive.Include);
             if (resolvedGameOver != null)
             {
                 resolvedGameOver.GameOverActive();

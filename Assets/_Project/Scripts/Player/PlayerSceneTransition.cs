@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using TinyDragon.Data;
 
@@ -149,7 +149,7 @@ public class PlayerSceneTransition : MonoBehaviour
             return;
         }
 
-        Camera sceneCamera = Camera.main;
+        UnityEngine.Camera sceneCamera = UnityEngine.Camera.main;
         if (sceneCamera == null)
         {
             return;

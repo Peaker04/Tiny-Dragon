@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!29 &1
 OcclusionCullingSettings:
@@ -200,7 +200,7 @@ Canvas:
   m_GameObject: {fileID: 597228312}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 1396665529}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -836,7 +836,7 @@ Canvas:
   m_GameObject: {fileID: 1768860140}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 1396665529}
   m_PlaneDistance: 100
   m_PixelPerfect: 0

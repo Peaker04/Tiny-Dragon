@@ -8,6 +8,7 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
     [SerializeField] private bool useTargetSpawnPosition;
     [SerializeField] private Vector3 targetSpawnPosition;
     [SerializeField] private float targetFacingDirection = 1f;
+    [SerializeField] private bool healOnExit;
 
     private bool isLoadingScene;
 
@@ -35,6 +36,16 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
         }
 
         isLoadingScene = true;
+
+        if (healOnExit)
+        {
+            PlayerHealth playerHealth = playerCollider.GetComponentInParent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.Revive();
+            }
+        }
+
         if (useTargetSpawnPosition)
         {
             PlayerSceneTransition.LoadSceneWithPlayerSpawn(
