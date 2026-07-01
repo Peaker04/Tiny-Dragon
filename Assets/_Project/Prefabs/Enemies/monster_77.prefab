@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &7620781613243225900
 GameObject:
@@ -239,6 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd29a62ea73a4b7a8fd929ce427fc234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  runtimeConfig: {fileID: 0}
   displayName: Mob 77
   balanceEnemyId: enemy_boss_act_1
   maxHealth: 120
@@ -329,7 +330,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c37a7f9e2d3b4af7a8d1972f4d5e6c02, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level03BossShield
   phaseTwoMovementMultiplier: 1.15
   phaseTwoAttackIntervalMultiplier: 0.85

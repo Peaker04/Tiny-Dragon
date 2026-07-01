@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TinyDragon.Config;
 using TinyDragon.Shared.Unity;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
 
 public enum Level03State
 {
@@ -14,6 +18,7 @@ public enum Level03State
 }
 
 [DisallowMultipleComponent]
+[ExecuteAlways]
 public class Level03Manager : MonoBehaviour
 {
     [Header("Level 02 Platform Visual")]
@@ -55,6 +60,9 @@ public class Level03Manager : MonoBehaviour
     private GUIStyle counterStyle;
     private GUIStyle announcementStyle;
     private Material spriteUnlitMaterial;
+#if UNITY_EDITOR
+    private bool editorBuildQueued;
+#endif
     private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
     private Level03EncounterConfig EncounterConfig => Config.Level03;
 
@@ -67,8 +75,51 @@ public class Level03Manager : MonoBehaviour
         ApplyConfigDefaults();
     }
 
+#if UNITY_EDITOR
+    private void OnEnable()
+    {
+        QueueEditorBuild();
+    }
+
+    private void OnValidate()
+    {
+        QueueEditorBuild();
+    }
+
+    private void QueueEditorBuild()
+    {
+        if (Application.isPlaying || editorBuildQueued)
+        {
+            return;
+        }
+
+        editorBuildQueued = true;
+        EditorApplication.delayCall += BuildEditableHierarchy;
+    }
+
+    [ContextMenu("Build Editable Level 03 Objects")]
+    private void BuildEditableHierarchy()
+    {
+        editorBuildQueued = false;
+        if (this == null || Application.isPlaying || !gameObject.scene.IsValid())
+        {
+            return;
+        }
+
+        ApplyConfigDefaults();
+        BuildEncounterHierarchy(false);
+        EditorUtility.SetDirty(this);
+        EditorSceneManager.MarkSceneDirty(gameObject.scene);
+    }
+#endif
+
     private IEnumerator Start()
     {
+        if (!Application.isPlaying)
+        {
+            yield break;
+        }
+
         yield return null;
 
         if (!ResolveSceneActors())
@@ -77,7 +128,7 @@ public class Level03Manager : MonoBehaviour
             yield break;
         }
 
-        BuildEncounterHierarchy();
+        BuildEncounterHierarchy(true);
         bossShield.ActivateShield(this);
         bossHealth.Died += HandleBossDied;
         playerMovement.JumpPerformed += HandlePlayerJumpPerformed;
@@ -106,7 +157,14 @@ public class Level03Manager : MonoBehaviour
 
         if (spriteUnlitMaterial != null)
         {
-            Destroy(spriteUnlitMaterial);
+            if (Application.isPlaying)
+            {
+                Destroy(spriteUnlitMaterial);
+            }
+            else
+            {
+                DestroyImmediate(spriteUnlitMaterial);
+            }
         }
     }
 
@@ -174,17 +232,18 @@ public class Level03Manager : MonoBehaviour
         mergePoint = config.mergePoint;
     }
 
-    private void BuildEncounterHierarchy()
+    private void BuildEncounterHierarchy(bool runtimeState)
     {
-        Transform flyingPlatforms = Level03SceneFactory.CreateRoot("FlyingPlatforms", transform);
-        Transform groupARoot = Level03SceneFactory.CreateRoot("PlatformGroup_A", flyingPlatforms);
-        Transform groupBRoot = Level03SceneFactory.CreateRoot("PlatformGroup_B", flyingPlatforms);
+        fragments.Clear();
+        Transform flyingPlatforms = GetOrCreateRoot("FlyingPlatforms", transform);
+        Transform groupARoot = GetOrCreateRoot("PlatformGroup_A", flyingPlatforms);
+        Transform groupBRoot = GetOrCreateRoot("PlatformGroup_B", flyingPlatforms);
 
         platformGroupA = new Level03PlatformGroupRuntime();
         platformGroupB = new Level03PlatformGroupRuntime();
 
-        Vector3[] platformsA = EncounterConfig.platformGroupA;
-        Vector3[] platformsB = EncounterConfig.platformGroupB;
+        Vector3[] platformsA = GetPlatformPositions(groupARoot, EncounterConfig.platformGroupA, "Platform_A");
+        Vector3[] platformsB = GetPlatformPositions(groupBRoot, EncounterConfig.platformGroupB, "Platform_B");
 
         CreatePlatform("Platform_A1", platformsA[0], groupARoot, platformGroupA);
         CreatePlatform("Platform_A2", platformsA[1], groupARoot, platformGroupA);
@@ -198,28 +257,44 @@ public class Level03Manager : MonoBehaviour
         CreatePlatform("Platform_B4", platformsB[3], groupBRoot, platformGroupB);
         CreatePlatform("Platform_B5", platformsB[4], groupBRoot, platformGroupB);
 
-        Level03PlatformGroupRuntime.SetState(platformGroupA, 1f, true);
-        Level03PlatformGroupRuntime.SetState(platformGroupB, 0f, false);
+        if (runtimeState)
+        {
+            Level03PlatformGroupRuntime.SetState(platformGroupA, 1f, true);
+            Level03PlatformGroupRuntime.SetState(platformGroupB, 0f, false);
+        }
+        else
+        {
+            Level03PlatformGroupRuntime.SetState(platformGroupA, 1f, true);
+            Level03PlatformGroupRuntime.SetState(platformGroupB, 1f, true);
+        }
 
-        Transform fragmentRoot = Level03SceneFactory.CreateRoot("DragonFragments", transform);
+        Transform fragmentRoot = GetOrCreateRoot("DragonFragments", transform);
         CreateFragments(
             fragmentRoot,
             platformsA,
             platformsB);
 
-        Transform completeRoot = Level03SceneFactory.CreateRoot("DragonGemComplete", transform);
-        completeRoot.position = mergePoint;
-        completeGemRenderer = completeRoot.gameObject.AddComponent<SpriteRenderer>();
+        Transform existingCompleteRoot = transform.Find("DragonGemComplete");
+        Transform completeRoot = GetOrCreateRoot("DragonGemComplete", transform);
+        if (existingCompleteRoot != null)
+        {
+            mergePoint = completeRoot.position;
+        }
+        else
+        {
+            completeRoot.position = mergePoint;
+        }
+        completeGemRenderer = GetOrCreateComponent<SpriteRenderer>(completeRoot.gameObject);
         completeGemRenderer.sprite = Level03SpriteFactory.CreateFullTextureSprite(completeGemTexture, fragmentPixelsPerUnit);
         completeGemRenderer.sharedMaterial = GetSpriteUnlitMaterial();
         completeGemRenderer.sortingOrder = 25;
         completeGemRenderer.transform.localScale = Vector3.one * 0.65f;
-        completeGemRenderer.enabled = false;
+        completeGemRenderer.enabled = !runtimeState;
 
-        Transform effectsRoot = Level03SceneFactory.CreateRoot("Effects", transform);
-        Transform mergeEffectRoot = Level03SceneFactory.CreateRoot("MergeEffect", effectsRoot);
+        Transform effectsRoot = GetOrCreateRoot("Effects", transform);
+        Transform mergeEffectRoot = GetOrCreateRoot("MergeEffect", effectsRoot);
         mergeEffectRoot.position = mergePoint;
-        mergeEffect = mergeEffectRoot.gameObject.AddComponent<DragonGemEffectPlayer>();
+        mergeEffect = GetOrCreateComponent<DragonGemEffectPlayer>(mergeEffectRoot.gameObject);
         mergeEffect.Configure(mergeEffectTexture, mergeEffectData);
     }
 
@@ -278,10 +353,10 @@ public class Level03Manager : MonoBehaviour
         Vector3[] path,
         Transform parent)
     {
-        GameObject fragmentObject = new GameObject(objectName);
-        fragmentObject.transform.SetParent(parent, true);
+        Transform fragmentTransform = GetOrCreateRoot(objectName, parent);
+        GameObject fragmentObject = fragmentTransform.gameObject;
         fragmentObject.transform.localScale = Vector3.one * 0.8f;
-        Level03DragonFragment fragment = fragmentObject.AddComponent<Level03DragonFragment>();
+        Level03DragonFragment fragment = GetOrCreateComponent<Level03DragonFragment>(fragmentObject);
         fragment.Initialize(this, index, sprite, path, GetSpriteUnlitMaterial());
         return fragment;
     }
@@ -292,20 +367,20 @@ public class Level03Manager : MonoBehaviour
         Transform parent,
         Level03PlatformGroupRuntime group)
     {
-        GameObject platform = new GameObject(objectName);
+        Transform platformTransform = GetOrCreateRoot(objectName, parent);
+        GameObject platform = platformTransform.gameObject;
         platform.layer = LayerMask.NameToLayer("Ground");
-        platform.transform.SetParent(parent, true);
         platform.transform.position = position;
 
-        BoxCollider2D collider = platform.AddComponent<BoxCollider2D>();
+        BoxCollider2D collider = GetOrCreateComponent<BoxCollider2D>(platform);
         collider.size = EncounterConfig.platformColliderSize;
         collider.offset = EncounterConfig.platformColliderOffset;
         group.colliders.Add(collider);
 
-        GameObject visual = new GameObject("BlockVisual");
-        visual.transform.SetParent(platform.transform, false);
+        Transform visualTransform = GetOrCreateRoot("BlockVisual", platform.transform);
+        GameObject visual = visualTransform.gameObject;
 
-        SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+        SpriteRenderer renderer = GetOrCreateComponent<SpriteRenderer>(visual);
         renderer.sprite = platformBlockSprite;
         renderer.sharedMaterial = GetSpriteUnlitMaterial();
         renderer.color = platformColor;
@@ -323,6 +398,38 @@ public class Level03Manager : MonoBehaviour
         }
 
         group.renderers.Add(renderer);
+    }
+
+    private static Transform GetOrCreateRoot(string objectName, Transform parent)
+    {
+        Transform child = parent.Find(objectName);
+        if (child != null)
+        {
+            return child;
+        }
+
+        GameObject created = new GameObject(objectName);
+        created.transform.SetParent(parent, false);
+        return created.transform;
+    }
+
+    private static T GetOrCreateComponent<T>(GameObject target) where T : Component
+    {
+        T component = target.GetComponent<T>();
+        return component != null ? component : target.AddComponent<T>();
+    }
+
+    private static Vector3[] GetPlatformPositions(Transform groupRoot, Vector3[] fallbackPositions, string platformPrefix)
+    {
+        Vector3[] positions = new Vector3[fallbackPositions.Length];
+        for (int i = 0; i < fallbackPositions.Length; i++)
+        {
+            string objectName = $"{platformPrefix}{i + 1}";
+            Transform existing = groupRoot.Find(objectName);
+            positions[i] = existing != null ? existing.position : fallbackPositions[i];
+        }
+
+        return positions;
     }
 
     private void HandlePlayerJumpPerformed()
@@ -495,6 +602,11 @@ public class Level03Manager : MonoBehaviour
 
     private void OnGUI()
     {
+        if (!Application.isPlaying)
+        {
+            return;
+        }
+
         counterStyle ??= Level03GuiStyles.Create(18, new Color(1f, 0.85f, 0.1f), FontStyle.Bold);
         announcementStyle ??= Level03GuiStyles.Create(24, Color.white, FontStyle.Bold);
 

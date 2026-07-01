@@ -27,13 +27,24 @@ public class Level03DragonFragment : MonoBehaviour
         FragmentIndex = index;
         pathPoints = path;
         pathIndex = 0;
+        IsCollected = false;
 
-        spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+        }
+
         spriteRenderer.sprite = sprite;
         spriteRenderer.sharedMaterial = spriteMaterial;
         spriteRenderer.sortingOrder = 20;
 
-        CircleCollider2D circle = gameObject.AddComponent<CircleCollider2D>();
+        CircleCollider2D circle = GetComponent<CircleCollider2D>();
+        if (circle == null)
+        {
+            circle = gameObject.AddComponent<CircleCollider2D>();
+        }
+
         circle.isTrigger = true;
         if (sprite != null)
         {
@@ -42,6 +53,7 @@ public class Level03DragonFragment : MonoBehaviour
             circle.radius = Mathf.Clamp(Mathf.Min(bounds.size.x, bounds.size.y) * 0.4f, 0.25f, 0.5f);
         }
         triggerCollider = circle;
+        triggerCollider.enabled = true;
 
         if (pathPoints != null && pathPoints.Length > 0)
         {

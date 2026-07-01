@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using TinyDragon.Config;
 using TinyDragon.Shared.Unity;
 
@@ -11,6 +13,8 @@ namespace TinyDragon.UI
         [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
         [SerializeField] private string menuSceneName = "Level_01_Origin";
         [SerializeField] private GameObject gameOverPanel;
+        [SerializeField] private Button playAgainButton;
+        [SerializeField] private Button menuButton;
 
         private void Awake()
         {
@@ -22,6 +26,8 @@ namespace TinyDragon.UI
 
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
+            EnsureEventSystem();
+            BindButtons();
 
             if (gameOverPanel != null)
             {
@@ -29,14 +35,65 @@ namespace TinyDragon.UI
             }
         }
 
+        private void OnEnable()
+        {
+            BindButtons();
+        }
+
+        private void BindButtons()
+        {
+            if (playAgainButton == null || menuButton == null)
+            {
+                foreach (Button button in GetComponentsInChildren<Button>(true))
+                {
+                    if (button.name == "PlayAgain")
+                    {
+                        playAgainButton = button;
+                    }
+                    else if (button.name == "Menu")
+                    {
+                        menuButton = button;
+                    }
+                }
+            }
+
+            if (playAgainButton != null)
+            {
+                playAgainButton.onClick.RemoveListener(PlayAgain);
+                playAgainButton.onClick.AddListener(PlayAgain);
+            }
+
+            if (menuButton != null)
+            {
+                menuButton.onClick.RemoveListener(Menu);
+                menuButton.onClick.AddListener(Menu);
+            }
+        }
+
         public void GameOverActive()
         {
+            EnsureEventSystem();
+            BindButtons();
+
             if (gameOverPanel != null)
                 gameOverPanel.SetActive(true);
             else
                 gameObject.SetActive(true);
 
             Time.timeScale = 0f;
+        }
+
+        private static void EnsureEventSystem()
+        {
+            if (EventSystem.current != null)
+            {
+                return;
+            }
+
+            GameObject eventSystemObject = new GameObject("EventSystem");
+            eventSystemObject.AddComponent<EventSystem>();
+            eventSystemObject.AddComponent<StandaloneInputModule>();
+            DontDestroyOnLoad(eventSystemObject);
         }
 
         public void PlayAgain()
