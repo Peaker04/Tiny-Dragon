@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 using TinyDragon.Camera;
+using TinyDragon.Shared.Unity;
 
 public sealed class CameraFollow : MonoBehaviour
 {
@@ -32,6 +33,22 @@ public sealed class CameraFollow : MonoBehaviour
             transform.position = ClampToMapBounds(targetPos + offset);
             followVelocity = Vector3.zero;
         }
+    }
+
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+        if (target != null)
+        {
+            targetCollider = target.GetComponent<Collider2D>();
+        }
+    }
+
+    public void ClearTarget()
+    {
+        target = null;
+        targetCollider = null;
+        ResolveTarget();
     }
 
     private void LateUpdate()
@@ -73,7 +90,7 @@ public sealed class CameraFollow : MonoBehaviour
     {
         if (mapBounds == null)
         {
-            mapBounds = Object.FindAnyObjectByType<MapBounds2D>();
+            mapBounds = ObjectLookup.Any<MapBounds2D>();
         }
     }
 

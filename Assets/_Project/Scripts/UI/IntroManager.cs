@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 
 [System.Serializable]
 public struct StorySceneData
@@ -35,6 +36,7 @@ public class IntroManager : MonoBehaviour
     [SerializeField] private float maxAudioVolume = 0.7f;   // Max volume for fade in
 
     [Header("Story Data")]
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private StorySceneData[] introScenes;
     [SerializeField] private string nextLevelName = "Level_01_Origin";
 
@@ -44,19 +46,16 @@ public class IntroManager : MonoBehaviour
     private int currentIndex = 0;
     private bool isTransitioning = false;
     private AudioSource globalBgmSource;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     private void Start()
     {
         Time.timeScale = 1f;
 
-        if (!forceShowIntro && PlayerPrefs.GetInt("HasSeenIntro", 0) == 1)
-        {
-            LoadNextLevel();
-            return;
-        }
+        bool hasSeenIntro = !forceShowIntro && PlayerPrefs.GetInt("HasSeenIntro", 0) == 1;
 
         // Find global background music player and pause it during intro
-        GameObject bgmPlayer = GameObject.Find("BackgroundMusicPlayer");
+        GameObject bgmPlayer = ObjectLookup.SceneObject("BackgroundMusicPlayer");
         if (bgmPlayer != null)
         {
             globalBgmSource = bgmPlayer.GetComponent<AudioSource>();
@@ -95,10 +94,16 @@ public class IntroManager : MonoBehaviour
                 audioSource.Play();
             }
 
-            StartCoroutine(PosterSequence());
+            StartCoroutine(PosterSequence(hasSeenIntro));
         }
         else
         {
+            if (hasSeenIntro)
+            {
+                LoadNextLevel();
+                return;
+            }
+
             if (storyCanvasGroup != null)
             {
                 storyCanvasGroup.alpha = 1f;
@@ -134,7 +139,7 @@ public class IntroManager : MonoBehaviour
         }
     }
 
-    private IEnumerator PosterSequence()
+    private IEnumerator PosterSequence(bool skipStory)
     {
         isTransitioning = true;
 
@@ -166,6 +171,12 @@ public class IntroManager : MonoBehaviour
         if (audioSource != null)
         {
             audioSource.Stop();
+        }
+
+        if (skipStory)
+        {
+            FinishIntro();
+            yield break;
         }
 
         // Enable story elements and skip button
@@ -338,9 +349,7 @@ public class IntroManager : MonoBehaviour
 
     private void LoadNextLevel()
     {
-        if (!string.IsNullOrWhiteSpace(nextLevelName))
-        {
-            SceneManager.LoadScene(nextLevelName);
-        }
+        string configuredScene = Config.Scenes.introNextSceneName;
+        SceneNavigator.LoadSceneIfSet(string.IsNullOrWhiteSpace(configuredScene) ? nextLevelName : configuredScene);
     }
 }

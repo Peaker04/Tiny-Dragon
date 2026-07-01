@@ -1,49 +1,92 @@
 using System.Collections.Generic;
 using TinyDragon.Data;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.SceneManagement;
-#endif
 
 namespace TinyDragon.UI
 {
-    [ExecuteAlways]
+    [System.Serializable]
+    public struct InventoryItemSlot
+    {
+        public Image iconImage;
+        public Text nameText;
+        public Text statText;
+        public Button button;
+    }
+
     public sealed class InventoryPanel : MonoBehaviour
     {
-        private const int CurrentLayoutVersion = 7;
-        private const string PreviewStatsText = "HP: 230 / 260\nKI: 100 / 100\nSức đánh: 12, Crit: 0%\nGiáp: 2, Giảm ST: 0%";
-
         private static InventoryPanel instance;
+        public static bool IsVisible => instance != null && instance.panel != null && instance.panel.activeSelf;
 
-        private readonly List<Image> itemIconImages = new List<Image>();
-        private readonly List<Text> itemNameTexts = new List<Text>();
-        private readonly List<Text> itemStatTexts = new List<Text>();
+        /// <summary>Ẩn inventory nếu đang mở. Dùng khi mở Pause / Settings.</summary>
+        public static void HideIfVisible()
+        {
+            if (IsVisible) instance.SetVisible(false);
+        }
 
-        [SerializeField] private int layoutVersion;
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatic()
+        {
+            instance = null;
+        }
 
-        private Canvas canvas;
-        private RectTransform canvasRoot;
-        private RectTransform panel;
-        private Text nameText;
-        private Text statsText;
-        private Text goldText;
-        private Text bossGemText;
-        private Text premiumText;
-        private Font uiFont;
-        private Sprite whiteSprite;
-        private Sprite circleSprite;
-        private Sprite coinSprite;
-        private Sprite gemSprite;
+        [Header("UI Elements")]
+        [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
+        [SerializeField] private Canvas canvas;
+        [SerializeField] private GameObject panel;
+        [SerializeField] private Text nameText;
+        [SerializeField] private Text questStatsText;
+        [SerializeField] private Text itemStatsText;
+        [SerializeField] private Text skillStatsText;
+        [SerializeField] private Text featureStatsText;
+        [SerializeField] private Text goldText;
+        [SerializeField] private Text bossGemText;
+        [SerializeField] private Text premiumText;
+        [SerializeField] private Button closeButton;
+        [SerializeField] private Image avatarImage;
+
+        [Header("Item List Fields (Scroll Content)")]
+        [SerializeField] private GameObject itemListPanel;
+        [SerializeField] private GameObject questPanel;
+        [SerializeField] private GameObject skillPanel;
+        [SerializeField] private GameObject featurePanel;
+        [SerializeField] private List<InventoryItemSlot> itemSlots = new List<InventoryItemSlot>();
+
+        [Header("Tab Controls")]
+        [SerializeField] private List<Button> tabButtons = new List<Button>();
+        [SerializeField] private Button downArrowButton;
+
         private InventoryViewData currentInventoryData;
         private float nextRuntimeStatsRefreshTime;
-        private bool isBuilt;
+        private int activeTabIndex = 1; // Default to Tab 1: Hành Trang (Inventory)
+        private int initialSlotsCount;
+        private int selectedItemIndex = -1;
+        private int selectedSkillIndex = -1;
+        private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
         private void Awake()
         {
+            if (canvas == null) canvas = GetComponent<Canvas>();
+
+            if (panel == null)
+            {
+                Transform p = transform.Find("Panel");
+                if (p != null) panel = p.gameObject;
+            }
+
+            if (panel != null)
+            {
+                if (nameText == null) nameText = FindComponent<Text>(panel.transform, "Header/Name");
+                if (questStatsText == null) questStatsText = FindComponent<Text>(panel.transform, "Header/Stats/QuestStats") ?? FindComponent<Text>(panel.transform, "Header/Stats/queststats");
+                if (itemStatsText == null) itemStatsText = FindComponent<Text>(panel.transform, "Header/Stats/ItemStats") ?? FindComponent<Text>(panel.transform, "Header/Stats/itemstats");
+                if (skillStatsText == null) skillStatsText = FindComponent<Text>(panel.transform, "Header/Stats/SkillStats") ?? FindComponent<Text>(panel.transform, "Header/Stats/skillstats");
+                if (featureStatsText == null) featureStatsText = FindComponent<Text>(panel.transform, "Header/Stats/FeatureStats") ?? FindComponent<Text>(panel.transform, "Header/Stats/featurestats");
+            }
+
             if (Application.isPlaying && instance != null && instance != this)
             {
                 Destroy(gameObject);
@@ -51,93 +94,39 @@ namespace TinyDragon.UI
             }
 
             instance = this;
-            Build();
+            if (Application.isPlaying) DontDestroyOnLoad(gameObject);
+        }
+
+        private void Start()
+        {
+            initialSlotsCount = itemSlots.Count;
+
+            if (closeButton != null)
+            {
+                closeButton.onClick.RemoveAllListeners();
+                closeButton.onClick.AddListener(() => SetVisible(false));
+            }
+
+            // Setup Tab Click Listeners
+            for (int i = 0; i < tabButtons.Count; i++)
+            {
+                int index = i;
+                if (tabButtons[i] != null)
+                {
+                    tabButtons[i].onClick.RemoveAllListeners();
+                    tabButtons[i].onClick.AddListener(() => OnTabClicked(index));
+                }
+            }
+
+            if (downArrowButton != null)
+            {
+                downArrowButton.onClick.RemoveAllListeners();
+                downArrowButton.onClick.AddListener(ScrollDown);
+            }
 
             if (Application.isPlaying)
             {
                 SetVisible(false);
-            }
-        }
-
-        private void OnEnable()
-        {
-            Build();
-
-            if (Application.isPlaying)
-            {
-                SceneManager.sceneLoaded += HandleSceneLoaded;
-            }
-        }
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (!CanBuildInCurrentContext())
-            {
-                return;
-            }
-
-            isBuilt = false;
-            EditorApplication.delayCall -= BuildEditorPreviewDelayed;
-            EditorApplication.delayCall += BuildEditorPreviewDelayed;
-        }
-
-        [ContextMenu("Rebuild Inventory UI")]
-        private void RebuildInventoryUi()
-        {
-            if (!CanBuildInCurrentContext())
-            {
-                Debug.LogWarning("Open Assets/_Project/Prefabs/UI/InventoryPanel.prefab to rebuild and customize the Inventory UI. Scene instances stay lightweight.", this);
-                return;
-            }
-
-            isBuilt = false;
-            layoutVersion = 0;
-            ClearChildrenImmediate();
-            Build();
-            EditorUtility.SetDirty(this);
-            EditorUtility.SetDirty(gameObject);
-        }
-
-        private void BuildEditorPreviewDelayed()
-        {
-            EditorApplication.delayCall -= BuildEditorPreviewDelayed;
-            if (this == null || !CanBuildInCurrentContext())
-            {
-                return;
-            }
-
-            isBuilt = false;
-            Build();
-            EditorUtility.SetDirty(this);
-        }
-
-        private bool CanBuildInCurrentContext()
-        {
-            if (Application.isPlaying)
-            {
-                return true;
-            }
-
-            if (gameObject == null)
-            {
-                return false;
-            }
-
-            if (PrefabUtility.IsPartOfPrefabAsset(gameObject))
-            {
-                return false;
-            }
-
-            return PrefabStageUtility.GetPrefabStage(gameObject) != null;
-        }
-#endif
-
-        private void OnDisable()
-        {
-            if (Application.isPlaying)
-            {
-                SceneManager.sceneLoaded -= HandleSceneLoaded;
             }
         }
 
@@ -149,6 +138,16 @@ namespace TinyDragon.UI
             }
         }
 
+        private void OnEnable()
+        {
+            if (Application.isPlaying) SceneManager.sceneLoaded += HandleSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            if (Application.isPlaying) SceneManager.sceneLoaded -= HandleSceneLoaded;
+        }
+
         private void Update()
         {
             if (!Application.isPlaying)
@@ -156,367 +155,208 @@ namespace TinyDragon.UI
                 return;
             }
 
-            if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.B))
+            PlayerInputReader inputReader = ObjectLookup.Any<PlayerInputReader>();
+            
+            // Check if inventory should be forcibly closed
+            if (panel != null && panel.activeSelf && !ShouldInventoryBeOpenable())
             {
-                if (!CanOpenInventory())
+                SetVisible(false);
+            }
+
+            if (inputReader != null && inputReader.ConsumeInventoryPressed())
+            {
+                if (!ShouldInventoryBeOpenable())
                 {
                     SetVisible(false);
                     return;
                 }
 
-                SetVisible(!panel.gameObject.activeSelf);
+                if (panel != null)
+                {
+                    SetVisible(!panel.activeSelf);
+                }
             }
 
-            if (panel != null && panel.gameObject.activeSelf && Time.unscaledTime >= nextRuntimeStatsRefreshTime)
+            if (panel != null && panel.activeSelf && Time.unscaledTime >= nextRuntimeStatsRefreshTime)
             {
                 nextRuntimeStatsRefreshTime = Time.unscaledTime + 0.25f;
                 Refresh();
             }
         }
 
+        private void OnTabClicked(int tabIndex)
+        {
+            activeTabIndex = tabIndex;
+            selectedItemIndex = -1;
+            selectedSkillIndex = -1;
+            if (skillStatsText != null) skillStatsText.text = "Chọn chỉ số hoặc kỹ năng để xem chi tiết";
+            UpdateTabVisuals();
+            Refresh();
+        }
+
+        private void ScrollDown()
+        {
+            GameObject activePanel = null;
+            if (activeTabIndex == 0) activePanel = questPanel;
+            else if (activeTabIndex == 1) activePanel = itemListPanel;
+            else if (activeTabIndex == 2) activePanel = skillPanel;
+            else if (activeTabIndex == 3) activePanel = featurePanel;
+
+            if (activePanel != null)
+            {
+                ScrollRect scrollRect = activePanel.GetComponent<ScrollRect>();
+                if (scrollRect != null)
+                {
+                    scrollRect.verticalNormalizedPosition = Mathf.Max(0f, scrollRect.verticalNormalizedPosition - 1f);
+                }
+            }
+        }
+
+        private void UpdateTabVisuals()
+        {
+            UiTheme uiTheme = Config.Ui;
+            Color32 activeTabColor = uiTheme.inventoryActiveTabColor;
+            Color32 inactiveTabColor = uiTheme.inventoryInactiveTabColor;
+            Color32 activeTabTextColor = uiTheme.inventoryActiveTabTextColor;
+            Color32 inactiveTabTextColor = uiTheme.inventoryInactiveTabTextColor;
+
+            for (int i = 0; i < tabButtons.Count; i++)
+            {
+                if (tabButtons[i] == null) continue;
+                Image img = tabButtons[i].GetComponent<Image>();
+                Text txt = tabButtons[i].GetComponentInChildren<Text>();
+                bool isActive = (i == activeTabIndex);
+                if (img != null) img.color = isActive ? activeTabColor : inactiveTabColor;
+                if (txt != null) txt.color = isActive ? activeTabTextColor : inactiveTabTextColor;
+            }
+
+            if (questPanel != null) questPanel.SetActive(activeTabIndex == 0);
+            if (itemListPanel != null) itemListPanel.SetActive(activeTabIndex == 1);
+            if (skillPanel != null) skillPanel.SetActive(activeTabIndex == 2);
+            if (featurePanel != null) featurePanel.SetActive(activeTabIndex == 3);
+
+            if (questStatsText != null) questStatsText.gameObject.SetActive(activeTabIndex == 0);
+            if (itemStatsText != null) itemStatsText.gameObject.SetActive(activeTabIndex == 1);
+            if (skillStatsText != null) skillStatsText.gameObject.SetActive(activeTabIndex == 2);
+            if (featureStatsText != null) featureStatsText.gameObject.SetActive(activeTabIndex == 3);
+        }
+
         private void SetVisible(bool visible)
         {
-            Build();
-            panel.gameObject.SetActive(visible);
+            if (panel != null)
+            {
+                panel.SetActive(visible);
+            }
 
             if (visible)
             {
+                UpdateTabVisuals();
                 Refresh();
             }
         }
 
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (!CanOpenInventory())
-            {
-                SetVisible(false);
-            }
+            if (!ShouldInventoryBeOpenable()) SetVisible(false);
         }
 
-        private bool CanOpenInventory()
+        private bool ShouldInventoryBeOpenable()
         {
-            if (SceneManager.GetActiveScene().name == "Level_01_Origin")
+            if (SceneManager.GetActiveScene().name == "Level_01_Original")
             {
                 return false;
             }
 
-            return FindAnyObjectByType<PlayerHealth>() != null;
-        }
-
-        private void Build()
-        {
-#if UNITY_EDITOR
-            if (!CanBuildInCurrentContext())
-            {
-                return;
-            }
-#endif
-
-            if (isBuilt)
-            {
-                return;
-            }
-
-            uiFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (uiFont == null)
-            {
-                uiFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            }
-
-            whiteSprite = CreateSolidSprite(Color.white);
-            circleSprite = CreateCircleSprite(64, Color.white);
-            coinSprite = Resources.Load<Sprite>("UI/Currency/coin_stack");
-            gemSprite = Resources.Load<Sprite>("UI/Currency/gem_green");
-
-            if (!Application.isPlaying && layoutVersion < CurrentLayoutVersion && transform.childCount > 0)
-            {
-                ClearChildrenImmediate();
-                layoutVersion = CurrentLayoutVersion;
-            }
-
-            EnsureCanvasComponents();
-
-            if (TryCacheExistingUi())
-            {
-                ApplyEditorPreview();
-                isBuilt = true;
-                return;
-            }
-
-            panel = CreateRect("Panel", canvasRoot, new Vector2(355f, 640f));
-            SetRect(panel, new Vector2(4f, -18f), new Vector2(355f, 640f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            AddImage(panel, new Color32(95, 56, 25, 250));
-
-            RectTransform border = CreateRect("Border", panel, new Vector2(351f, 636f));
-            border.anchorMin = Vector2.zero;
-            border.anchorMax = Vector2.one;
-            border.offsetMin = new Vector2(2f, 2f);
-            border.offsetMax = new Vector2(-2f, -2f);
-            AddImage(border, new Color32(236, 145, 26, 255));
-            border.SetAsFirstSibling();
-
-            RectTransform surface = CreateRect("Surface", panel, new Vector2(345f, 630f));
-            surface.anchorMin = Vector2.zero;
-            surface.anchorMax = Vector2.one;
-            surface.offsetMin = new Vector2(5f, 5f);
-            surface.offsetMax = new Vector2(-5f, -5f);
-            AddImage(surface, new Color32(148, 98, 50, 230));
-            surface.SetSiblingIndex(1);
-
-            BuildHeader();
-            BuildTabs();
-            BuildItemList();
-            BuildCurrencyBar();
-            ApplyEditorPreview();
-
-            layoutVersion = CurrentLayoutVersion;
-            isBuilt = true;
-        }
-
-        private void EnsureCanvasComponents()
-        {
-            Transform canvasTransform = transform.Find("InventoryCanvas");
-            if (canvasTransform == null)
-            {
-                canvasRoot = CreateRect("InventoryCanvas", transform, Vector2.zero);
-            }
-            else
-            {
-                canvasRoot = canvasTransform as RectTransform;
-                if (canvasRoot == null)
-                {
-                    DestroyImmediate(canvasTransform.gameObject);
-                    canvasRoot = CreateRect("InventoryCanvas", transform, Vector2.zero);
-                }
-            }
-
-            canvasRoot.anchorMin = Vector2.zero;
-            canvasRoot.anchorMax = Vector2.one;
-            canvasRoot.pivot = new Vector2(0.5f, 0.5f);
-            canvasRoot.anchoredPosition = Vector2.zero;
-            canvasRoot.sizeDelta = Vector2.zero;
-
-            canvas = canvasRoot.GetComponent<Canvas>();
-            if (canvas == null)
-            {
-                canvas = canvasRoot.gameObject.AddComponent<Canvas>();
-            }
-
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 1600;
-
-            CanvasScaler scaler = canvasRoot.GetComponent<CanvasScaler>();
-            if (scaler == null)
-            {
-                scaler = canvasRoot.gameObject.AddComponent<CanvasScaler>();
-            }
-
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
-            scaler.scaleFactor = 1f;
-
-            if (canvasRoot.GetComponent<GraphicRaycaster>() == null)
-            {
-                canvasRoot.gameObject.AddComponent<GraphicRaycaster>();
-            }
-
-            if (Application.isPlaying)
-            {
-                EnsureEventSystem();
-            }
-        }
-
-        private bool TryCacheExistingUi()
-        {
-            Transform panelTransform = transform.Find("InventoryCanvas/Panel");
-            if (panelTransform == null)
-            {
-                panelTransform = transform.Find("Panel");
-            }
-
-            if (panelTransform == null)
-            {
-                return false;
-            }
-
-            panel = panelTransform as RectTransform;
-            nameText = FindComponent<Text>(panelTransform, "Header/Name");
-            statsText = FindComponent<Text>(panelTransform, "Header/Stats");
-            goldText = FindComponent<Text>(panelTransform, "CurrencyBar/Gold");
-            bossGemText = FindComponent<Text>(panelTransform, "CurrencyBar/BossGem");
-            premiumText = FindComponent<Text>(panelTransform, "CurrencyBar/Premium");
-
-            Button closeButton = FindComponent<Button>(panelTransform, "Header/Close");
-            if (closeButton != null)
-            {
-                closeButton.onClick.RemoveAllListeners();
-                closeButton.onClick.AddListener(() => SetVisible(false));
-            }
-
-            itemIconImages.Clear();
-            itemNameTexts.Clear();
-            itemStatTexts.Clear();
-
-            Transform itemList = panelTransform.Find("ItemList");
-            if (itemList != null)
-            {
-                for (int i = 0; i < itemList.childCount; i++)
-                {
-                    Transform row = itemList.GetChild(i);
-                    if (!row.name.StartsWith("ItemRow"))
-                    {
-                        continue;
-                    }
-
-                    itemIconImages.Add(FindComponent<Image>(row, "IconCell/Icon"));
-                    itemNameTexts.Add(FindComponent<Text>(row, "ItemName"));
-                    itemStatTexts.Add(FindComponent<Text>(row, "ItemStat"));
-                }
-            }
-
-            return panel != null && nameText != null && statsText != null;
-        }
-
-        private void BuildHeader()
-        {
-            RectTransform header = CreateRect("Header", panel, new Vector2(345f, 128f));
-            SetRect(header, new Vector2(5f, -5f), new Vector2(345f, 128f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            AddImage(header, new Color32(201, 112, 13, 238));
-
-            nameText = CreateText("Name", header, "DragonBoy250", 14, FontStyle.Bold, new Color32(46, 31, 18, 255));
-            SetRect(nameText.rectTransform, new Vector2(9f, -6f), new Vector2(150f, 20f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-
-            RectTransform avatarFrame = CreateRect("AvatarFrame", header, new Vector2(108f, 96f));
-            SetRect(avatarFrame, new Vector2(8f, -27f), new Vector2(108f, 96f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            AddImage(avatarFrame, new Color32(255, 229, 151, 255));
-            AddOutline(avatarFrame.gameObject, new Color32(88, 45, 12, 255), new Vector2(2f, -2f));
-
-            RectTransform avatarRoot = CreateRect("Avatar", avatarFrame, new Vector2(94f, 84f));
-            SetRect(avatarRoot, new Vector2(7f, -6f), new Vector2(94f, 84f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            AddImage(avatarRoot, new Color32(255, 214, 150, 255)).sprite = circleSprite;
-
-            RectTransform hair = CreateRect("Hair", avatarRoot, new Vector2(96f, 42f));
-            SetRect(hair, new Vector2(-1f, -1f), new Vector2(96f, 42f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            AddImage(hair, new Color32(8, 7, 6, 255));
-
-            RectTransform face = CreateRect("Face", avatarRoot, new Vector2(72f, 52f));
-            SetRect(face, new Vector2(11f, -36f), new Vector2(72f, 52f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            AddImage(face, new Color32(255, 224, 169, 255)).sprite = circleSprite;
-
-            CreateEye(avatarRoot, new Vector2(28f, -51f));
-            CreateEye(avatarRoot, new Vector2(54f, -51f));
-
-            statsText = CreateText("Stats", header, PreviewStatsText, 16, FontStyle.Bold, new Color32(255, 244, 84, 255));
-            statsText.lineSpacing = 1.05f;
-            AddShadow(statsText.gameObject, new Color32(82, 43, 5, 210), new Vector2(1.25f, -1.25f));
-            SetRect(statsText.rectTransform, new Vector2(122f, -32f), new Vector2(206f, 92f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-
-            Button closeButton = CreateButton("Close", header, "X", new Color32(239, 75, 20, 255), new Color32(255, 255, 255, 255), 24);
-            AddOutline(closeButton.gameObject, new Color32(92, 30, 0, 255), new Vector2(2f, -2f));
-            SetRect(closeButton.GetComponent<RectTransform>(), new Vector2(307f, -33f), new Vector2(31f, 31f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            closeButton.onClick.AddListener(() => SetVisible(false));
-        }
-
-        private void BuildTabs()
-        {
-            string[] labels = { "Nhiệm\nVụ", "Hành\nTrang", "Kỹ\nNăng", "Chức\nNăng" };
-            for (int i = 0; i < labels.Length; i++)
-            {
-                bool active = i == 1;
-                Button tab = CreateButton(
-                    $"Tab {i}",
-                    panel,
-                    labels[i],
-                    active ? new Color32(151, 238, 159, 255) : new Color32(255, 238, 205, 255),
-                    active ? new Color32(24, 91, 43, 255) : new Color32(91, 74, 58, 255),
-                    16
-                );
-                AddOutline(tab.gameObject, active ? new Color32(32, 112, 48, 255) : new Color32(154, 100, 40, 255), new Vector2(1.5f, -1.5f));
-                SetRect(tab.GetComponent<RectTransform>(), new Vector2(20f + i * 78f, -137f), new Vector2(75f, 43f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            }
-
-            CreatePageButton("Page 1", "1", new Vector2(6f, -188f), new Color32(255, 252, 46, 255), new Color32(112, 112, 0, 255));
-            CreatePageButton("Page 2", "2", new Vector2(178f, -188f), new Color32(231, 227, 219, 255), new Color32(88, 88, 88, 255));
-        }
-
-        private void CreatePageButton(string objectName, string value, Vector2 position, Color32 background, Color32 textColor)
-        {
-            RectTransform backgroundRect = CreateRect($"{objectName} Background", panel, new Vector2(171f, 34f));
-            SetRect(backgroundRect, position, new Vector2(171f, 34f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            AddImage(backgroundRect, background);
-
-            Text pageText = CreateText(objectName, backgroundRect, value, 18, FontStyle.Bold, textColor);
-            pageText.alignment = TextAnchor.MiddleCenter;
-            SetRect(pageText.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, Vector2.one);
-            pageText.rectTransform.offsetMin = Vector2.zero;
-            pageText.rectTransform.offsetMax = Vector2.zero;
-        }
-
-        private void BuildItemList()
-        {
-            RectTransform list = CreateRect("ItemList", panel, new Vector2(348f, 384f));
-            SetRect(list, new Vector2(5f, -237f), new Vector2(348f, 384f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            AddImage(list, new Color32(226, 216, 197, 255));
-            AddOutline(list.gameObject, new Color32(154, 94, 30, 255), new Vector2(1f, -1f));
-
-            for (int i = 0; i < 8; i++)
-            {
-                RectTransform row = CreateRect($"ItemRow {i}", list, new Vector2(348f, 48f));
-                SetRect(row, new Vector2(0f, -i * 48f), new Vector2(348f, 48f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-                AddImage(row, i % 2 == 0 ? new Color32(232, 224, 210, 255) : new Color32(222, 211, 193, 255));
-
-                RectTransform iconCell = CreateRect("IconCell", row, new Vector2(70f, 48f));
-                SetRect(iconCell, Vector2.zero, new Vector2(70f, 48f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-                AddImage(iconCell, new Color32(159, 126, 78, 255));
-
-                RectTransform iconRect = CreateRect("Icon", iconCell, new Vector2(30f, 24f));
-                Image icon = AddImage(iconRect, new Color32(120, 125, 128, 255));
-                SetRect(icon.rectTransform, new Vector2(22f, -12f), new Vector2(30f, 24f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-
-                Text itemName = CreateText("ItemName", row, string.Empty, 16, FontStyle.Bold, new Color32(0, 112, 51, 255));
-                AddShadow(itemName.gameObject, new Color32(255, 255, 255, 130), new Vector2(0.75f, -0.75f));
-                SetRect(itemName.rectTransform, new Vector2(84f, -5f), new Vector2(240f, 22f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-
-                Text itemStat = CreateText("ItemStat", row, string.Empty, 15, FontStyle.Bold, new Color32(0, 128, 255, 255));
-                SetRect(itemStat.rectTransform, new Vector2(84f, -25f), new Vector2(240f, 20f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-
-                itemIconImages.Add(icon);
-                itemNameTexts.Add(itemName);
-                itemStatTexts.Add(itemStat);
-            }
-
-            Text downArrow = CreateText("DownArrow", panel, "▼", 17, FontStyle.Bold, new Color32(0, 165, 255, 255));
-            downArrow.alignment = TextAnchor.MiddleCenter;
-            SetRect(downArrow.rectTransform, new Vector2(324f, -585f), new Vector2(24f, 20f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-        }
-
-        private void BuildCurrencyBar()
-        {
-            RectTransform bar = CreateRect("CurrencyBar", panel, new Vector2(348f, 33f));
-            SetRect(bar, new Vector2(5f, -604f), new Vector2(348f, 33f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            AddImage(bar, new Color32(183, 148, 99, 255));
-            AddOutline(bar.gameObject, new Color32(119, 76, 31, 255), new Vector2(1f, -1f));
-
-            CreateCurrencyIcon(bar, new Vector2(5f, -5f), new Vector2(38f, 29f), coinSprite, new Color32(255, 219, 28, 255));
-            goldText = CreateText("Gold", bar, "0", 16, FontStyle.Bold, new Color32(255, 235, 0, 255));
-            SetRect(goldText.rectTransform, new Vector2(48f, -7f), new Vector2(75f, 24f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-
-            CreateCurrencyIcon(bar, new Vector2(140f, -5f), new Vector2(31f, 26f), gemSprite, new Color32(0, 235, 111, 255));
-            bossGemText = CreateText("BossGem", bar, "0", 16, FontStyle.Bold, new Color32(255, 235, 0, 255));
-            SetRect(bossGemText.rectTransform, new Vector2(174f, -7f), new Vector2(62f, 24f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-
-            CreateCurrencyIcon(bar, new Vector2(250f, -8f), new Color32(247, 31, 77, 255));
-            premiumText = CreateText("Premium", bar, "0", 16, FontStyle.Bold, new Color32(255, 235, 0, 255));
-            SetRect(premiumText.rectTransform, new Vector2(278f, -7f), new Vector2(62f, 24f), new Vector2(0f, 1f), new Vector2(0f, 1f));
+            return ObjectLookup.Any<PlayerHealth>() != null;
         }
 
         private void Refresh()
         {
+            if (TinyDragonSaveManager.Instance == null) return;
+
+            // Gather slots for the active panel dynamically at runtime
+            GameObject activePanel = null;
+            if (activeTabIndex == 1) activePanel = itemListPanel;
+            else if (activeTabIndex == 2) activePanel = skillPanel;
+
+            if (activePanel != null)
+            {
+                Transform container = activePanel.transform.Find("Viewport/Content");
+                if (container == null) container = activePanel.transform;
+
+                itemSlots.Clear();
+                
+                // Get all children of the container
+                List<Transform> children = new List<Transform>();
+                foreach (Transform child in container)
+                {
+                    children.Add(child);
+                }
+                
+                // Sort children by Y coordinate descending (top to bottom visually on screen)
+                children.Sort((a, b) => b.localPosition.y.CompareTo(a.localPosition.y));
+
+                foreach (Transform child in children)
+                {
+                    var texts = child.GetComponentsInChildren<Text>(true);
+                    var images = child.GetComponentsInChildren<Image>(true);
+                    
+                    if (texts.Length > 0 || images.Length > 0)
+                    {
+                        InventoryItemSlot slot = new InventoryItemSlot();
+                        
+                        // Find icon image
+                        slot.iconImage = FindComponent<Image>(child, "IconCell/Icon");
+                        if (slot.iconImage == null)
+                        {
+                            foreach (var img in images)
+                            {
+                                if (img.transform != child)
+                                {
+                                    slot.iconImage = img;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // Find text components (fallback to index order if not found by name)
+                        if (texts.Length > 0) slot.nameText = texts[0];
+                        if (texts.Length > 1) slot.statText = texts[1];
+                        
+                        Text namedName = FindComponent<Text>(child, "ItemName");
+                        if (namedName != null) slot.nameText = namedName;
+                        
+                        Text namedStat = FindComponent<Text>(child, "ItemStat");
+                        if (namedStat != null) slot.statText = namedStat;
+
+                        slot.button = child.GetComponent<Button>();
+                        
+                        itemSlots.Add(slot);
+                    }
+                }
+                initialSlotsCount = itemSlots.Count;
+            }
+
+            CleanupNullSlots();
+
             InventoryViewData data = TinyDragonSaveManager.Instance.LoadInventory();
             currentInventoryData = data;
 
             if (nameText != null)
             {
-                nameText.text = string.IsNullOrWhiteSpace(data.DisplayName) ? "DragonBoy250" : data.DisplayName;
+                nameText.text = string.IsNullOrWhiteSpace(data.DisplayName) ? "Player" : data.DisplayName;
+            }
+
+            if (avatarImage != null)
+            {
+                if (!string.IsNullOrEmpty(data.AvatarPath))
+                {
+                    Sprite sprite = ResourceLoader.Load<Sprite>(data.AvatarPath);
+                    if (sprite != null)
+                    {
+                        avatarImage.sprite = sprite;
+                    }
+                }
             }
 
             ApplyStats(data);
@@ -525,22 +365,206 @@ namespace TinyDragon.UI
             if (bossGemText != null) bossGemText.text = data.BossGem.ToString();
             if (premiumText != null) premiumText.text = data.PremiumCoin.ToString();
 
-            for (int i = 0; i < itemNameTexts.Count; i++)
+            if (activeTabIndex == 1)
             {
-                if (i < data.Items.Count)
+                int itemsCount = data.Items.Count;
+                int currentSlotsCount = itemSlots.Count;
+
+                // 1. If we have more slots than needed and we are above initial limit, destroy extra rows
+                if (currentSlotsCount > initialSlotsCount && currentSlotsCount > itemsCount)
                 {
-                    ApplyItem(i, data.Items[i]);
+                    int targetCount = Mathf.Max(initialSlotsCount, itemsCount);
+                    for (int i = currentSlotsCount - 1; i >= targetCount; i--)
+                    {
+                        var slot = itemSlots[i];
+                        GameObject rowObject = null;
+                        if (slot.nameText != null)
+                        {
+                            rowObject = slot.nameText.transform.parent.gameObject;
+                        }
+                        else if (slot.iconImage != null)
+                        {
+                            rowObject = slot.iconImage.transform.parent.parent.gameObject;
+                        }
+
+                        if (rowObject != null)
+                        {
+                            Destroy(rowObject);
+                        }
+                        itemSlots.RemoveAt(i);
+                    }
                 }
-                else
+
+                // 2. If items exceed current slots, dynamically instantiate more rows
+                currentSlotsCount = itemSlots.Count;
+                if (itemsCount > currentSlotsCount && currentSlotsCount > 0 && itemListPanel != null)
+                {
+                    GameObject template = null;
+                    if (itemSlots[0].nameText != null)
+                    {
+                        template = itemSlots[0].nameText.transform.parent.gameObject;
+                    }
+                    else if (itemSlots[0].iconImage != null)
+                    {
+                        template = itemSlots[0].iconImage.transform.parent.parent.gameObject;
+                    }
+
+                    if (template != null)
+                    {
+                        for (int i = currentSlotsCount; i < itemsCount; i++)
+                        {
+                            GameObject newRow = Instantiate(template, template.transform.parent);
+                            newRow.name = $"ItemRow {i}";
+
+                            InventoryItemSlot newSlot = new InventoryItemSlot
+                            {
+                                iconImage = FindComponent<Image>(newRow.transform, "IconCell/Icon"),
+                                nameText = FindComponent<Text>(newRow.transform, "ItemName"),
+                                statText = FindComponent<Text>(newRow.transform, "ItemStat"),
+                                button = newRow.GetComponent<Button>()
+                            };
+                            itemSlots.Add(newSlot);
+                        }
+                    }
+                }
+
+                // 3. Populate item slots
+                for (int i = 0; i < itemSlots.Count; i++)
+                {
+                    if (i < data.Items.Count)
+                    {
+                        ApplyItem(i, data.Items[i]);
+                    }
+                    else
+                    {
+                        ClearItem(i);
+                    }
+                }
+            }
+            else if (activeTabIndex == 2)
+            {
+                int skillsCount = 5 + data.CombatSkills.Count;
+                int currentSlotsCount = itemSlots.Count;
+
+                // 1. If we have more slots than needed, destroy extra rows
+                if (currentSlotsCount > initialSlotsCount && currentSlotsCount > skillsCount)
+                {
+                    int targetCount = Mathf.Max(initialSlotsCount, skillsCount);
+                    for (int i = currentSlotsCount - 1; i >= targetCount; i--)
+                    {
+                        var slot = itemSlots[i];
+                        GameObject rowObject = null;
+                        if (slot.nameText != null)
+                        {
+                            rowObject = slot.nameText.transform.parent.gameObject;
+                        }
+                        else if (slot.iconImage != null)
+                        {
+                            rowObject = slot.iconImage.transform.parent.parent.gameObject;
+                        }
+
+                        if (rowObject != null)
+                        {
+                            Destroy(rowObject);
+                        }
+                        itemSlots.RemoveAt(i);
+                    }
+                }
+
+                // 2. Instantiate more rows if skillsCount exceed current slots
+                currentSlotsCount = itemSlots.Count;
+                if (skillsCount > currentSlotsCount && currentSlotsCount > 0 && skillPanel != null)
+                {
+                    GameObject template = null;
+                    if (itemSlots[0].nameText != null)
+                    {
+                        template = itemSlots[0].nameText.transform.parent.gameObject;
+                    }
+                    else if (itemSlots[0].iconImage != null)
+                    {
+                        template = itemSlots[0].iconImage.transform.parent.parent.gameObject;
+                    }
+
+                    if (template != null)
+                    {
+                        for (int i = currentSlotsCount; i < skillsCount; i++)
+                        {
+                            GameObject newRow = Instantiate(template, template.transform.parent);
+                            newRow.name = $"ItemRow {i}";
+
+                            InventoryItemSlot newSlot = new InventoryItemSlot
+                            {
+                                iconImage = FindComponent<Image>(newRow.transform, "IconCell/Icon"),
+                                nameText = FindComponent<Text>(newRow.transform, "ItemName"),
+                                statText = FindComponent<Text>(newRow.transform, "ItemStat"),
+                                button = newRow.GetComponent<Button>()
+                            };
+                            itemSlots.Add(newSlot);
+                        }
+                    }
+                }
+
+                // 3. Populate skills slots (5 stats + combat skills)
+                Color32 hpColor = new Color32(46, 204, 113, 255); // Green
+                Color32 kiColor = new Color32(52, 152, 219, 255); // Blue
+                Color32 atkColor = new Color32(231, 76, 60, 255); // Red
+                Color32 defColor = new Color32(149, 165, 166, 255); // Grey
+                Color32 critColor = new Color32(241, 196, 15, 255); // Yellow
+
+                int hpCost = data.BaseHP * 10;
+                ApplySkillSlot(0, $"HP gốc: {data.BaseHP}", $"{hpCost:N0} tiềm năng: tăng 20", "res/x4/mainimage/myTexture2dHP", hpColor);
+
+                int kiCost = data.BaseKi * 10;
+                ApplySkillSlot(1, $"KI gốc: {data.BaseKi}", $"{kiCost:N0} tiềm năng: tăng 20", "res/x4/mainimage/myTexture2dMP", kiColor);
+
+                int atkCost = data.BaseAtk * 100;
+                ApplySkillSlot(2, $"Sức đánh gốc: {data.BaseAtk}", $"{atkCost:N0} tiềm năng: tăng 1", "UI/Currency/gem_green", atkColor);
+
+                int defCost = (data.BaseDef + 1) * 500000;
+                ApplySkillSlot(3, $"Giáp gốc: {data.BaseDef}", $"{defCost:N0} tiềm năng: tăng 1", "UI/Currency/coin_stack", defColor);
+
+                int critCost = (data.BaseCritPercent + 1) * 50000000;
+                ApplySkillSlot(4, $"Chí mạng gốc: {data.BaseCritPercent}%", $"{critCost:N0} tiềm năng: tăng 1%", "UI/Currency/gem_green", critColor);
+
+                for (int i = 5; i < itemSlots.Count; i++)
+                {
+                    int skillIdx = i - 5;
+                    if (skillIdx < data.CombatSkills.Count)
+                    {
+                        var skill = data.CombatSkills[skillIdx];
+                        string statText = skill.SkillLevel == 0 ? "Chưa học (Bấm để học)" : $"Cấp {skill.SkillLevel}";
+                        string skillIconPath = string.IsNullOrEmpty(skill.IconKey) ? Config.Resources.hudKiSpritePath : skill.IconKey;
+                        ApplySkillSlot(i, skill.Name, statText, skillIconPath, new Color32(155, 89, 182, 255));
+                    }
+                    else
+                    {
+                        ClearItem(i);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < itemSlots.Count; i++)
                 {
                     ClearItem(i);
+                }
+            }
+
+            // Bind click events to buttons
+            for (int i = 0; i < itemSlots.Count; i++)
+            {
+                int index = i;
+                if (itemSlots[i].button != null && itemSlots[i].button)
+                {
+                    itemSlots[i].button.onClick.RemoveAllListeners();
+                    itemSlots[i].button.onClick.AddListener(() => OnRowClicked(index));
                 }
             }
         }
 
         private void ApplyStats(InventoryViewData data)
         {
-            if (statsText == null || data == null)
+            if (data == null)
             {
                 return;
             }
@@ -551,6 +575,9 @@ namespace TinyDragon.UI
             int totalDefense = data.BaseDef;
             int totalCrit = data.BaseCritPercent;
             int totalDamageReduction = data.BaseDamageReductionPercent;
+            int totalCritDamage = data.BaseCritDamagePercent;
+            float totalSpeed = data.BaseSpd;
+
             foreach (InventoryItemViewData item in data.Items)
             {
                 totalHP += item.BonusHP;
@@ -559,20 +586,22 @@ namespace TinyDragon.UI
                 totalDefense += item.BonusDef;
                 totalDamageReduction += item.BonusDamageReductionPercent;
                 totalCrit += item.BonusCritPercent;
+                totalCritDamage += item.BonusCritDamagePercent;
+                totalSpeed += item.BonusSpd;
             }
 
             int currentHP = data.CurrentHP;
             int currentKi = data.CurrentKi;
             if (Application.isPlaying)
             {
-                PlayerHealth playerHealth = FindAnyObjectByType<PlayerHealth>();
+                PlayerHealth playerHealth = ObjectLookup.Any<PlayerHealth>();
                 if (playerHealth != null)
                 {
                     currentHP = playerHealth.CurrentHealth;
                     totalHP = playerHealth.MaxHealth;
                 }
 
-                PlayerAttack playerAttack = FindAnyObjectByType<PlayerAttack>();
+                PlayerAttack playerAttack = ObjectLookup.Any<PlayerAttack>();
                 if (playerAttack != null)
                 {
                     currentKi = Mathf.RoundToInt(playerAttack.CurrentMana);
@@ -580,214 +609,193 @@ namespace TinyDragon.UI
                 }
             }
 
-            statsText.text =
+            string itemStatsContent =
                 $"HP: {Mathf.Min(currentHP, totalHP)} / {totalHP}\n" +
                 $"KI: {Mathf.Min(currentKi, totalKi)} / {totalKi}\n" +
-                $"Sức đánh: {totalAtk}, Crit: {totalCrit}%\n" +
-                $"Giáp: {totalDefense}, Giảm ST: {totalDamageReduction}%";
-        }
+                $"Sức đánh: {totalAtk}  Crit: {totalCrit}%\n" +
+                $"Giáp: {totalDefense}  Giảm ST: {totalDamageReduction}%";
 
-        private void ApplyEditorPreview()
-        {
-            if (Application.isPlaying)
+            if (itemStatsText != null)
             {
-                return;
+                itemStatsText.text = itemStatsContent;
             }
 
-            if (nameText != null)
+            if (skillStatsText != null)
             {
-                nameText.text = "DragonBoy250";
+                skillStatsText.text =
+                    $"Top: 0\n" +
+                    $"Điểm tiềm năng: {data.Exp:N0}\n" +
+                    $"Năng động: 0";
             }
 
-            if (statsText != null)
+            if (questStatsText != null)
             {
-                statsText.text = PreviewStatsText;
+                questStatsText.text = "Nhiệm vụ: Chưa có nhiệm vụ hoạt động";
             }
 
-            if (goldText != null) goldText.text = "2000";
-            if (bossGemText != null) bossGemText.text = "0";
-            if (premiumText != null) premiumText.text = "20";
-
-            for (int i = 0; i < itemNameTexts.Count; i++)
+            if (featureStatsText != null)
             {
-                if (itemIconImages[i] != null)
-                {
-                    itemIconImages[i].enabled = i < 2;
-                    itemIconImages[i].color = i == 0
-                        ? new Color32(195, 199, 200, 255)
-                        : new Color32(49, 61, 78, 255);
-                }
-
-                if (itemNameTexts[i] != null)
-                {
-                    itemNameTexts[i].text = i == 0 ? "Áo vải 3 lỗ" : i == 1 ? "Quần vải đen" : string.Empty;
-                }
-
-                if (itemStatTexts[i] != null)
-                {
-                    itemStatTexts[i].text = i == 0 ? "Giáp+2" : i == 1 ? "HP+30" : string.Empty;
-                }
+                featureStatsText.text = "Chức năng hệ thống";
             }
         }
 
         private void ApplyItem(int index, InventoryItemViewData item)
         {
-            if (itemIconImages[index] != null)
+            if (index >= itemSlots.Count) return;
+
+            var slot = itemSlots[index];
+            if (slot.iconImage != null && slot.iconImage)
             {
-                itemIconImages[index].enabled = true;
-                itemIconImages[index].color = GetIconColor(item);
+                slot.iconImage.enabled = true;
+                if (!string.IsNullOrEmpty(item.SpritePath))
+                {
+                    Sprite sprite = ResourceLoader.Load<Sprite>(item.SpritePath);
+                    if (sprite != null)
+                    {
+                        slot.iconImage.sprite = sprite;
+                        slot.iconImage.color = Color.white;
+                    }
+                    else
+                    {
+                        slot.iconImage.sprite = null;
+                        slot.iconImage.color = InventoryPanelFormatting.GetIconColor(item);
+                    }
+                }
+                else
+                {
+                    slot.iconImage.sprite = null;
+                    slot.iconImage.color = InventoryPanelFormatting.GetIconColor(item);
+                }
             }
 
-            if (itemNameTexts[index] != null)
+            if (slot.nameText != null && slot.nameText)
             {
-                itemNameTexts[index].text = item.Name;
+                slot.nameText.text = item.Name;
             }
 
-            if (itemStatTexts[index] != null)
+            if (slot.statText != null && slot.statText)
             {
-                itemStatTexts[index].text = BuildItemStat(item);
+                slot.statText.text = InventoryPanelFormatting.BuildItemStat(item);
             }
         }
 
         private void ClearItem(int index)
         {
-            if (itemIconImages[index] != null) itemIconImages[index].enabled = false;
-            if (itemNameTexts[index] != null) itemNameTexts[index].text = string.Empty;
-            if (itemStatTexts[index] != null) itemStatTexts[index].text = string.Empty;
+            if (index >= itemSlots.Count) return;
+
+            var slot = itemSlots[index];
+            if (slot.iconImage != null && slot.iconImage) slot.iconImage.enabled = false;
+            if (slot.nameText != null && slot.nameText) slot.nameText.text = string.Empty;
+            if (slot.statText != null && slot.statText) slot.statText.text = string.Empty;
         }
 
-        private string BuildItemStat(InventoryItemViewData item)
+        private void ApplySkillSlot(int index, string name, string statDesc, string spritePath, Color32 fallbackColor)
         {
-            if (item.UpgradeLevel > 0)
+            if (index >= itemSlots.Count) return;
+
+            var slot = itemSlots[index];
+            if (slot.iconImage != null && slot.iconImage)
             {
-                return $"Giáp+{item.UpgradeLevel}";
+                slot.iconImage.enabled = true;
+                if (!string.IsNullOrEmpty(spritePath))
+                {
+                    Sprite sprite = ResourceLoader.Load<Sprite>(spritePath);
+                    if (sprite != null)
+                    {
+                        slot.iconImage.sprite = sprite;
+                        slot.iconImage.color = Color.white;
+                    }
+                    else
+                    {
+                        slot.iconImage.sprite = null;
+                        slot.iconImage.color = fallbackColor;
+                    }
+                }
+                else
+                {
+                    slot.iconImage.sprite = null;
+                    slot.iconImage.color = fallbackColor;
+                }
             }
 
-            if (item.BonusHP != 0)
+            if (slot.nameText != null && slot.nameText)
             {
-                return $"HP+{item.BonusHP}";
+                slot.nameText.text = name;
             }
 
-            if (item.BonusAtk != 0)
+            if (slot.statText != null && slot.statText)
             {
-                return $"Sức đánh+{item.BonusAtk}";
+                slot.statText.text = statDesc;
             }
-
-            return item.Quantity > 1 ? $"x{item.Quantity}" : item.ItemType;
         }
 
-        private Color32 GetIconColor(InventoryItemViewData item)
+        private void OnRowClicked(int index)
         {
-            if (item.SlotType == "LEG")
+            if (activeTabIndex == 1)
             {
-                return new Color32(49, 61, 78, 255);
+                selectedItemIndex = index;
+                if (index < currentInventoryData.Items.Count)
+                {
+                    var item = currentInventoryData.Items[index];
+                    if (itemStatsText != null)
+                    {
+                        itemStatsText.text = $"{item.Name}\n" +
+                                             $"{InventoryPanelFormatting.BuildItemStatsDescription(item)}\n" +
+                                             $"Số lượng: {item.Quantity}\n" +
+                                             $"Cấp nâng cấp: {item.UpgradeLevel}";
+                    }
+                }
             }
-
-            if (item.SlotType == "BODY")
+            else if (activeTabIndex == 2)
             {
-                return new Color32(195, 199, 200, 255);
+                if (selectedSkillIndex == index)
+                {
+                    PerformSkillUpgrade(index);
+                }
+                else
+                {
+                    selectedSkillIndex = index;
+                    ShowSkillDetails(index);
+                }
             }
-
-            return new Color32(118, 132, 146, 255);
         }
 
-        private void CreateEye(Transform parent, Vector2 position)
+        private void ShowSkillDetails(int index)
         {
-            RectTransform eye = CreateRect("Eye", parent, new Vector2(16f, 22f));
-            SetRect(eye, position, new Vector2(16f, 22f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            AddImage(eye, Color.white).sprite = circleSprite;
+            if (currentInventoryData == null || skillStatsText == null) return;
 
-            RectTransform pupil = CreateRect("Pupil", eye, new Vector2(6f, 9f));
-            SetRect(pupil, new Vector2(5f, -7f), new Vector2(6f, 9f), new Vector2(0f, 1f), new Vector2(0f, 1f));
-            AddImage(pupil, Color.black).sprite = circleSprite;
+            skillStatsText.text = InventoryPanelFormatting.BuildSkillDetails(index, currentInventoryData);
         }
 
-        private void CreateCurrencyIcon(Transform parent, Vector2 position, Vector2 size, Sprite sprite, Color fallbackColor)
+        private void PerformSkillUpgrade(int index)
         {
-            RectTransform icon = CreateRect("CurrencyIcon", parent, size);
-            SetRect(icon, position, size, new Vector2(0f, 1f), new Vector2(0f, 1f));
-            Image image = AddImage(icon, sprite != null ? Color.white : fallbackColor);
-            image.sprite = sprite != null ? sprite : circleSprite;
-            image.preserveAspect = true;
-        }
+            if (currentInventoryData == null) return;
 
-        private void CreateCurrencyIcon(Transform parent, Vector2 position, Color color)
-        {
-            CreateCurrencyIcon(parent, position, new Vector2(22f, 18f), null, color);
-        }
+            string statType = InventoryPanelFormatting.GetUpgradeableBaseStat(index);
 
-        private Button CreateButton(string objectName, Transform parent, string label, Color32 background, Color32 textColor, int fontSize)
-        {
-            RectTransform rect = CreateRect(objectName, parent, new Vector2(64f, 32f));
-            Image image = AddImage(rect, background);
-            Button button = rect.gameObject.AddComponent<Button>();
-            button.targetGraphic = image;
-
-            Text text = CreateText("Label", rect, label, fontSize, FontStyle.Bold, textColor);
-            text.alignment = TextAnchor.MiddleCenter;
-            text.resizeTextForBestFit = true;
-            text.resizeTextMinSize = 10;
-            text.resizeTextMaxSize = fontSize;
-            SetRect(text.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, Vector2.one);
-            text.rectTransform.offsetMin = Vector2.zero;
-            text.rectTransform.offsetMax = Vector2.zero;
-            return button;
-        }
-
-        private Text CreateText(string objectName, Transform parent, string value, int fontSize, FontStyle style, Color color)
-        {
-            RectTransform rect = CreateRect(objectName, parent, new Vector2(100f, 24f));
-            Text text = rect.gameObject.AddComponent<Text>();
-            text.font = uiFont;
-            text.text = value;
-            text.fontSize = fontSize;
-            text.fontStyle = style;
-            text.color = color;
-            text.alignment = TextAnchor.UpperLeft;
-            text.horizontalOverflow = HorizontalWrapMode.Overflow;
-            text.verticalOverflow = VerticalWrapMode.Overflow;
-            return text;
-        }
-
-        private RectTransform CreateRect(string objectName, Transform parent, Vector2 size)
-        {
-            GameObject rectObject = new GameObject(objectName);
-            rectObject.transform.SetParent(parent, false);
-            RectTransform rect = rectObject.AddComponent<RectTransform>();
-            rect.sizeDelta = size;
-            return rect;
-        }
-
-        private Image AddImage(RectTransform rect, Color color)
-        {
-            Image image = rect.gameObject.AddComponent<Image>();
-            image.sprite = whiteSprite;
-            image.color = color;
-            return image;
-        }
-
-        private void AddOutline(GameObject target, Color color, Vector2 distance)
-        {
-            Outline outline = target.GetComponent<Outline>();
-            if (outline == null)
+            if (statType != null)
             {
-                outline = target.AddComponent<Outline>();
+                bool success = TinyDragonSaveManager.Instance.UpgradePlayerStat(statType);
+                if (success)
+                {
+                    Refresh();
+                    ShowSkillDetails(index);
+                }
+                else
+                {
+                    if (skillStatsText != null)
+                    {
+                        skillStatsText.text += "\n<color=red>Thất bại: Không đủ tiềm năng!</color>";
+                    }
+                }
             }
-
-            outline.effectColor = color;
-            outline.effectDistance = distance;
-        }
-
-        private void AddShadow(GameObject target, Color color, Vector2 distance)
-        {
-            Shadow shadow = target.GetComponent<Shadow>();
-            if (shadow == null)
+            else if (index >= 5)
             {
-                shadow = target.AddComponent<Shadow>();
+                if (skillStatsText != null)
+                {
+                    skillStatsText.text += "\n<color=orange>Tính năng nâng cấp chiêu thức này đang phát triển!</color>";
+                }
             }
-
-            shadow.effectColor = color;
-            shadow.effectDistance = distance;
         }
 
         private T FindComponent<T>(Transform root, string path) where T : Component
@@ -796,70 +804,112 @@ namespace TinyDragon.UI
             return child != null ? child.GetComponent<T>() : null;
         }
 
-        private void SetRect(RectTransform rect, Vector2 position, Vector2 size, Vector2 anchorMin, Vector2 anchorMax)
+        private void CleanupNullSlots()
         {
-            rect.anchorMin = anchorMin;
-            rect.anchorMax = anchorMax;
-            rect.pivot = new Vector2(0f, 1f);
-            rect.anchoredPosition = position;
-            if (size != Vector2.zero)
+            itemSlots.RemoveAll(slot => slot.iconImage == null && slot.nameText == null && slot.statText == null);
+            tabButtons.RemoveAll(btn => btn == null);
+        }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            CleanupNullSlots();
+
+            if (canvas == null) canvas = GetComponent<Canvas>();
+            if (panel == null)
             {
-                rect.sizeDelta = size;
+                Transform p = transform.Find("Panel");
+                if (p != null) panel = p.gameObject;
             }
-        }
 
-        private Sprite CreateSolidSprite(Color color)
-        {
-            Texture2D texture = new Texture2D(1, 1);
-            texture.SetPixel(0, 0, color);
-            texture.Apply();
-            return Sprite.Create(texture, new Rect(0f, 0f, 1f, 1f), new Vector2(0.5f, 0.5f), 1f);
-        }
-
-        private Sprite CreateCircleSprite(int size, Color color)
-        {
-            Texture2D texture = new Texture2D(size, size);
-            float center = (size - 1) * 0.5f;
-            float radius = size * 0.48f;
-            for (int y = 0; y < size; y++)
+            if (panel != null)
             {
-                for (int x = 0; x < size; x++)
+                if (nameText == null) nameText = FindComponent<Text>(panel.transform, "Header/Name");
+                if (questStatsText == null) questStatsText = FindComponent<Text>(panel.transform, "Header/Stats/QuestStats") ?? FindComponent<Text>(panel.transform, "Header/Stats/queststats");
+                if (itemStatsText == null) itemStatsText = FindComponent<Text>(panel.transform, "Header/Stats/ItemStats") ?? FindComponent<Text>(panel.transform, "Header/Stats/itemstats");
+                if (skillStatsText == null) skillStatsText = FindComponent<Text>(panel.transform, "Header/Stats/SkillStats") ?? FindComponent<Text>(panel.transform, "Header/Stats/skillstats");
+                if (featureStatsText == null) featureStatsText = FindComponent<Text>(panel.transform, "Header/Stats/FeatureStats") ?? FindComponent<Text>(panel.transform, "Header/Stats/featurestats");
+                if (goldText == null) goldText = FindComponent<Text>(panel.transform, "CurrencyBar/Gold");
+                if (bossGemText == null) bossGemText = FindComponent<Text>(panel.transform, "CurrencyBar/BossGem");
+                if (premiumText == null) premiumText = FindComponent<Text>(panel.transform, "CurrencyBar/Premium");
+                if (closeButton == null) closeButton = FindComponent<Button>(panel.transform, "Header/Close");
+                if (avatarImage == null)
                 {
-                    float distance = Vector2.Distance(new Vector2(x, y), new Vector2(center, center));
-                    texture.SetPixel(x, y, distance <= radius ? color : Color.clear);
+                    avatarImage = FindComponent<Image>(panel.transform, "Header/AvatarFrame/Avatar");
+                    if (avatarImage == null) avatarImage = FindComponent<Image>(panel.transform, "Header/Avatar");
+                    if (avatarImage == null) avatarImage = FindComponent<Image>(panel.transform, "AvatarFrame/Avatar");
+                    if (avatarImage == null) avatarImage = FindComponent<Image>(panel.transform, "Avatar");
+                }
+
+                if (itemListPanel == null)
+                {
+                    Transform t = panel.transform.Find("ItemList");
+                    if (t == null) t = panel.transform.Find("Scroll View/Viewport/Content");
+                    if (t != null) itemListPanel = t.gameObject;
+                }
+                if (questPanel == null)
+                {
+                    Transform t = panel.transform.Find("QuestList");
+                    if (t == null) t = panel.transform.Find("Quest");
+                    if (t != null) questPanel = t.gameObject;
+                }
+                if (skillPanel == null)
+                {
+                    Transform t = panel.transform.Find("SkillList");
+                    if (t == null) t = panel.transform.Find("Skill");
+                    if (t != null) skillPanel = t.gameObject;
+                }
+                if (featurePanel == null)
+                {
+                    Transform t = panel.transform.Find("FeatureList");
+                    if (t == null) t = panel.transform.Find("Feature");
+                    if (t != null) featurePanel = t.gameObject;
+                }
+                if (downArrowButton == null)
+                {
+                    Transform t = panel.transform.Find("ItemList/DownArrow");
+                    if (t == null) t = panel.transform.Find("DownArrow");
+                    if (t != null) downArrowButton = t.GetComponent<Button>();
+                }
+
+                // Auto-locate Tabs
+                if (tabButtons.Count == 0)
+                {
+                    tabButtons.Clear();
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Transform tab = panel.transform.Find($"Tab {i}");
+                        if (tab != null)
+                        {
+                            Button btn = tab.GetComponent<Button>();
+                            if (btn != null) tabButtons.Add(btn);
+                        }
+                    }
+                }
+
+                // Find all item rows in the item list panel
+                if (itemListPanel != null)
+                {
+                    Transform container = itemListPanel.transform.Find("Viewport/Content");
+                    if (container == null) container = itemListPanel.transform;
+
+                    itemSlots.Clear();
+                    foreach (Transform child in container)
+                    {
+                        if (child.name.StartsWith("ItemRow"))
+                        {
+                            InventoryItemSlot slot = new InventoryItemSlot
+                            {
+                                iconImage = FindComponent<Image>(child, "IconCell/Icon"),
+                                nameText = FindComponent<Text>(child, "ItemName"),
+                                statText = FindComponent<Text>(child, "ItemStat")
+                            };
+                            itemSlots.Add(slot);
+                        }
+                    }
                 }
             }
-
-            texture.Apply();
-            return Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), 100f);
         }
-
-        private void ClearChildrenImmediate()
-        {
-            for (int i = transform.childCount - 1; i >= 0; i--)
-            {
-                Transform child = transform.GetChild(i);
-                if (Application.isPlaying)
-                {
-                    Destroy(child.gameObject);
-                }
-                else
-                {
-                    DestroyImmediate(child.gameObject);
-                }
-            }
-        }
-
-        private void EnsureEventSystem()
-        {
-            if (FindAnyObjectByType<EventSystem>() != null)
-            {
-                return;
-            }
-
-            GameObject eventSystemObject = new GameObject("EventSystem");
-            eventSystemObject.AddComponent<EventSystem>();
-            eventSystemObject.AddComponent<StandaloneInputModule>();
-        }
+#endif
     }
 }

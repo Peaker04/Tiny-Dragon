@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 using TMPro;
+using TinyDragon.Shared.Unity;
 
 namespace TinyDragon.UI
 {
@@ -16,7 +17,11 @@ namespace TinyDragon.UI
         public bool enableJump;
         public bool enableAttack;
         public bool enablePowerShot;
+        public bool enablePunch;
+        public bool enableKick;
         public bool enableInventory;
+        public bool enablePause;
+        public bool enableSettings;
 
         [Header("Custom Enables (Text)")]
         public string[] customEnables;
@@ -51,7 +56,7 @@ namespace TinyDragon.UI
                 return;
             }
 
-            playerInput = FindAnyObjectByType<PlayerInputReader>();
+            playerInput = ObjectLookup.Any<PlayerInputReader>();
 
             if (!forceShowTutorial && PlayerPrefs.GetInt("HasSeenTutorial", 0) == 1)
             {
@@ -112,7 +117,11 @@ namespace TinyDragon.UI
                         playerInput.EnableJump(step.enableJump);
                         playerInput.EnableAttack(step.enableAttack);
                         playerInput.EnablePowerShot(step.enablePowerShot);
-                        // playerInput.EnableInventory(step.enableInventory);
+                        playerInput.EnablePunch(step.enablePunch);
+                        playerInput.EnableKick(step.enableKick);
+                        playerInput.EnableInventory(step.enableInventory);
+                        playerInput.EnablePause(step.enablePause);
+                        playerInput.EnableSettings(step.enableSettings);
                     }
 
                     // Only clear custom features at the very start of the tutorial (step 0).
@@ -198,7 +207,11 @@ namespace TinyDragon.UI
                             tutorialSteps[i].enableJump = true;
                             tutorialSteps[i].enableAttack = true;
                             tutorialSteps[i].enablePowerShot = true;
+                            tutorialSteps[i].enablePunch = true;
+                            tutorialSteps[i].enableKick = true;
                             tutorialSteps[i].enableInventory = true;
+                            tutorialSteps[i].enablePause = true;
+                            tutorialSteps[i].enableSettings = true;
                         }
                         else
                         {
@@ -207,7 +220,11 @@ namespace TinyDragon.UI
                             tutorialSteps[i].enableJump = false;
                             tutorialSteps[i].enableAttack = false;
                             tutorialSteps[i].enablePowerShot = false;
+                            tutorialSteps[i].enablePunch = false;
+                            tutorialSteps[i].enableKick = false;
                             tutorialSteps[i].enableInventory = false;
+                            tutorialSteps[i].enablePause = false;
+                            tutorialSteps[i].enableSettings = false;
                         }
                         // Cập nhật lại trạng thái previous
                         tutorialSteps[i]._previousEnableAll = tutorialSteps[i].enableAll;
@@ -220,7 +237,11 @@ namespace TinyDragon.UI
                                           tutorialSteps[i].enableJump && 
                                           tutorialSteps[i].enableAttack && 
                                           tutorialSteps[i].enablePowerShot && 
-                                          tutorialSteps[i].enableInventory;
+                                          tutorialSteps[i].enablePunch &&
+                                          tutorialSteps[i].enableKick &&
+                                          tutorialSteps[i].enableInventory &&
+                                          tutorialSteps[i].enablePause &&
+                                          tutorialSteps[i].enableSettings;
                         
                         // Tự động điều chỉnh ô Enable All dựa theo các ô con
                         tutorialSteps[i].enableAll = allEnabled;

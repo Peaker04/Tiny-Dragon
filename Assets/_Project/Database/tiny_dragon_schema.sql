@@ -124,6 +124,7 @@ CREATE TABLE IF NOT EXISTS Item (
   name              TEXT NOT NULL,
   description       TEXT,
   iconKey           TEXT,
+  spritePath        TEXT,
   prefabKey         TEXT,
   itemType          TEXT NOT NULL
     CHECK(itemType IN ('WEAPON','ARMOR','CONSUMABLE','MATERIAL','BOSS_GEM','RADAR','DRAGON_BALL','KEY','PART','VIP_GEAR')),

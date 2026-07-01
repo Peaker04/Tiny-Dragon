@@ -49811,6 +49811,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 814988238669665201, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4658666115403653189, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -49849,6 +49853,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4658666115403653189, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5046261373221181949, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5065766520981434253, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5726535027347272443, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8979709515854807381, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
@@ -62869,6 +62885,7 @@ GameObject:
   - component: {fileID: 1792433694}
   - component: {fileID: 1792433695}
   - component: {fileID: 1792433697}
+  - component: {fileID: 1792433698}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -62994,6 +63011,21 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &1792433698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1792433693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3d4a5b6e7f8490aa1b2c3d4e5f60718, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
+  target: {fileID: 0}
+  offset: {x: 0, y: 0.75, z: -10}
+  smoothTime: 0.12
 --- !u!1 &1798898855
 GameObject:
   m_ObjectHideFlags: 0
@@ -77863,41 +77895,16 @@ PrefabInstance:
   m_Modification:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 3699858875958176861, guid: 44ee62aca27aaee48bbaab4b75eadd0c, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1792433694}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44ee62aca27aaee48bbaab4b75eadd0c, type: 3}
---- !u!1001 &3140000005
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5338252679808828295, guid: ea11fb613fcd81840975c59a7178bacb, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5338252679808828295, guid: ea11fb613fcd81840975c59a7178bacb, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5338252679808828295, guid: ea11fb613fcd81840975c59a7178bacb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5338252679808828295, guid: ea11fb613fcd81840975c59a7178bacb, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ea11fb613fcd81840975c59a7178bacb, type: 3}
 --- !u!1001 &3140000006
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -77950,6 +77957,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3140000009}
   - component: {fileID: 3140000010}
+  - component: {fileID: 3140000015}
   m_Layer: 6
   m_Name: MapWall_Left
   m_TagString: Untagged
@@ -78113,6 +78121,22 @@ MonoBehaviour:
   useTargetSpawnPosition: 1
   targetSpawnPosition: {x: 0.6, y: -14.98, z: 0}
   targetFacingDirection: 1
+--- !u!114 &3140000015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3140000008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6c7d8e9f0124a3b9c8d7e6f5a4b3c2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneExitOnPlayerContact
+  targetSceneName: DoiHoaCuc
+  useTargetSpawnPosition: 1
+  targetSpawnPosition: {x: 60.9999, y: -14.661, z: 0}
+  targetFacingDirection: -1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -78120,7 +78144,6 @@ SceneRoots:
   - {fileID: 1792433696}
   - {fileID: 345713630}
   - {fileID: 3140000004}
-  - {fileID: 3140000005}
   - {fileID: 3140000006}
   - {fileID: 3140000007}
   - {fileID: 92366222}

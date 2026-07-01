@@ -112,6 +112,9 @@ GameObject:
   - component: {fileID: 956085415}
   - component: {fileID: 956085416}
   - component: {fileID: 956085406}
+  - component: {fileID: 956085417}
+  - component: {fileID: 956085418}
+  - component: {fileID: 956085419}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -310,26 +313,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 512fd064676f40e0a7ecc16d3c8f5071, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileShooter
+  runtimeConfig: {fileID: 0}
   projectilePrefab: {fileID: 0}
   projectilePoolPrewarmCount: 4
-  projectileDamage: 12
-  projectileSpeed: 8
-  projectileLifetime: 2
-  projectileScale: 1.2
-  projectileSpawnOffset: {x: 0.6, y: 0.37}
-  projectileSprite: {fileID: 21300000, guid: e9c32b8f30ada4b4e8876bdaf533f912, type: 3}
-  projectileFacesRightByDefault: 1
-  projectileSortingLayerName: Default
-  projectileSortingOrder: 100
-  powerShotDamage: 36
-  powerShotSpeed: 6
-  powerShotLifetime: 3
-  powerShotScale: 1
-  powerShotSpawnOffset: {x: 0.8, y: 0.42}
-  powerShotSprite: {fileID: 21300000, guid: 0b11dc408440d4440a3c4cfc6566c580, type: 3}
-  powerShotFacesRightByDefault: 1
-  powerShotSortingLayerName: Default
-  powerShotSortingOrder: 100
+  normalShot:
+    damage: 12
+    speed: 8
+    lifetime: 2
+    scale: 1.2
+    spawnOffset: {x: 0.6, y: 0.37}
+    sprite: {fileID: 21300000, guid: e9c32b8f30ada4b4e8876bdaf533f912, type: 3}
+    facesRightByDefault: 1
+    sortingLayerName: Default
+    sortingOrder: 100
+  powerShot:
+    damage: 36
+    speed: 6
+    lifetime: 3
+    scale: 1
+    spawnOffset: {x: 0.8, y: 0.42}
+    sprite: {fileID: 21300000, guid: 0b11dc408440d4440a3c4cfc6566c580, type: 3}
+    facesRightByDefault: 1
+    sortingLayerName: Default
+    sortingOrder: 100
 --- !u!114 &956085414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,16 +351,15 @@ MonoBehaviour:
   inputReader: {fileID: 956085410}
   animatorDriver: {fileID: 956085412}
   projectileShooter: {fileID: 956085413}
+  mana: {fileID: 956085417}
+  comboAttack: {fileID: 956085419}
   attackCooldown: 0.35
   powerShotCooldown: 1.2
   powerShotManaCostRatio: 0.5
-  maxMana: 100
-  manaRegenRate: 10
   auraEffect: {fileID: 1676606902}
   audioSource: {fileID: 0}
   attackSound: {fileID: 0}
   powerShotSound: {fileID: 0}
-  comboWindow: 0.5
 --- !u!114 &956085415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,6 +422,56 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &956085417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69ee35fe259546d18c28fa403e59f4b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMana
+  maxMana: 100
+  manaRegenRate: 10
+--- !u!114 &956085418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d0cc7dab6bc44e7887340bf9cc2080f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMeleeHitbox
+  hitRadius: 0.8
+  hitOffset: {x: 0.8, y: 0.2}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+--- !u!114 &956085419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff08bfb6a9d436686b0c4f654bfbf9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerComboAttack
+  inputReader: {fileID: 956085410}
+  animatorDriver: {fileID: 956085412}
+  meleeHitbox: {fileID: 956085418}
+  comboWindow: 0.5
+  baseDamage: 12
+  audioSource: {fileID: 0}
+  attackSound: {fileID: 0}
 --- !u!1 &1432590104
 GameObject:
   m_ObjectHideFlags: 0

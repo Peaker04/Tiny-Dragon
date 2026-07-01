@@ -1,4 +1,5 @@
 using UnityEngine;
+using TinyDragon.Shared.Unity;
 
 public static class RuntimeSceneRoot
 {
@@ -27,7 +28,7 @@ public static class RuntimeSceneRoot
             return root;
         }
 
-        GameObject rootObject = GameObject.Find(RootName);
+        GameObject rootObject = ObjectLookup.SceneObject(RootName);
         if (rootObject == null)
         {
             rootObject = new GameObject(RootName);

@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using TinyDragon.Shared.Unity;
 
 [RequireComponent(typeof(Collider2D))]
 public sealed class SceneExitOnPlayerContact : MonoBehaviour
@@ -8,6 +8,7 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
     [SerializeField] private bool useTargetSpawnPosition;
     [SerializeField] private Vector3 targetSpawnPosition;
     [SerializeField] private float targetFacingDirection = 1f;
+    [SerializeField] private bool healOnExit;
 
     private bool isLoadingScene;
 
@@ -35,6 +36,16 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
         }
 
         isLoadingScene = true;
+
+        if (healOnExit)
+        {
+            PlayerHealth playerHealth = playerCollider.GetComponentInParent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.Revive();
+            }
+        }
+
         if (useTargetSpawnPosition)
         {
             PlayerSceneTransition.LoadSceneWithPlayerSpawn(
@@ -45,6 +56,6 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
+        SceneNavigator.LoadSceneIfSet(targetSceneName);
     }
 }

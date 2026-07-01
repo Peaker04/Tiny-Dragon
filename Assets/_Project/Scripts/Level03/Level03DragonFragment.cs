@@ -126,7 +126,6 @@ public class Level03DragonFragment : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / duration));
             transform.position = Vector3.LerpUnclamped(start, destination, t);
-            transform.Rotate(0f, 0f, 240f * Time.deltaTime);
             yield return null;
         }
 

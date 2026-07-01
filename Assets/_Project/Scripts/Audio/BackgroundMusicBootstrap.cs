@@ -1,23 +1,25 @@
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 
 public static class BackgroundMusicBootstrap
 {
     private const string PlayerName = "BackgroundMusicPlayer";
-    private const string ClipPath = "Music/XenoverseTrack16Loop";
     private const float Volume = 0.65f;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void PlayBackgroundMusic()
     {
-        if (GameObject.Find(PlayerName) != null)
+        if (ObjectLookup.SceneObject(PlayerName) != null)
         {
             return;
         }
 
-        AudioClip clip = Resources.Load<AudioClip>(ClipPath);
+        string clipPath = TinyDragonRuntimeConfigProvider.Resolve().Resources.backgroundMusicClipPath;
+        AudioClip clip = ResourceLoader.Load<AudioClip>(clipPath);
         if (clip == null)
         {
-            Debug.LogWarning($"Background music clip not found at Resources/{ClipPath}.");
+            Debug.LogWarning($"Background music clip not found at Resources/{clipPath}.");
             return;
         }
 

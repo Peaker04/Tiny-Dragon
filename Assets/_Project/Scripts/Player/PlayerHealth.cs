@@ -1,22 +1,26 @@
 using System;
 using TinyDragon.Data;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    private const string DefaultDamagePopupPrefabPath = "Combat/DamagePopup";
-
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private int maxHealth = GameplayBalanceDefaults.PlayerBaseHealth;
     [SerializeField] private FloatingDamageText damagePopupPrefab;
     [SerializeField] private int damagePopupPoolPrewarmCount = 4;
     [SerializeField] private Vector3 damagePopupOffset = new Vector3(0f, 1.1f, 0f);
     [SerializeField] private Color damagePopupColor = new Color(1f, 0.15f, 0.05f);
 
+    // Guide-scene immortality is handled exclusively by PlayerDeathSceneHandler.
+
     private int currentHealth;
     private int flatDamageReduction;
     private int damageReductionPercent;
     private bool isDead;
     private ComponentPool<FloatingDamageText> damagePopupPool;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     public static event Action<PlayerHealth> PlayerAvailable;
 
@@ -47,7 +51,12 @@ public class PlayerHealth : MonoBehaviour
         }
 
         int effectiveDamage = CalculateIncomingDamage(damage);
-        currentHealth = Mathf.Max(currentHealth - effectiveDamage, 0);
+        currentHealth -= effectiveDamage;
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+        }
+
         TinyDragonSaveManager.Instance.SaveCurrentHealth(currentHealth, maxHealth);
         ShowDamagePopup(effectiveDamage);
         HealthChanged?.Invoke(this);
@@ -113,7 +122,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (damagePopupPrefab == null)
         {
-            GameObject damagePopupPrefabObject = Resources.Load<GameObject>(DefaultDamagePopupPrefabPath);
+            GameObject damagePopupPrefabObject = ResourceLoader.Load<GameObject>(Config.Resources.damagePopupPrefabPath);
             if (damagePopupPrefabObject != null)
             {
                 damagePopupPrefab = damagePopupPrefabObject.GetComponent<FloatingDamageText>();

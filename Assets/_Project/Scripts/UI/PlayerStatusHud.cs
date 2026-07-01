@@ -1,19 +1,18 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TinyDragon.Config;
+using TinyDragon.Shared.UI;
+using TinyDragon.Shared.Unity;
 
 namespace TinyDragon.UI
 {
     public class PlayerStatusHud : MonoBehaviour
     {
-        private const string PanelSpritePath = "res/x4/mainimage/myTexture2dpanel";
-        private const string PanelSpriteName = "myTexture2dpanel_0";
-        private const string HealthSpritePath = "res/x4/mainimage/myTexture2dHP";
-        private const string HealthSpriteName = "myTexture2dHP_0";
-        private const string KiSpritePath = "res/x4/mainimage/myTexture2dMP";
-        private const string KiSpriteName = "myTexture2dMP_0";
-
         private static PlayerStatusHud activeHud;
+
+        [Header("Config")]
+        [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
 
         [SerializeField] private Vector2 panelSize = new Vector2(230f, 61f);
         [SerializeField] private Vector2 panelPadding = new Vector2(12f, 8f);
@@ -37,6 +36,7 @@ namespace TinyDragon.UI
         private Image targetHealthBarImage;
         private Text targetNameText;
         private Text targetHpText;
+        private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetActiveHud()
@@ -53,7 +53,7 @@ namespace TinyDragon.UI
 
             if (activeHud == null)
             {
-                activeHud = FindAnyObjectByType<PlayerStatusHud>();
+                activeHud = ObjectLookup.Any<PlayerStatusHud>();
             }
 
             if (activeHud == null)
@@ -85,7 +85,7 @@ namespace TinyDragon.UI
         {
             PlayerHealth.PlayerAvailable += HandlePlayerAvailable;
             SceneManager.sceneLoaded += HandleSceneLoaded;
-            Bind(FindAnyObjectByType<PlayerHealth>());
+            Bind(ObjectLookup.Any<PlayerHealth>());
             ApplySceneVisibility(SceneManager.GetActiveScene());
         }
 
@@ -98,7 +98,7 @@ namespace TinyDragon.UI
 
         private void Start()
         {
-            Bind(FindAnyObjectByType<PlayerHealth>());
+            Bind(ObjectLookup.Any<PlayerHealth>());
             ApplySceneVisibility(SceneManager.GetActiveScene());
         }
 
@@ -167,14 +167,21 @@ namespace TinyDragon.UI
         {
             ClearExistingChildren();
 
+            bool canvasWasNew = GetComponent<Canvas>() == null;
             Canvas canvas = GetComponent<Canvas>();
             if (canvas == null)
             {
                 canvas = gameObject.AddComponent<Canvas>();
             }
 
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 1000;
+            // Only override renderMode & sortingOrder when the Canvas is brand-new.
+            // If it already existed (set up in Inspector), leave it alone so the
+            // user's Screen Space – Camera setting is preserved after scene loads.
+            if (canvasWasNew)
+            {
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                canvas.sortingOrder = 1000;
+            }
 
             CanvasScaler scaler = GetComponent<CanvasScaler>();
             if (scaler == null)
@@ -190,14 +197,17 @@ namespace TinyDragon.UI
                 gameObject.AddComponent<GraphicRaycaster>();
             }
 
-            RectTransform panelRoot = CreateRect("Panel", transform);
+            ResourceCatalog resources = Config.Resources;
+            UiTheme uiTheme = Config.Ui;
+
+            RectTransform panelRoot = UiFactory.CreateRect("Panel", transform);
             panelRoot.anchorMin = new Vector2(0f, 1f);
             panelRoot.anchorMax = new Vector2(0f, 1f);
             panelRoot.pivot = new Vector2(0f, 1f);
             panelRoot.anchoredPosition = new Vector2(panelPadding.x, -panelPadding.y);
             panelRoot.sizeDelta = panelSize;
 
-            RectTransform frame = CreateRect("Frame", panelRoot);
+            RectTransform frame = UiFactory.CreateRect("Frame", panelRoot);
             frame.anchorMin = Vector2.zero;
             frame.anchorMax = Vector2.one;
             frame.pivot = new Vector2(0.5f, 0.5f);
@@ -205,14 +215,14 @@ namespace TinyDragon.UI
             frame.offsetMax = Vector2.zero;
 
             Image panelImage = frame.gameObject.AddComponent<Image>();
-            panelImage.sprite = LoadPanelSprite();
+            panelImage.sprite = PlayerStatusHudResources.LoadSprite(resources.hudPanelSpritePath, resources.hudPanelSpriteName);
             panelImage.preserveAspect = true;
             panelImage.raycastTarget = false;
             frameImage = panelImage;
 
-            healthBarImage = CreateStatusBar("HP Bar", frame, HealthSpritePath, HealthSpriteName, healthBarPosition, healthBarSize);
-            kiBarImage = CreateStatusBar("Ki Bar", frame, KiSpritePath, KiSpriteName, kiBarPosition, kiBarSize);
-            targetHealthBarImage = CreateStatusBar("Target HP Bar", frame, HealthSpritePath, HealthSpriteName, targetHealthBarPosition, targetHealthBarSize);
+            healthBarImage = CreateStatusBar("HP Bar", frame, resources.hudHealthSpritePath, resources.hudHealthSpriteName, healthBarPosition, healthBarSize);
+            kiBarImage = CreateStatusBar("Ki Bar", frame, resources.hudKiSpritePath, resources.hudKiSpriteName, kiBarPosition, kiBarSize);
+            targetHealthBarImage = CreateStatusBar("Target HP Bar", frame, resources.hudHealthSpritePath, resources.hudHealthSpriteName, targetHealthBarPosition, targetHealthBarSize);
             targetHealthBarImage.gameObject.SetActive(false);
             BuildTargetInfo(frame);
             ApplySceneVisibility(SceneManager.GetActiveScene());
@@ -220,9 +230,10 @@ namespace TinyDragon.UI
 
         private void ClearExistingChildren()
         {
-            for (int i = transform.childCount - 1; i >= 0; i--)
+            Transform panel = transform.Find("Panel");
+            if (panel != null)
             {
-                Destroy(transform.GetChild(i).gameObject);
+                Destroy(panel.gameObject);
             }
 
             frameImage = null;
@@ -273,25 +284,26 @@ namespace TinyDragon.UI
 
         private void BuildTargetInfo(RectTransform frame)
         {
-            RectTransform targetInfo = CreateRect("Target Info", frame);
+            UiTheme uiTheme = Config.Ui;
+            RectTransform targetInfo = UiFactory.CreateRect("Target Info", frame);
             targetInfo.anchorMin = new Vector2(0f, 1f);
             targetInfo.anchorMax = new Vector2(0f, 1f);
             targetInfo.pivot = new Vector2(0f, 1f);
             targetInfo.anchoredPosition = targetInfoPosition;
             targetInfo.sizeDelta = targetInfoSize;
 
-            targetNameText = CreateText("Name", targetInfo, 17, FontStyle.Bold, new Color32(22, 87, 33, 255));
+            targetNameText = UiFactory.CreateText("Name", targetInfo, 17, FontStyle.Bold, uiTheme.hudTargetNameColor);
             targetNameText.alignment = TextAnchor.MiddleCenter;
             targetNameText.resizeTextForBestFit = true;
             targetNameText.resizeTextMinSize = 10;
             targetNameText.resizeTextMaxSize = 17;
-            AddTextShadow(targetNameText.gameObject);
-            SetTextRect(targetNameText.rectTransform, new Vector2(2f, -2f), new Vector2(targetInfoSize.x - 4f, 22f));
+            UiFactory.AddShadow(targetNameText.gameObject, uiTheme.hudTextShadowColor, new Vector2(1f, -1f));
+            UiFactory.SetTopLeftRect(targetNameText.rectTransform, new Vector2(2f, -2f), new Vector2(targetInfoSize.x - 4f, 22f));
 
-            targetHpText = CreateText("HP", targetInfo, 17, FontStyle.Bold, new Color32(24, 81, 32, 255));
+            targetHpText = UiFactory.CreateText("HP", targetInfo, 17, FontStyle.Bold, uiTheme.hudTargetHpColor);
             targetHpText.alignment = TextAnchor.MiddleCenter;
-            AddTextShadow(targetHpText.gameObject);
-            SetTextRect(targetHpText.rectTransform, new Vector2(2f, -22f), new Vector2(targetInfoSize.x - 4f, 20f));
+            UiFactory.AddShadow(targetHpText.gameObject, uiTheme.hudTextShadowColor, new Vector2(1f, -1f));
+            UiFactory.SetTopLeftRect(targetHpText.rectTransform, new Vector2(2f, -22f), new Vector2(targetInfoSize.x - 4f, 20f));
 
             SetTargetVisible(false);
         }
@@ -305,7 +317,7 @@ namespace TinyDragon.UI
             Vector2 size
         )
         {
-            RectTransform rectTransform = CreateRect(objectName, parent);
+            RectTransform rectTransform = UiFactory.CreateRect(objectName, parent);
             rectTransform.anchorMin = new Vector2(0f, 1f);
             rectTransform.anchorMax = new Vector2(0f, 1f);
             rectTransform.pivot = new Vector2(0f, 1f);
@@ -313,72 +325,13 @@ namespace TinyDragon.UI
             rectTransform.sizeDelta = size;
 
             Image image = rectTransform.gameObject.AddComponent<Image>();
-            image.sprite = LoadSprite(spritePath, spriteName);
+            image.sprite = PlayerStatusHudResources.LoadSprite(spritePath, spriteName);
             image.type = Image.Type.Filled;
             image.fillMethod = Image.FillMethod.Horizontal;
             image.fillOrigin = 0;
             image.fillAmount = 1f;
             image.raycastTarget = false;
             return image;
-        }
-
-        private RectTransform CreateRect(string objectName, Transform parent)
-        {
-            GameObject rectObject = new GameObject(objectName);
-            rectObject.transform.SetParent(parent, false);
-            return rectObject.AddComponent<RectTransform>();
-        }
-
-        private Text CreateText(string objectName, Transform parent, int fontSize, FontStyle fontStyle, Color color)
-        {
-            RectTransform rectTransform = CreateRect(objectName, parent);
-            Text text = rectTransform.gameObject.AddComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (text.font == null)
-            {
-                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            }
-
-            text.fontSize = fontSize;
-            text.fontStyle = fontStyle;
-            text.color = color;
-            text.raycastTarget = false;
-            return text;
-        }
-
-        private void SetTextRect(RectTransform rectTransform, Vector2 anchoredPosition, Vector2 size)
-        {
-            rectTransform.anchorMin = new Vector2(0f, 1f);
-            rectTransform.anchorMax = new Vector2(0f, 1f);
-            rectTransform.pivot = new Vector2(0f, 1f);
-            rectTransform.anchoredPosition = anchoredPosition;
-            rectTransform.sizeDelta = size;
-        }
-
-        private void AddTextShadow(GameObject target)
-        {
-            Shadow shadow = target.AddComponent<Shadow>();
-            shadow.effectColor = new Color32(255, 255, 255, 160);
-            shadow.effectDistance = new Vector2(1f, -1f);
-        }
-
-        private Sprite LoadPanelSprite()
-        {
-            return LoadSprite(PanelSpritePath, PanelSpriteName);
-        }
-
-        private Sprite LoadSprite(string path, string spriteName)
-        {
-            Sprite[] sprites = Resources.LoadAll<Sprite>(path);
-            for (int i = 0; i < sprites.Length; i++)
-            {
-                if (sprites[i] != null && sprites[i].name == spriteName)
-                {
-                    return sprites[i];
-                }
-            }
-
-            return Resources.Load<Sprite>(path);
         }
 
         private void UpdateBars()
@@ -392,7 +345,7 @@ namespace TinyDragon.UI
 
             if (playerAttack == null)
             {
-                playerAttack = FindAnyObjectByType<PlayerAttack>();
+                playerAttack = ObjectLookup.Any<PlayerAttack>();
             }
 
             float manaPercent = 1f;
@@ -491,14 +444,19 @@ namespace TinyDragon.UI
 
         private bool IsSceneHidden(string sceneName)
         {
-            if (string.IsNullOrWhiteSpace(sceneName) || hiddenScenes == null)
+            string[] configuredHiddenScenes = Config.Scenes.hiddenHudScenes;
+            string[] scenesToCheck = configuredHiddenScenes != null && configuredHiddenScenes.Length > 0
+                ? configuredHiddenScenes
+                : hiddenScenes;
+
+            if (string.IsNullOrWhiteSpace(sceneName) || scenesToCheck == null)
             {
                 return false;
             }
 
-            for (int i = 0; i < hiddenScenes.Length; i++)
+            for (int i = 0; i < scenesToCheck.Length; i++)
             {
-                if (sceneName == hiddenScenes[i])
+                if (sceneName == scenesToCheck[i])
                 {
                     return true;
                 }
@@ -515,6 +473,24 @@ namespace TinyDragon.UI
             }
 
             image.fillAmount = Mathf.Clamp01(percent);
+        }
+
+        public void OnPauseClicked()
+        {
+            PauseManager pauseManager = ObjectLookup.Any<PauseManager>();
+            if (pauseManager != null)
+            {
+                pauseManager.TogglePause();
+            }
+        }
+
+        public void OnSettingsClicked()
+        {
+            SettingsManager settingsManager = ObjectLookup.Any<SettingsManager>();
+            if (settingsManager != null)
+            {
+                settingsManager.ToggleSettings();
+            }
         }
     }
 }

@@ -1,13 +1,13 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using TinyDragon.Data;
+using TinyDragon.Shared.Unity;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerSceneTransition : MonoBehaviour
 {
     [SerializeField] private bool enableSceneTransitions = true;
-    
-    
+
     [SerializeField] private float transitionExitPadding = 0.35f;
     [SerializeField] private float transitionEntryPadding = 1f;
     [SerializeField] private float transitionCooldown = 0.75f;
@@ -55,6 +55,12 @@ public class PlayerSceneTransition : MonoBehaviour
         CheckSceneTransition();
     }
 
+    /// <summary>
+    /// Edge-based transition is intentionally disabled.
+    /// Scene transitions use trigger-based SceneExitOnPlayerContact instead.
+    /// This method is kept as the guard-only stub so the Update loop
+    /// can be reactivated if edge-based flow is needed in the future.
+    /// </summary>
     private void CheckSceneTransition()
     {
         if (!enableSceneTransitions || isTransitioning || globalTransitionInProgress || Time.time < transitionsLockedUntil)
@@ -62,16 +68,12 @@ public class PlayerSceneTransition : MonoBehaviour
             return;
         }
 
-        if (gameObject.scene != SceneManager.GetActiveScene())
+        if (!SceneNavigator.IsActiveScene(gameObject.scene))
         {
             return;
         }
 
-        string activeSceneName = SceneManager.GetActiveScene().name;
-        float rightExitX = levelRightEdgeX - transitionExitPadding;
-        float leftExitX = levelLeftEdgeX + transitionExitPadding;
-
-        
+        // Edge-based transition body removed — use SceneExitOnPlayerContact triggers.
     }
 
     private void LoadLinkedScene(string sceneName, float spawnX, float facingDirection)
@@ -85,10 +87,15 @@ public class PlayerSceneTransition : MonoBehaviour
         globalTransitionInProgress = true;
         transitionsLockedUntil = Time.time + transitionCooldown;
         hasPendingSpawn = true;
-        pendingSpawnPosition = new Vector3(spawnX, transitionSpawnY, transform.position.z);
-        pendingFacingDirection = facingDirection;
+        float resolvedFacingDirection = Mathf.Approximately(facingDirection, 0f) ? 1f : Mathf.Sign(facingDirection);
+        pendingSpawnPosition = new Vector3(
+            spawnX + transitionEntryPadding * resolvedFacingDirection,
+            transitionSpawnY,
+            transform.position.z
+        );
+        pendingFacingDirection = resolvedFacingDirection;
         TinyDragonSaveManager.Instance.SaveCurrentPlayer();
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        SceneNavigator.LoadSceneIfSet(sceneName, LoadSceneMode.Single);
     }
 
     /// <summary>
@@ -106,7 +113,7 @@ public class PlayerSceneTransition : MonoBehaviour
         hasPendingSpawn = true;
         pendingSpawnPosition = spawnPosition;
         pendingFacingDirection = facingDirection;
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        SceneNavigator.LoadSceneIfSet(sceneName, LoadSceneMode.Single);
     }
 
     private void ApplyPendingSpawn()
@@ -149,7 +156,7 @@ public class PlayerSceneTransition : MonoBehaviour
             return;
         }
 
-        Camera sceneCamera = Camera.main;
+        UnityEngine.Camera sceneCamera = UnityEngine.Camera.main;
         if (sceneCamera == null)
         {
             return;

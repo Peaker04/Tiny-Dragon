@@ -11152,6 +11152,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -11180,8 +11181,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
-  m_RequiresOpaqueTextureOption: 2
+  m_RequiresDepthTextureOption: 0
+  m_RequiresOpaqueTextureOption: 0
   m_CameraType: 0
   m_Cameras: []
   m_RendererIndex: -1
@@ -11277,6 +11278,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3d4a5b6e7f8490aa1b2c3d4e5f60718, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
+  target: {fileID: 0}
+  offset: {x: 0, y: 0.75, z: -10}
+  smoothTime: 0.12
 --- !u!1 &523319078
 GameObject:
   m_ObjectHideFlags: 0
@@ -20608,7 +20624,7 @@ Transform:
   m_GameObject: {fileID: 1029069751}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.7998896, y: -2.8, z: 0}
+  m_LocalPosition: {x: 1.7998896, y: -3.27, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42560,7 +42576,7 @@ GameObject:
   - component: {fileID: 2058611516}
   - component: {fileID: 2058611515}
   m_Layer: 0
-  m_Name: ExitToLevel03
+  m_Name: GroundColliderWall_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42580,7 +42596,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneExitOnPlayerContact
   targetSceneName: Level_03
   useTargetSpawnPosition: 1
-  targetSpawnPosition: {x: -12, y: -3.5, z: 0}
+  targetSpawnPosition: {x: -4.61, y: -3.38, z: 0}
   targetFacingDirection: 1
 --- !u!61 &2058611516
 BoxCollider2D:
@@ -43728,6 +43744,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2119354098}
   - component: {fileID: 2119354099}
+  - component: {fileID: 2119354100}
   m_Layer: 6
   m_Name: GroundCollider (1)
   m_TagString: Untagged
@@ -43796,6 +43813,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.25056648, y: 9.458059}
   m_EdgeRadius: 0
+--- !u!114 &2119354100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2119354097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6c7d8e9f0124a3b9c8d7e6f5a4b3c2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneExitOnPlayerContact
+  targetSceneName: ThungLungTre
+  useTargetSpawnPosition: 1
+  targetSpawnPosition: {x: 49.5171, y: -11.8078, z: 0}
+  targetFacingDirection: 1
 --- !u!1 &2122252365
 GameObject:
   m_ObjectHideFlags: 0
@@ -44168,6 +44201,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 814988238669665201, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4658666115403653189, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -44206,6 +44243,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4658666115403653189, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5046261373221181949, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5065766520981434253, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5726535027347272443, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8979709515854807381, guid: 56fce2c953c657343a7f9fb4ce1ab3ae, type: 3}
@@ -44412,35 +44461,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44ee62aca27aaee48bbaab4b75eadd0c, type: 3}
---- !u!1001 &3140000007
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5338252679808828295, guid: ea11fb613fcd81840975c59a7178bacb, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5338252679808828295, guid: ea11fb613fcd81840975c59a7178bacb, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5338252679808828295, guid: ea11fb613fcd81840975c59a7178bacb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5338252679808828295, guid: ea11fb613fcd81840975c59a7178bacb, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ea11fb613fcd81840975c59a7178bacb, type: 3}
 --- !u!1001 &3140000008
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44667,7 +44687,7 @@ Transform:
   m_GameObject: {fileID: 3140000010}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.79, y: -12.14, z: 0}
+  m_LocalPosition: {x: 14.79, y: -12.58, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44703,7 +44723,7 @@ MonoBehaviour:
   energyDamage: 20
   projectileSpeed: 5
   projectileLifetime: 3
-  projectileScale: 0.45
+  projectileScale: 1
   projectileSpawnOffset: {x: 0.8, y: 0.15}
   projectileSprite: {fileID: 21300000, guid: 4401b9a146cb47219daf23a582f26679, type: 3}
   projectileFacesRightByDefault: 1
@@ -44828,7 +44848,6 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 3140000006}
-  - {fileID: 3140000007}
   - {fileID: 3140000008}
   - {fileID: 3140000015}
   - {fileID: 121303967}

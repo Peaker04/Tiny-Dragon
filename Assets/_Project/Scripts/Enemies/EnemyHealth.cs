@@ -1,13 +1,14 @@
 using TinyDragon.Data;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    private const string DefaultDamagePopupPrefabPath = "Combat/DamagePopup";
-
     private static Sprite healthBarSprite;
     private static Material healthBarMaterial;
 
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private string displayName = "Khủng long";
     [SerializeField] private string balanceEnemyId;
     [SerializeField] private int maxHealth = GameplayBalanceDefaults.NormalEnemyHealth;
@@ -28,6 +29,7 @@ public class EnemyHealth : MonoBehaviour
     private SpriteRenderer healthBarBack;
     private SpriteRenderer healthBarFill;
     private ComponentPool<FloatingDamageText> damagePopupPool;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     public int CurrentHealth => currentHealth;
     public int MaxHealth => maxHealth;
@@ -38,6 +40,7 @@ public class EnemyHealth : MonoBehaviour
 
     private void Awake()
     {
+        if (!Application.isPlaying) return;
         ApplyDatabaseBalanceIfAvailable();
         EnsureDamagePopupPool();
         ResetHealth();
@@ -45,6 +48,7 @@ public class EnemyHealth : MonoBehaviour
 
     private void OnEnable()
     {
+        if (!Application.isPlaying) return;
         ResetHealth();
         SetHealthBarActive(showHealthBar);
     }
@@ -100,10 +104,22 @@ public class EnemyHealth : MonoBehaviour
             return;
         }
 
-        currentHealth = Mathf.Max(currentHealth - damage, 0);
+        int actualDamage = damage;
+        IEnemyDamageFilter filter = GetComponent<IEnemyDamageFilter>();
+        if (filter != null)
+        {
+            actualDamage = filter.FilterDamage(damage);
+        }
+
+        if (actualDamage <= 0)
+        {
+            return;
+        }
+
+        currentHealth = Mathf.Max(currentHealth - actualDamage, 0);
         UpdateHealthBar();
-        ShowDamagePopup(damage);
-        Debug.Log($"Enemy took {damage} damage. HP: {currentHealth}/{maxHealth}", this);
+        ShowDamagePopup(actualDamage);
+        Debug.Log($"Enemy took {actualDamage} damage. HP: {currentHealth}/{maxHealth}", this);
 
         if (currentHealth <= 0)
         {
@@ -284,7 +300,7 @@ public class EnemyHealth : MonoBehaviour
 
         if (damagePopupPrefab == null)
         {
-            GameObject damagePopupPrefabObject = Resources.Load<GameObject>(DefaultDamagePopupPrefabPath);
+            GameObject damagePopupPrefabObject = ResourceLoader.Load<GameObject>(Config.Resources.damagePopupPrefabPath);
             if (damagePopupPrefabObject != null)
             {
                 damagePopupPrefab = damagePopupPrefabObject.GetComponent<FloatingDamageText>();
