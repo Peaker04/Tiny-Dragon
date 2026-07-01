@@ -19,6 +19,7 @@ public class ProjectileShooter : MonoBehaviour
     [SerializeField] private ProjectileSpec normalShot = new ProjectileSpec
     {
         damage = GameplayBalanceDefaults.PlayerBaseAttack,
+        damageSource = PlayerDamageSource.NormalShot,
         speed = 8f,
         lifetime = 2f,
         scale = 1.2f,
@@ -32,6 +33,7 @@ public class ProjectileShooter : MonoBehaviour
     [SerializeField] private ProjectileSpec powerShot = new ProjectileSpec
     {
         damage = GameplayBalanceDefaults.PlayerPowerShotDamage,
+        damageSource = PlayerDamageSource.PowerShot,
         speed = 6f,
         lifetime = 3f,
         scale = 1f,
@@ -46,8 +48,14 @@ public class ProjectileShooter : MonoBehaviour
     private float suppressNextShotUntil;
     private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
+    private void OnValidate()
+    {
+        EnsureDamageSources();
+    }
+
     private void Awake()
     {
+        EnsureDamageSources();
         EnsurePool();
     }
 
@@ -85,6 +93,12 @@ public class ProjectileShooter : MonoBehaviour
         powerShot.damage = Mathf.Max(damage, 1);
     }
 
+    private void EnsureDamageSources()
+    {
+        normalShot.damageSource = PlayerDamageSource.NormalShot;
+        powerShot.damageSource = PlayerDamageSource.PowerShot;
+    }
+
     private void ShootProjectile(ProjectileSpec spec, bool warnIfSpriteMissing)
     {
         if (spec.sprite == null && warnIfSpriteMissing)
@@ -109,6 +123,7 @@ public class ProjectileShooter : MonoBehaviour
             projectileDirection,
             spec.speed,
             spec.damage,
+            spec.damageSource,
             spec.lifetime,
             spec.sprite,
             spec.scale,

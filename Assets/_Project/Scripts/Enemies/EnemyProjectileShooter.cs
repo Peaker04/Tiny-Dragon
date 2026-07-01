@@ -28,6 +28,17 @@ public class EnemyProjectileShooter : MonoBehaviour
         EnsureProjectilePool();
     }
 
+    public void ConfigureProjectileVisual(Sprite sprite, float scale, Vector2 spawnOffset)
+    {
+        if (sprite != null)
+        {
+            projectileSprite = sprite;
+        }
+
+        projectileScale = Mathf.Max(0.05f, scale);
+        projectileSpawnOffset = spawnOffset;
+    }
+
     /// <summary>
     /// Fires a projectile toward the given target position.
     /// </summary>

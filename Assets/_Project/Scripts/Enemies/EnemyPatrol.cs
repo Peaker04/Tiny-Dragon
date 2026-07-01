@@ -13,6 +13,7 @@ public class EnemyPatrol : MonoBehaviour
     private enum EnemyState
     {
         Patrol,
+        Chase,
         MeleeAttack,
         RangedAttack
     }
@@ -60,6 +61,12 @@ public class EnemyPatrol : MonoBehaviour
     private bool hasPatrolBounds;
     private float patrolMinX;
     private float patrolMaxX;
+    private bool hasArenaAwarenessBounds;
+    private bool chasePlayerInsideArenaBounds;
+    private float arenaAwarenessMinX;
+    private float arenaAwarenessMaxX;
+    private float arenaAwarenessMinY;
+    private float arenaAwarenessMaxY;
     private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     private void Awake()
@@ -116,6 +123,11 @@ public class EnemyPatrol : MonoBehaviour
             return EnemyState.RangedAttack;
         }
 
+        if (ShouldChasePlayer())
+        {
+            return EnemyState.Chase;
+        }
+
         return EnemyState.Patrol;
     }
 
@@ -128,6 +140,9 @@ public class EnemyPatrol : MonoBehaviour
                 break;
             case EnemyState.RangedAttack:
                 RangeAttackPlayer();
+                break;
+            case EnemyState.Chase:
+                ChasePlayer();
                 break;
             case EnemyState.Patrol:
             default:
@@ -155,11 +170,47 @@ public class EnemyPatrol : MonoBehaviour
         FlipToDirection(moveDirection);
     }
 
+    private bool ShouldChasePlayer()
+    {
+        if (!chasePlayerInsideArenaBounds || player == null || !IsPlayerInsideArenaAwareness())
+        {
+            return false;
+        }
+
+        float horizontalDistance = Mathf.Abs(player.position.x - transform.position.x);
+        float verticalDistance = Mathf.Abs(player.position.y - transform.position.y);
+        return horizontalDistance > rangeAttackRange && verticalDistance <= verticalAttackTolerance;
+    }
+
+    private void ChasePlayer()
+    {
+        float directionToPlayer = Mathf.Sign(player.position.x - transform.position.x);
+        float currentX = rb != null ? rb.position.x : transform.position.x;
+
+        if (hasPatrolBounds)
+        {
+            if ((directionToPlayer < 0f && currentX <= patrolMinX) || (directionToPlayer > 0f && currentX >= patrolMaxX))
+            {
+                StopMovingHorizontally();
+                FlipToDirection(directionToPlayer);
+                return;
+            }
+        }
+
+        MoveHorizontally(directionToPlayer);
+        FlipToDirection(directionToPlayer);
+    }
+
     // --- Melee attack ---
 
     private bool CanAttackPlayer()
     {
         if (player == null)
+        {
+            return false;
+        }
+
+        if (!IsPlayerInsideArenaAwareness())
         {
             return false;
         }
@@ -201,6 +252,11 @@ public class EnemyPatrol : MonoBehaviour
     private bool CanRangeAttackPlayer()
     {
         if (player == null)
+        {
+            return false;
+        }
+
+        if (!IsPlayerInsideArenaAwareness())
         {
             return false;
         }
@@ -326,6 +382,53 @@ public class EnemyPatrol : MonoBehaviour
         patrolMinX = Mathf.Min(minimumX, maximumX);
         patrolMaxX = Mathf.Max(minimumX, maximumX);
         hasPatrolBounds = patrolMinX < patrolMaxX;
+    }
+
+    public void SetArenaAwareness(float horizontalRange, float verticalRange)
+    {
+        rangeAttackRange = Mathf.Max(rangeAttackRange, horizontalRange);
+        verticalAttackTolerance = Mathf.Max(verticalAttackTolerance, verticalRange);
+        hasArenaAwarenessBounds = false;
+        chasePlayerInsideArenaBounds = false;
+    }
+
+    public void SetArenaAwarenessBounds(Bounds groundBounds, float horizontalPadding, float belowGroundTolerance, float aboveGroundTolerance)
+    {
+        SetArenaAwarenessBounds(groundBounds, horizontalPadding, belowGroundTolerance, aboveGroundTolerance, rangeAttackRange, true);
+    }
+
+    public void SetArenaAwarenessBounds(
+        Bounds groundBounds,
+        float horizontalPadding,
+        float belowGroundTolerance,
+        float aboveGroundTolerance,
+        float rangedAttackDistance,
+        bool chaseWhenAware
+    )
+    {
+        rangeAttackRange = Mathf.Max(attackRange + 0.1f, rangedAttackDistance);
+        verticalAttackTolerance = Mathf.Max(verticalAttackTolerance, belowGroundTolerance + aboveGroundTolerance);
+
+        arenaAwarenessMinX = groundBounds.min.x - horizontalPadding;
+        arenaAwarenessMaxX = groundBounds.max.x + horizontalPadding;
+        arenaAwarenessMinY = groundBounds.max.y - belowGroundTolerance;
+        arenaAwarenessMaxY = groundBounds.max.y + aboveGroundTolerance;
+        hasArenaAwarenessBounds = true;
+        chasePlayerInsideArenaBounds = chaseWhenAware;
+    }
+
+    private bool IsPlayerInsideArenaAwareness()
+    {
+        if (!hasArenaAwarenessBounds || player == null)
+        {
+            return true;
+        }
+
+        Vector3 playerPosition = player.position;
+        return playerPosition.x >= arenaAwarenessMinX
+            && playerPosition.x <= arenaAwarenessMaxX
+            && playerPosition.y >= arenaAwarenessMinY
+            && playerPosition.y <= arenaAwarenessMaxY;
     }
 
     // --- Movement helpers ---

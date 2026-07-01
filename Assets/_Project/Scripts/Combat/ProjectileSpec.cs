@@ -10,6 +10,7 @@ namespace TinyDragon.Combat
     public struct ProjectileSpec
     {
         public int damage;
+        public PlayerDamageSource damageSource;
         public float speed;
         public float lifetime;
         public float scale;

@@ -1,3 +1,4 @@
+using TinyDragon.Combat;
 using UnityEngine;
 
 /// <summary>
@@ -17,6 +18,11 @@ public class PlayerMeleeHitbox : MonoBehaviour
     /// </summary>
     public void DealDamage(int damage)
     {
+        DealDamage(damage, PlayerDamageSource.Generic);
+    }
+
+    public void DealDamage(int damage, PlayerDamageSource source)
+    {
         float facingDirection = transform.localScale.x >= 0f ? 1f : -1f;
         Vector2 scaledOffset = new Vector2(hitOffset.x * facingDirection, hitOffset.y);
         Vector2 hitPosition = (Vector2)transform.position + scaledOffset;
@@ -27,7 +33,7 @@ public class PlayerMeleeHitbox : MonoBehaviour
             EnemyHealth enemyHealth = enemy.GetComponentInParent<EnemyHealth>();
             if (enemyHealth != null)
             {
-                enemyHealth.TakeDamage(damage);
+                enemyHealth.TakeDamage(damage, source);
             }
         }
     }

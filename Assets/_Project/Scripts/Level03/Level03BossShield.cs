@@ -1,4 +1,5 @@
 using System.Collections;
+using TinyDragon.Combat;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -33,7 +34,7 @@ public class Level03BossShield : MonoBehaviour, IEnemyDamageFilter
         SetRootColor(Color.white);
     }
 
-    public int FilterDamage(int incomingDamage)
+    public int FilterDamage(int incomingDamage, PlayerDamageSource source)
     {
         if (!IsShielded)
         {

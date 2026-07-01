@@ -1,5 +1,6 @@
 using TinyDragon.Data;
 using TinyDragon.Config;
+using TinyDragon.Combat;
 using TinyDragon.Shared.Unity;
 using UnityEngine;
 
@@ -99,6 +100,11 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        TakeDamage(damage, PlayerDamageSource.Generic);
+    }
+
+    public void TakeDamage(int damage, PlayerDamageSource source)
+    {
         if (damage <= 0 || currentHealth <= 0)
         {
             return;
@@ -108,7 +114,7 @@ public class EnemyHealth : MonoBehaviour
         IEnemyDamageFilter filter = GetComponent<IEnemyDamageFilter>();
         if (filter != null)
         {
-            actualDamage = filter.FilterDamage(damage);
+            actualDamage = filter.FilterDamage(damage, source);
         }
 
         if (actualDamage <= 0)

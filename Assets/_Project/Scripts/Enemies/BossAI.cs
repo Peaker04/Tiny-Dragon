@@ -60,6 +60,11 @@ public class BossAI : MonoBehaviour
     private bool hasPendingEnergyShot;
     private bool isMovingAnimation;
     private string currentAttackState;
+    private bool hasArenaAwarenessBounds;
+    private float arenaAwarenessMinX;
+    private float arenaAwarenessMaxX;
+    private float arenaAwarenessMinY;
+    private float arenaAwarenessMaxY;
 
     private void Awake()
     {
@@ -101,6 +106,13 @@ public class BossAI : MonoBehaviour
             SetMoving(false);
             StopMoving();
             FacePlayer();
+            return;
+        }
+
+        if (!IsPlayerInsideArenaAwareness())
+        {
+            SetMoving(false);
+            StopMoving();
             return;
         }
 
@@ -156,9 +168,44 @@ public class BossAI : MonoBehaviour
         energyDamage = Mathf.Max(rangedDamage, 1);
     }
 
+    public void SetArenaAwareness(float horizontalRange, float verticalRange)
+    {
+        detectRange = Mathf.Max(detectRange, horizontalRange);
+        energyRange = Mathf.Max(energyRange, horizontalRange);
+        verticalTolerance = Mathf.Max(verticalTolerance, verticalRange);
+        hasArenaAwarenessBounds = false;
+    }
+
+    public void SetArenaAwarenessBounds(Bounds groundBounds, float horizontalPadding, float belowGroundTolerance, float aboveGroundTolerance)
+    {
+        detectRange = Mathf.Max(detectRange, groundBounds.size.x + horizontalPadding * 2f);
+        energyRange = Mathf.Max(energyRange, groundBounds.size.x + horizontalPadding * 2f);
+        verticalTolerance = Mathf.Max(verticalTolerance, belowGroundTolerance + aboveGroundTolerance);
+
+        arenaAwarenessMinX = groundBounds.min.x - horizontalPadding;
+        arenaAwarenessMaxX = groundBounds.max.x + horizontalPadding;
+        arenaAwarenessMinY = groundBounds.max.y - belowGroundTolerance;
+        arenaAwarenessMaxY = groundBounds.max.y + aboveGroundTolerance;
+        hasArenaAwarenessBounds = true;
+    }
+
+    private bool IsPlayerInsideArenaAwareness()
+    {
+        if (!hasArenaAwarenessBounds || player == null)
+        {
+            return true;
+        }
+
+        Vector3 playerPosition = player.position;
+        return playerPosition.x >= arenaAwarenessMinX
+            && playerPosition.x <= arenaAwarenessMaxX
+            && playerPosition.y >= arenaAwarenessMinY
+            && playerPosition.y <= arenaAwarenessMaxY;
+    }
+
     public void DealMeleeDamage()
     {
-        if (playerHealth == null || player == null)
+        if (playerHealth == null || player == null || !IsPlayerInsideArenaAwareness())
         {
             return;
         }
@@ -173,7 +220,7 @@ public class BossAI : MonoBehaviour
 
     public void ShootEnergyProjectile()
     {
-        if (player == null)
+        if (player == null || !IsPlayerInsideArenaAwareness())
         {
             return;
         }

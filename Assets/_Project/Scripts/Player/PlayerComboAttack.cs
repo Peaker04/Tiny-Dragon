@@ -1,4 +1,5 @@
 using TinyDragon.Data;
+using TinyDragon.Combat;
 using UnityEngine;
 
 /// <summary>
@@ -48,7 +49,7 @@ public class PlayerComboAttack : MonoBehaviour
 
         animatorDriver?.TriggerPunch(punchComboStep);
         PlaySound(attackSound);
-        meleeHitbox?.DealDamage(baseDamage);
+        meleeHitbox?.DealDamage(baseDamage, PlayerDamageSource.Punch);
         lastPunchTime = Time.time;
         return true;
     }
@@ -70,7 +71,7 @@ public class PlayerComboAttack : MonoBehaviour
 
         animatorDriver?.TriggerKick(kickComboStep);
         PlaySound(attackSound);
-        meleeHitbox?.DealDamage(baseDamage);
+        meleeHitbox?.DealDamage(baseDamage, PlayerDamageSource.Kick);
         lastKickTime = Time.time;
         return true;
     }

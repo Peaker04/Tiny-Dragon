@@ -1,3 +1,4 @@
+using TinyDragon.Combat;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -8,6 +9,7 @@ public class PlayerProjectile : MonoBehaviour
     private static Material spriteDefaultMaterial;
 
     private int damage;
+    private PlayerDamageSource damageSource = PlayerDamageSource.Generic;
     private float lifetime;
     private float age;
     private Rigidbody2D rb;
@@ -33,6 +35,7 @@ public class PlayerProjectile : MonoBehaviour
         Vector2 direction,
         float speed,
         int projectileDamage,
+        PlayerDamageSource projectileDamageSource,
         float projectileLifetime,
         Sprite projectileSprite,
         float projectileScale,
@@ -43,6 +46,7 @@ public class PlayerProjectile : MonoBehaviour
     )
     {
         damage = projectileDamage;
+        damageSource = projectileDamageSource;
         lifetime = projectileLifetime;
         age = 0f;
         releaseToPool = releaseHandler;
@@ -92,7 +96,7 @@ public class PlayerProjectile : MonoBehaviour
         }
 
         Debug.Log($"Player projectile hit enemy for {damage} damage.");
-        enemyHealth.TakeDamage(damage);
+        enemyHealth.TakeDamage(damage, damageSource);
         BossAI hitBoss = enemyHealth.GetComponent<BossAI>();
         if (hitBoss != null)
         {
