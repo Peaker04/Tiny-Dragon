@@ -13,6 +13,7 @@ public class PlayerComboAttack : MonoBehaviour
     [SerializeField] private PlayerAnimatorDriver animatorDriver;
     [SerializeField] private PlayerMeleeHitbox meleeHitbox;
     [SerializeField] private float comboWindow = 0.5f;
+    [SerializeField] private float comboInputLockout = 0.05f;
     [SerializeField] private int baseDamage = GameplayBalanceDefaults.PlayerBaseAttack;
 
     [Header("Sound")]
@@ -33,10 +34,10 @@ public class PlayerComboAttack : MonoBehaviour
     }
 
     /// <summary>Tries to execute a punch. Returns true if input was consumed.</summary>
-    public bool TryExecutePunch(float nextAttackTime)
+    public bool TryExecutePunch()
     {
         if (inputReader == null || !inputReader.ConsumePunchPressed()) return false;
-        if (Time.time < nextAttackTime) return false;
+        if (Time.time - lastPunchTime < comboInputLockout) return false;
 
         if (Time.time - lastPunchTime > comboWindow)
         {
@@ -55,10 +56,10 @@ public class PlayerComboAttack : MonoBehaviour
     }
 
     /// <summary>Tries to execute a kick. Returns true if input was consumed.</summary>
-    public bool TryExecuteKick(float nextAttackTime)
+    public bool TryExecuteKick()
     {
         if (inputReader == null || !inputReader.ConsumeKickPressed()) return false;
-        if (Time.time < nextAttackTime) return false;
+        if (Time.time - lastKickTime < comboInputLockout) return false;
 
         if (Time.time - lastKickTime > comboWindow)
         {

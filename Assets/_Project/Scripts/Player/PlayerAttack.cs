@@ -3,10 +3,10 @@ using UnityEngine;
 
 /// <summary>
 /// Thin orchestrator that routes player input to the correct attack sub-system.
-/// Mana management → PlayerMana
-/// Melee hit detection → PlayerMeleeHitbox
-/// Punch/Kick combos → PlayerComboAttack
-/// Projectile shooting → ProjectileShooter
+/// Mana management -> PlayerMana
+/// Melee hit detection -> PlayerMeleeHitbox
+/// Punch/Kick combos -> PlayerComboAttack
+/// Projectile shooting -> ProjectileShooter
 /// </summary>
 public class PlayerAttack : MonoBehaviour
 {
@@ -31,8 +31,6 @@ public class PlayerAttack : MonoBehaviour
 
     private float nextAttackTime;
     private float nextPowerShotTime;
-
-    // --- Public API (backward-compatible) ---
 
     public float CurrentMana => mana != null ? mana.CurrentMana : 0f;
     public float MaxMana => mana != null ? mana.MaxMana : 0f;
@@ -85,21 +83,11 @@ public class PlayerAttack : MonoBehaviour
         TryExecuteAttackCommand();
     }
 
-    // --- Attack routing ---
-
     private void TryExecuteAttackCommand()
     {
         if (TryHandlePowerShot()) return;
-        if (comboAttack != null && comboAttack.TryExecutePunch(nextAttackTime))
-        {
-            nextAttackTime = Time.time + attackCooldown;
-            return;
-        }
-        if (comboAttack != null && comboAttack.TryExecuteKick(nextAttackTime))
-        {
-            nextAttackTime = Time.time + attackCooldown;
-            return;
-        }
+        if (comboAttack != null && comboAttack.TryExecutePunch()) return;
+        if (comboAttack != null && comboAttack.TryExecuteKick()) return;
         HandleNormalAttack();
     }
 
@@ -151,8 +139,6 @@ public class PlayerAttack : MonoBehaviour
         nextAttackTime = Time.time + attackCooldown;
     }
 
-    // --- Public tuning API (used by save/load) ---
-
     public void ApplyAttackCooldown(float cooldown)
     {
         attackCooldown = Mathf.Max(cooldown, 0.01f);
@@ -171,8 +157,6 @@ public class PlayerAttack : MonoBehaviour
         powerShotCooldown = Mathf.Max(cooldown, 0.01f);
         powerShotManaCostRatio = Mathf.Clamp01(manaCostRatio);
     }
-
-    // --- Aura visual ---
 
     private void HandleManaChanged(PlayerMana playerMana)
     {
@@ -205,8 +189,6 @@ public class PlayerAttack : MonoBehaviour
             auraEffect.SetActive(active);
         }
     }
-
-    // --- Audio ---
 
     private void PlaySound(AudioClip clip)
     {

@@ -19,63 +19,75 @@ public class PlayerInputReader : MonoBehaviour
     [SerializeField] public bool inventoryInputEnabled = true;
     [SerializeField] public bool pauseInputEnabled = true;
     [SerializeField] public bool settingsInputEnabled = true;
+    [SerializeField] private float inputBufferTime = 0.2f;
+
+    private float jumpBufferTimer;
+    private float attackBufferTimer;
+    private float powerShotBufferTimer;
+    private float punchBufferTimer;
+    private float kickBufferTimer;
+    private float inventoryBufferTimer;
+    private float pauseBufferTimer;
+    private float settingsBufferTimer;
 
     public float Horizontal { get; private set; }
-    public bool JumpPressed { get; private set; }
-    public bool AttackPressed { get; private set; }
-    public bool PowerShotPressed { get; private set; }
-    public bool PunchPressed { get; private set; }
-    public bool KickPressed { get; private set; }
-    public bool InventoryPressed { get; private set; }
-    public bool PausePressed { get; private set; }
-    public bool SettingsPressed { get; private set; }
+    public bool JumpPressed => jumpBufferTimer > 0f;
+    public bool AttackPressed => attackBufferTimer > 0f;
+    public bool PowerShotPressed => powerShotBufferTimer > 0f;
+    public bool PunchPressed => punchBufferTimer > 0f;
+    public bool KickPressed => kickBufferTimer > 0f;
+    public bool InventoryPressed => inventoryBufferTimer > 0f;
+    public bool PausePressed => pauseBufferTimer > 0f;
+    public bool SettingsPressed => settingsBufferTimer > 0f;
 
     private void Update()
     {
+        TickInputBuffers();
+
         Horizontal = movementInputEnabled ? ReadHorizontalInput() : 0f;
 
         if (jumpInputEnabled && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)))
         {
-            JumpPressed = true;
+            jumpBufferTimer = inputBufferTime;
         }
 
         if (attackInputEnabled && Input.GetKeyDown(attackKey))
         {
-            AttackPressed = true;
+            attackBufferTimer = inputBufferTime;
         }
 
         if (powerShotInputEnabled && Input.GetKeyDown(powerShotKey))
         {
-            PowerShotPressed = true;
+            powerShotBufferTimer = inputBufferTime;
         }
 
         if (punchInputEnabled && Input.GetKeyDown(punchKey))
         {
-            PunchPressed = true;
+            punchBufferTimer = inputBufferTime;
         }
 
         if (kickInputEnabled && Input.GetKeyDown(kickKey))
         {
-            KickPressed = true;
+            kickBufferTimer = inputBufferTime;
         }
 
         if (inventoryInputEnabled && Input.GetKeyDown(inventoryKey))
         {
-            InventoryPressed = true;
+            inventoryBufferTimer = inputBufferTime;
         }
 
         if (pauseInputEnabled && Input.GetKeyDown(pauseKey))
         {
-            PausePressed = true;
+            pauseBufferTimer = inputBufferTime;
         }
 
         if (settingsInputEnabled && Input.GetKeyDown(settingsKey))
         {
-            SettingsPressed = true;
+            settingsBufferTimer = inputBufferTime;
         }
     }
 
-    public void SetInputEnabled(bool movement, bool jump, bool attack, bool powerShot, bool punch, bool kick, bool inventory, bool pause, bool settings)
+    public void SetInputEnabled(bool movement, bool jump, bool attack, bool powerShot, bool punch, bool kick)
     {
         movementInputEnabled = movement;
         jumpInputEnabled = jump;
@@ -83,27 +95,26 @@ public class PlayerInputReader : MonoBehaviour
         powerShotInputEnabled = powerShot;
         punchInputEnabled = punch;
         kickInputEnabled = kick;
+
+        ClearDisabledGameplayInputs();
+    }
+
+    public void SetInputEnabled(bool movement, bool jump, bool attack, bool powerShot, bool punch, bool kick, bool inventory, bool pause, bool settings)
+    {
+        SetInputEnabled(movement, jump, attack, powerShot, punch, kick);
         inventoryInputEnabled = inventory;
         pauseInputEnabled = pause;
         settingsInputEnabled = settings;
 
-        if (!movementInputEnabled) Horizontal = 0f;
-        if (!jumpInputEnabled) JumpPressed = false;
-        if (!attackInputEnabled) AttackPressed = false;
-        if (!powerShotInputEnabled) PowerShotPressed = false;
-        if (!punchInputEnabled) PunchPressed = false;
-        if (!kickInputEnabled) KickPressed = false;
-        if (!inventoryInputEnabled) InventoryPressed = false;
-        if (!pauseInputEnabled) PausePressed = false;
-        if (!settingsInputEnabled) SettingsPressed = false;
+        if (!inventoryInputEnabled) inventoryBufferTimer = 0f;
+        if (!pauseInputEnabled) pauseBufferTimer = 0f;
+        if (!settingsInputEnabled) settingsBufferTimer = 0f;
     }
 
     public void ResetInputRestrictions()
     {
         SetInputEnabled(true, true, true, true, true, true, true, true, true);
     }
-
-    // --- Feature-specific enable helpers (used by Level03Manager, PauseManager) ---
 
     public void EnableAll()
     {
@@ -119,53 +130,51 @@ public class PlayerInputReader : MonoBehaviour
     public void EnableJump(bool enabled)
     {
         jumpInputEnabled = enabled;
-        if (!enabled) JumpPressed = false;
+        if (!enabled) jumpBufferTimer = 0f;
     }
 
     public void EnableAttack(bool enabled)
     {
         attackInputEnabled = enabled;
-        if (!enabled) AttackPressed = false;
+        if (!enabled) attackBufferTimer = 0f;
     }
 
     public void EnablePowerShot(bool enabled)
     {
         powerShotInputEnabled = enabled;
-        if (!enabled) PowerShotPressed = false;
+        if (!enabled) powerShotBufferTimer = 0f;
     }
 
     public void EnablePunch(bool enabled)
     {
         punchInputEnabled = enabled;
-        if (!enabled) PunchPressed = false;
+        if (!enabled) punchBufferTimer = 0f;
     }
 
     public void EnableKick(bool enabled)
     {
         kickInputEnabled = enabled;
-        if (!enabled) KickPressed = false;
+        if (!enabled) kickBufferTimer = 0f;
     }
 
     public void EnableInventory(bool enabled)
     {
         inventoryInputEnabled = enabled;
+        if (!enabled) inventoryBufferTimer = 0f;
     }
 
     public void EnablePause(bool enabled)
     {
         pauseInputEnabled = enabled;
+        if (!enabled) pauseBufferTimer = 0f;
     }
 
     public void EnableSettings(bool enabled)
     {
         settingsInputEnabled = enabled;
+        if (!enabled) settingsBufferTimer = 0f;
     }
 
-    /// <summary>
-    /// Returns whether a named input feature is currently active.
-    /// Supported feature names: "Movement", "Jump", "Attack", "PowerShot", "Punch", "Kick".
-    /// Any unrecognised name returns true (fail-open).
-    /// </summary>
     public bool IsFeatureEnabled(string featureName)
     {
         return featureName switch
@@ -183,10 +192,6 @@ public class PlayerInputReader : MonoBehaviour
         };
     }
 
-    /// <summary>
-    /// Type-safe overload using PlayerInputFeature enum.
-    /// Prefer this over the string-based version to catch typos at compile time.
-    /// </summary>
     public bool IsFeatureEnabled(PlayerInputFeature feature)
     {
         return feature switch
@@ -204,61 +209,82 @@ public class PlayerInputReader : MonoBehaviour
         };
     }
 
-
     public bool ConsumeJumpPressed()
     {
-        bool wasPressed = JumpPressed;
-        JumpPressed = false;
+        bool wasPressed = jumpBufferTimer > 0f;
+        jumpBufferTimer = 0f;
         return wasPressed;
     }
 
     public bool ConsumeAttackPressed()
     {
-        bool wasPressed = AttackPressed;
-        AttackPressed = false;
+        bool wasPressed = attackBufferTimer > 0f;
+        attackBufferTimer = 0f;
         return wasPressed;
     }
 
     public bool ConsumePowerShotPressed()
     {
-        bool wasPressed = PowerShotPressed;
-        PowerShotPressed = false;
+        bool wasPressed = powerShotBufferTimer > 0f;
+        powerShotBufferTimer = 0f;
         return wasPressed;
     }
 
     public bool ConsumePunchPressed()
     {
-        bool wasPressed = PunchPressed;
-        PunchPressed = false;
+        bool wasPressed = punchBufferTimer > 0f;
+        punchBufferTimer = 0f;
         return wasPressed;
     }
 
     public bool ConsumeKickPressed()
     {
-        bool wasPressed = KickPressed;
-        KickPressed = false;
+        bool wasPressed = kickBufferTimer > 0f;
+        kickBufferTimer = 0f;
         return wasPressed;
     }
 
     public bool ConsumeInventoryPressed()
     {
-        bool wasPressed = InventoryPressed;
-        InventoryPressed = false;
+        bool wasPressed = inventoryBufferTimer > 0f;
+        inventoryBufferTimer = 0f;
         return wasPressed;
     }
 
     public bool ConsumePausePressed()
     {
-        bool wasPressed = PausePressed;
-        PausePressed = false;
+        bool wasPressed = pauseBufferTimer > 0f;
+        pauseBufferTimer = 0f;
         return wasPressed;
     }
 
     public bool ConsumeSettingsPressed()
     {
-        bool wasPressed = SettingsPressed;
-        SettingsPressed = false;
+        bool wasPressed = settingsBufferTimer > 0f;
+        settingsBufferTimer = 0f;
         return wasPressed;
+    }
+
+    private void TickInputBuffers()
+    {
+        if (jumpBufferTimer > 0f) jumpBufferTimer -= Time.deltaTime;
+        if (attackBufferTimer > 0f) attackBufferTimer -= Time.deltaTime;
+        if (powerShotBufferTimer > 0f) powerShotBufferTimer -= Time.deltaTime;
+        if (punchBufferTimer > 0f) punchBufferTimer -= Time.deltaTime;
+        if (kickBufferTimer > 0f) kickBufferTimer -= Time.deltaTime;
+        if (inventoryBufferTimer > 0f) inventoryBufferTimer -= Time.deltaTime;
+        if (pauseBufferTimer > 0f) pauseBufferTimer -= Time.deltaTime;
+        if (settingsBufferTimer > 0f) settingsBufferTimer -= Time.deltaTime;
+    }
+
+    private void ClearDisabledGameplayInputs()
+    {
+        if (!movementInputEnabled) Horizontal = 0f;
+        if (!jumpInputEnabled) jumpBufferTimer = 0f;
+        if (!attackInputEnabled) attackBufferTimer = 0f;
+        if (!powerShotInputEnabled) powerShotBufferTimer = 0f;
+        if (!punchInputEnabled) punchBufferTimer = 0f;
+        if (!kickInputEnabled) kickBufferTimer = 0f;
     }
 
     private float ReadHorizontalInput()
