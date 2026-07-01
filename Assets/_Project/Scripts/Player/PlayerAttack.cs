@@ -94,7 +94,9 @@ public class PlayerAttack : MonoBehaviour
     private bool TryHandlePunch()
     {
         if (!inputReader.ConsumePunchPressed()) return false;
-        if (Time.time < nextAttackTime) return false;
+        
+        // Ngăn chặn spam bằng macro (1 đòn / 0.05s) nhưng vẫn cho phép bấm tay cực nhanh
+        if (Time.time - lastPunchTime < 0.05f) return false;
 
         if (Time.time - lastPunchTime > comboWindow)
         {
@@ -108,7 +110,6 @@ public class PlayerAttack : MonoBehaviour
         animatorDriver?.TriggerPunch(punchComboStep);
         PlaySound(attackSound);
         DealMeleeDamage();
-        nextAttackTime = Time.time + attackCooldown;
         lastPunchTime = Time.time;
         return true;
     }
@@ -116,7 +117,9 @@ public class PlayerAttack : MonoBehaviour
     private bool TryHandleKick()
     {
         if (!inputReader.ConsumeKickPressed()) return false;
-        if (Time.time < nextAttackTime) return false;
+
+        // Ngăn chặn spam bằng macro (1 đòn / 0.05s) nhưng vẫn cho phép bấm tay cực nhanh
+        if (Time.time - lastKickTime < 0.05f) return false;
 
         if (Time.time - lastKickTime > comboWindow)
         {
@@ -130,7 +133,6 @@ public class PlayerAttack : MonoBehaviour
         animatorDriver?.TriggerKick(kickComboStep);
         PlaySound(attackSound);
         DealMeleeDamage();
-        nextAttackTime = Time.time + attackCooldown;
         lastKickTime = Time.time;
         return true;
     }
@@ -156,12 +158,12 @@ public class PlayerAttack : MonoBehaviour
 
     private void HandleNormalAttack()
     {
-        if (!inputReader.ConsumeAttackPressed())
+        if (Time.time < nextAttackTime)
         {
             return;
         }
 
-        if (Time.time < nextAttackTime)
+        if (!inputReader.ConsumeAttackPressed())
         {
             return;
         }
@@ -190,13 +192,13 @@ public class PlayerAttack : MonoBehaviour
 
     private bool TryHandlePowerShot()
     {
-        if (!inputReader.ConsumePowerShotPressed())
+        float manaCost = GetPowerShotManaCost();
+        if (maxMana <= 0f || currentMana < manaCost || Time.time < nextPowerShotTime)
         {
             return false;
         }
 
-        float manaCost = GetPowerShotManaCost();
-        if (maxMana <= 0f || currentMana < manaCost || Time.time < nextPowerShotTime)
+        if (!inputReader.ConsumePowerShotPressed())
         {
             return false;
         }
