@@ -271,6 +271,12 @@ MonoBehaviour:
   frameRate: 12
   pixelsPerUnit: 100
   scale: 3.5
+  textureCoordinateScale: 1
+  meleeAttackActionName: Attack3
+  rangedAttackActionName: Attack2
+  comboAttackActionName: Attack4
+  effectSpriteMinimumSize: 30
+  effectPartMinimumForwardOffset: 35
   parentSR: {fileID: 4040173902045298011}
   useUnlitMaterial: 1
   suppressParentSpriteRenderer: 1
@@ -295,13 +301,13 @@ MonoBehaviour:
   - animatorStateName: MoveDash
     jsonActionName: Move
   - animatorStateName: Attack
-    jsonActionName: Attack1
+    jsonActionName: Attack3
   - animatorStateName: Attack1
     jsonActionName: Attack1
   - animatorStateName: SlashAttack
-    jsonActionName: Attack1
+    jsonActionName: Attack3
   - animatorStateName: Boss_slash_attack
-    jsonActionName: Attack1
+    jsonActionName: Attack3
   - animatorStateName: rangeAttack
     jsonActionName: Attack2
   - animatorStateName: EnergyBlast
@@ -309,9 +315,9 @@ MonoBehaviour:
   - animatorStateName: Boss_energy_blast
     jsonActionName: Attack2
   - animatorStateName: ComboSlashBlast
-    jsonActionName: Attack3
+    jsonActionName: Attack4
   - animatorStateName: Boss_combo_slash_blast
-    jsonActionName: Attack3
+    jsonActionName: Attack4
   - animatorStateName: Hurt
     jsonActionName: Hurt
   - animatorStateName: Hit

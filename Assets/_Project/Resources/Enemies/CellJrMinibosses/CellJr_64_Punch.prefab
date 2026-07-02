@@ -272,6 +272,11 @@ MonoBehaviour:
   pixelsPerUnit: 100
   scale: 0.7
   textureCoordinateScale: 4
+  meleeAttackActionName: Attack1
+  rangedAttackActionName: Attack2
+  comboAttackActionName: Attack3
+  effectSpriteMinimumSize: 30
+  effectPartMinimumForwardOffset: 35
   parentSR: {fileID: 2120000}
   useUnlitMaterial: 1
   suppressParentSpriteRenderer: 1

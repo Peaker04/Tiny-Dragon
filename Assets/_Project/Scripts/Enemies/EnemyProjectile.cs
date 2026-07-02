@@ -14,6 +14,10 @@ public class EnemyProjectile : MonoBehaviour
     private CircleCollider2D projectileCollider;
     private SpriteRenderer spriteRenderer;
     private System.Action<EnemyProjectile> releaseToPool;
+    private Sprite[] animationSprites;
+    private float animationFrameRate;
+    private float animationTimer;
+    private int animationFrameIndex;
 
     private void Awake()
     {
@@ -40,16 +44,48 @@ public class EnemyProjectile : MonoBehaviour
         System.Action<EnemyProjectile> releaseHandler = null
     )
     {
+        Initialize(
+            direction,
+            speed,
+            projectileDamage,
+            projectileLifetime,
+            projectileSprite,
+            null,
+            0f,
+            projectileScale,
+            projectileFacesRightByDefault,
+            releaseHandler
+        );
+    }
+
+    public void Initialize(
+        Vector2 direction,
+        float speed,
+        int projectileDamage,
+        float projectileLifetime,
+        Sprite projectileSprite,
+        Sprite[] projectileAnimationSprites,
+        float projectileAnimationFrameRate,
+        float projectileScale,
+        bool projectileFacesRightByDefault,
+        System.Action<EnemyProjectile> releaseHandler = null
+    )
+    {
         damage = projectileDamage;
         lifetime = projectileLifetime;
         age = 0f;
         releaseToPool = releaseHandler;
+        animationSprites = HasAnimationSprites(projectileAnimationSprites) ? projectileAnimationSprites : null;
+        animationFrameRate = Mathf.Max(1f, projectileAnimationFrameRate);
+        animationTimer = 0f;
+        animationFrameIndex = 0;
         transform.localScale = Vector3.one * projectileScale;
 
         rb.linearVelocity = direction.normalized * speed;
 
-        bool hasCustomSprite = projectileSprite != null;
-        spriteRenderer.sprite = hasCustomSprite ? projectileSprite : CreateDefaultSprite();
+        bool hasAnimatedSprite = animationSprites != null;
+        bool hasCustomSprite = hasAnimatedSprite || projectileSprite != null;
+        spriteRenderer.sprite = hasAnimatedSprite ? animationSprites[0] : (projectileSprite != null ? projectileSprite : CreateDefaultSprite());
         spriteRenderer.color = hasCustomSprite ? Color.white : new Color(1f, 0.8f, 0.05f);
         spriteRenderer.flipX = ShouldFlipSprite(direction.x, projectileFacesRightByDefault);
         SetUnlitSpriteMaterial(spriteRenderer);
@@ -58,11 +94,32 @@ public class EnemyProjectile : MonoBehaviour
 
     private void Update()
     {
+        UpdateAnimation();
         age += Time.deltaTime;
 
         if (age >= lifetime)
         {
             Release();
+        }
+    }
+
+    private void UpdateAnimation()
+    {
+        if (animationSprites == null || animationSprites.Length <= 1)
+        {
+            return;
+        }
+
+        animationTimer += Time.deltaTime;
+        float frameDuration = 1f / animationFrameRate;
+        while (animationTimer >= frameDuration)
+        {
+            animationTimer -= frameDuration;
+            animationFrameIndex = (animationFrameIndex + 1) % animationSprites.Length;
+            if (animationSprites[animationFrameIndex] != null)
+            {
+                spriteRenderer.sprite = animationSprites[animationFrameIndex];
+            }
         }
     }
 
@@ -81,6 +138,7 @@ public class EnemyProjectile : MonoBehaviour
     private void Release()
     {
         rb.linearVelocity = Vector2.zero;
+        animationSprites = null;
 
         if (releaseToPool != null)
         {
@@ -123,6 +181,24 @@ public class EnemyProjectile : MonoBehaviour
 
         bool movingRight = directionX > 0f;
         return facesRightByDefault ? !movingRight : movingRight;
+    }
+
+    private static bool HasAnimationSprites(Sprite[] sprites)
+    {
+        if (sprites == null || sprites.Length == 0)
+        {
+            return false;
+        }
+
+        foreach (Sprite sprite in sprites)
+        {
+            if (sprite != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static void SetUnlitSpriteMaterial(SpriteRenderer renderer)

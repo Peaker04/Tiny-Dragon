@@ -33,6 +33,9 @@ public class BossAI : MonoBehaviour
     [SerializeField] private float projectileScale = 0.45f;
     [SerializeField] private Vector2 projectileSpawnOffset = new Vector2(0.8f, 0.15f);
     [SerializeField] private Sprite projectileSprite;
+    [SerializeField] private Sprite[] projectileAnimationSprites;
+    [SerializeField] private float projectileAnimationFrameRate = 12f;
+    [SerializeField] private bool useMob77BridgeProjectileAnimation = true;
     [SerializeField] private bool projectileFacesRightByDefault = true;
     [SerializeField] private string energyTriggerName = "EnergyBlast";
     [SerializeField] private string energyStateName = "Boss_energy_blast";
@@ -88,6 +91,32 @@ public class BossAI : MonoBehaviour
         {
             playerHealth = player.GetComponent<PlayerHealth>();
         }
+
+        ConfigureMob77ProjectileAnimation();
+    }
+
+    private void ConfigureMob77ProjectileAnimation()
+    {
+        if (!useMob77BridgeProjectileAnimation || HasAnimationSprites(projectileAnimationSprites))
+        {
+            return;
+        }
+
+        Mob77JsonAnimationBridge bridge = GetComponent<Mob77JsonAnimationBridge>();
+        if (bridge == null)
+        {
+            return;
+        }
+
+        Sprite[] bridgeSprites = bridge.CreateRangedAttackEffectSprites();
+        if (!HasAnimationSprites(bridgeSprites))
+        {
+            return;
+        }
+
+        projectileAnimationSprites = bridgeSprites;
+        projectileAnimationFrameRate = Mathf.Max(1f, bridge.frameRate);
+        projectileSprite = bridgeSprites[0];
     }
 
     private void FixedUpdate()
@@ -240,9 +269,29 @@ public class BossAI : MonoBehaviour
             energyDamage,
             projectileLifetime,
             projectileSprite,
+            projectileAnimationSprites,
+            projectileAnimationFrameRate,
             projectileScale,
             projectileFacesRightByDefault
         );
+    }
+
+    private static bool HasAnimationSprites(Sprite[] sprites)
+    {
+        if (sprites == null || sprites.Length == 0)
+        {
+            return false;
+        }
+
+        foreach (Sprite sprite in sprites)
+        {
+            if (sprite != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void ChasePlayer()

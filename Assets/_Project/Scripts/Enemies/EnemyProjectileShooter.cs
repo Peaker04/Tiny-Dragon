@@ -18,6 +18,8 @@ public class EnemyProjectileShooter : MonoBehaviour
     [SerializeField] private float projectileScale = 0.35f;
     [SerializeField] private Vector2 projectileSpawnOffset = new Vector2(0.45f, -0.05f);
     [SerializeField] private Sprite projectileSprite;
+    [SerializeField] private Sprite[] projectileAnimationSprites;
+    [SerializeField] private float projectileAnimationFrameRate = 12f;
     [SerializeField] private bool projectileFacesRightByDefault = true;
 
     private ComponentPool<EnemyProjectile> projectilePool;
@@ -35,6 +37,20 @@ public class EnemyProjectileShooter : MonoBehaviour
             projectileSprite = sprite;
         }
 
+        projectileAnimationSprites = null;
+        projectileScale = Mathf.Max(0.05f, scale);
+        projectileSpawnOffset = spawnOffset;
+    }
+
+    public void ConfigureProjectileAnimation(Sprite[] sprites, float frameRate, float scale, Vector2 spawnOffset)
+    {
+        if (HasAnimationSprites(sprites))
+        {
+            projectileAnimationSprites = sprites;
+            projectileSprite = sprites[0];
+        }
+
+        projectileAnimationFrameRate = Mathf.Max(1f, frameRate);
         projectileScale = Mathf.Max(0.05f, scale);
         projectileSpawnOffset = spawnOffset;
     }
@@ -63,6 +79,8 @@ public class EnemyProjectileShooter : MonoBehaviour
             damage,
             projectileLifetime,
             projectileSprite,
+            projectileAnimationSprites,
+            projectileAnimationFrameRate,
             projectileScale,
             projectileFacesRightByDefault,
             projectilePool.Release
@@ -93,5 +111,23 @@ public class EnemyProjectileShooter : MonoBehaviour
                 projectilePoolPrewarmCount
             );
         }
+    }
+
+    private static bool HasAnimationSprites(Sprite[] sprites)
+    {
+        if (sprites == null || sprites.Length == 0)
+        {
+            return false;
+        }
+
+        foreach (Sprite sprite in sprites)
+        {
+            if (sprite != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

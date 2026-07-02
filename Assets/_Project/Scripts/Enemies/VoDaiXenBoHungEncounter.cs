@@ -34,6 +34,8 @@ public sealed class VoDaiXenBoHungEncounter : MonoBehaviour
     [SerializeField] private float playerAboveGroundAwareness = 3.5f;
     [SerializeField] private bool ensureMinibossesVisibleInEditMode = true;
     [SerializeField] private bool allowActorsToPassThroughEachOther = true;
+    [SerializeField] private float inactiveMinibossBobAmplitude = 0.12f;
+    [SerializeField] private float inactiveMinibossBobFrequency = 3f;
     [SerializeField] private MinibossEntry[] minibosses =
     {
         new MinibossEntry
@@ -132,6 +134,16 @@ public sealed class VoDaiXenBoHungEncounter : MonoBehaviour
 
         nextPassThroughRefreshTime = Time.time + 0.2f;
         ConfigureActorPassThrough();
+    }
+
+    private void LateUpdate()
+    {
+        if (!Application.isPlaying || activeMinibossHealth.Count == 0)
+        {
+            return;
+        }
+
+        AnimateInactiveMinibossesInPlace();
     }
 
     private void OnDestroy()
@@ -286,6 +298,13 @@ public sealed class VoDaiXenBoHungEncounter : MonoBehaviour
         EnemyProjectileShooter shooter = miniboss.GetComponent<EnemyProjectileShooter>();
         if (bridge == null || shooter == null)
         {
+            return;
+        }
+
+        Sprite[] projectileSprites = bridge.CreateRangedAttackEffectSprites();
+        if (projectileSprites != null && projectileSprites.Length > 0)
+        {
+            shooter.ConfigureProjectileAnimation(projectileSprites, bridge.frameRate, minibossProjectileScale, minibossProjectileSpawnOffset);
             return;
         }
 
@@ -473,6 +492,45 @@ public sealed class VoDaiXenBoHungEncounter : MonoBehaviour
         if (filter != null)
         {
             filter.SetDamageEnabled(isActiveMiniboss);
+        }
+
+        if (isActiveMiniboss)
+        {
+            Mob77JsonAnimationBridge bridge = health.GetComponent<Mob77JsonAnimationBridge>();
+            if (bridge != null)
+            {
+                bridge.SetRuntimeVisualOffsetY(0f);
+            }
+        }
+    }
+
+    private void AnimateInactiveMinibossesInPlace()
+    {
+        float frequency = Mathf.Max(0.01f, inactiveMinibossBobFrequency);
+
+        for (int i = 0; i < activeMinibossHealth.Count; i++)
+        {
+            EnemyHealth health = activeMinibossHealth[i];
+            if (health == null)
+            {
+                continue;
+            }
+
+            Mob77JsonAnimationBridge bridge = health.GetComponent<Mob77JsonAnimationBridge>();
+            if (bridge == null)
+            {
+                continue;
+            }
+
+            if (i == activeMinibossIndex)
+            {
+                bridge.SetRuntimeVisualOffsetY(0f);
+                continue;
+            }
+
+            float phase = i * 0.8f;
+            float offsetY = Mathf.Sin(Time.time * frequency + phase) * inactiveMinibossBobAmplitude;
+            bridge.SetRuntimeVisualOffsetY(offsetY);
         }
     }
 

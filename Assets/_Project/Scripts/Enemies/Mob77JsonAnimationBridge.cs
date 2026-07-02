@@ -61,6 +61,7 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
         public int type_data;
         public RawSpritePart[] sprites;
         public FramePart[] frames;
+        public int[][] data;
         public int[] animations;
     }
 
@@ -73,6 +74,12 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
     public float pixelsPerUnit = 100f;
     public float scale = 3.5f;
     [Min(1f)] public float textureCoordinateScale = 1f;
+    [Header("Combat Actions")]
+    public string meleeAttackActionName = "Attack1";
+    public string rangedAttackActionName = "Attack2";
+    public string comboAttackActionName = "Attack3";
+    [Min(1)] public int effectSpriteMinimumSize = 30;
+    [Min(0f)] public float effectPartMinimumForwardOffset = 35f;
     public SpriteRenderer parentSR;
     public bool useUnlitMaterial = true;
     public bool suppressParentSpriteRenderer = true;
@@ -151,6 +158,7 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
     private int baseSortingLayerId;
     private int baseSortingOrder;
     private bool partRendererCacheInitialized;
+    private float runtimeVisualOffsetY;
 
     private void Awake()
     {
@@ -209,6 +217,15 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
         {
             hashToActionName.Add(walkHash, "Move");
         }
+
+        SetActionMapping("Attack", meleeAttackActionName);
+        SetActionMapping("SlashAttack", meleeAttackActionName);
+        SetActionMapping("Boss_slash_attack", meleeAttackActionName);
+        SetActionMapping("rangeAttack", rangedAttackActionName);
+        SetActionMapping("EnergyBlast", rangedAttackActionName);
+        SetActionMapping("Boss_energy_blast", rangedAttackActionName);
+        SetActionMapping("ComboSlashBlast", comboAttackActionName);
+        SetActionMapping("Boss_combo_slash_blast", comboAttackActionName);
 
         // Cache sorting info
         if (parentSR != null)
@@ -296,6 +313,16 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
         }
     }
 
+    private void SetActionMapping(string animatorStateName, string actionName)
+    {
+        if (string.IsNullOrWhiteSpace(animatorStateName) || string.IsNullOrWhiteSpace(actionName))
+        {
+            return;
+        }
+
+        hashToActionName[Animator.StringToHash(animatorStateName)] = actionName;
+    }
+
     public Sprite CreateLargestAttackEffectSprite()
     {
         if (texture == null || !EnsureMobDataLoaded() || mobData.frames == null || mobData.imageInfos == null)
@@ -341,6 +368,82 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
         }
 
         return bestSpriteIndex >= 0 ? CreateSprite(mobData.imageInfos[bestSpriteIndex]) : null;
+    }
+
+    public Sprite[] CreateRangedAttackEffectSprites()
+    {
+        return CreateTrailingActionEffectSprites(rangedAttackActionName);
+    }
+
+    public Sprite[] CreateTrailingActionEffectSprites(string actionName)
+    {
+        if (texture == null || !EnsureMobDataLoaded() || mobData.frames == null || mobData.imageInfos == null)
+        {
+            return new Sprite[0];
+        }
+
+        if (sprites == null || sprites.Length != mobData.imageInfos.Length)
+        {
+            CreateSprites();
+        }
+
+        ActionData action = FindAction(actionName) ?? FindAction("Attack2") ?? FindAction("Attack1");
+        if (action == null || action.frameIndices == null)
+        {
+            return new Sprite[0];
+        }
+
+        List<Sprite> effectSprites = new List<Sprite>();
+        int minimumSize = Mathf.Max(1, effectSpriteMinimumSize);
+
+        foreach (int frameIndex in action.frameIndices)
+        {
+            if (frameIndex < 0 || frameIndex >= mobData.frames.Length)
+            {
+                continue;
+            }
+
+            FramePart frame = mobData.frames[frameIndex];
+            if (frame == null || frame.idImg == null || frame.idImg.Length <= 1)
+            {
+                continue;
+            }
+
+            for (int i = frame.idImg.Length - 1; i >= 0; i--)
+            {
+                if (frame.dx != null && i < frame.dx.Length && frame.dx[i] < effectPartMinimumForwardOffset)
+                {
+                    continue;
+                }
+
+                int spriteIndex = frame.idImg[i];
+                if (spriteIndex < 0 || spriteIndex >= mobData.imageInfos.Length)
+                {
+                    continue;
+                }
+
+                SpritePart info = mobData.imageInfos[spriteIndex];
+                if (info == null || Mathf.Max(info.w, info.h) < minimumSize)
+                {
+                    continue;
+                }
+
+                Sprite sprite = sprites[spriteIndex] != null ? sprites[spriteIndex] : CreateSprite(info);
+                if (sprite != null)
+                {
+                    effectSprites.Add(sprite);
+                    break;
+                }
+            }
+        }
+
+        if (effectSprites.Count > 0)
+        {
+            return effectSprites.ToArray();
+        }
+
+        Sprite fallback = CreateLargestAttackEffectSprite();
+        return fallback != null ? new[] { fallback } : new Sprite[0];
     }
 
     private Sprite CreateSprite(SpritePart info)
@@ -407,23 +510,11 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
         if (currentAction != null && currentAction.name == actionName) return;
         if (mobData.actions == null || mobData.actions.Length == 0) return;
 
-        ActionData foundAction = null;
-        foreach (var act in mobData.actions)
-        {
-            if (act.name == actionName)
-            {
-                foundAction = act;
-                break;
-            }
-        }
+        ActionData foundAction = FindAction(actionName);
 
         if (foundAction == null)
         {
-            // Try to find by index or fallback
-            if (mobData.actions.Length > 0)
-            {
-                foundAction = mobData.actions[0];
-            }
+            foundAction = FindAttackFallback(actionName) ?? mobData.actions[0];
         }
 
         if (foundAction != null)
@@ -520,11 +611,11 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
 
                     if (isFlipped)
                     {
-                        r.transform.localPosition = new Vector3(-centerX * scale / pixelsPerUnit, -centerY * scale / pixelsPerUnit, 0f);
+                        r.transform.localPosition = new Vector3(-centerX * scale / pixelsPerUnit, -centerY * scale / pixelsPerUnit + runtimeVisualOffsetY, 0f);
                     }
                     else
                     {
-                        r.transform.localPosition = new Vector3(centerX * scale / pixelsPerUnit, -centerY * scale / pixelsPerUnit, 0f);
+                        r.transform.localPosition = new Vector3(centerX * scale / pixelsPerUnit, -centerY * scale / pixelsPerUnit + runtimeVisualOffsetY, 0f);
                     }
 
                     r.gameObject.SetActive(true);
@@ -538,6 +629,57 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
             {
                 r.gameObject.SetActive(false);
             }
+        }
+    }
+
+    private ActionData FindAction(string actionName)
+    {
+        if (mobData == null || mobData.actions == null || string.IsNullOrWhiteSpace(actionName))
+        {
+            return null;
+        }
+
+        foreach (var act in mobData.actions)
+        {
+            if (act != null && act.name == actionName)
+            {
+                return act;
+            }
+        }
+
+        return null;
+    }
+
+    private ActionData FindAttackFallback(string actionName)
+    {
+        if (string.IsNullOrWhiteSpace(actionName) || !actionName.StartsWith("Attack"))
+        {
+            return null;
+        }
+
+        return FindAction("Attack1") ?? FindAction("Attack2") ?? FindAction("Attack3");
+    }
+
+    public void SetRuntimeVisualOffsetY(float offsetY)
+    {
+        if (Mathf.Approximately(runtimeVisualOffsetY, offsetY))
+        {
+            return;
+        }
+
+        float deltaY = offsetY - runtimeVisualOffsetY;
+        runtimeVisualOffsetY = offsetY;
+
+        foreach (SpriteRenderer renderer in partRenderers)
+        {
+            if (renderer == null)
+            {
+                continue;
+            }
+
+            Vector3 localPosition = renderer.transform.localPosition;
+            localPosition.y += deltaY;
+            renderer.transform.localPosition = localPosition;
         }
     }
 
@@ -656,8 +798,8 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
                 ID = sprite.id,
                 x0 = sprite.x,
                 y0 = sprite.y,
-                w = sprite.w,
-                h = sprite.h
+                w = NormalizeSourceSize(sprite.w),
+                h = NormalizeSourceSize(sprite.h)
             };
         }
 
@@ -668,8 +810,13 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
             typeData = raw.type_data,
             imageInfos = imageInfos,
             frames = raw.frames,
-            actions = BuildDefaultActions(raw.frames.Length, raw.animations)
+            actions = BuildActionsFromRawData(raw.data, raw.frames.Length) ?? BuildDefaultActions(raw.frames.Length, raw.animations)
         };
+    }
+
+    private static int NormalizeSourceSize(int size)
+    {
+        return size < 0 ? size + 256 : size;
     }
 
     private static ActionData[] BuildDefaultActions(int frameCount, int[] animationFrames)
@@ -718,6 +865,67 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
         return frames;
     }
 
+    private static ActionData[] BuildActionsFromRawData(int[][] actionFrames, int frameCount)
+    {
+        if (actionFrames == null || actionFrames.Length == 0)
+        {
+            return null;
+        }
+
+        string[] actionNames =
+        {
+            "Stand",
+            "Move",
+            "Attack1",
+            "Attack2",
+            "Attack3",
+            "Attack4",
+            "Attack5",
+            "Attack6",
+            "Attack7",
+            "Attack8",
+            "Attack9",
+            "Attack10",
+            "Hurt",
+            "Die",
+            "Fly",
+            "AddDameTick",
+            "EffectType"
+        };
+
+        List<ActionData> actions = new List<ActionData>();
+        for (int i = 0; i < actionFrames.Length; i++)
+        {
+            int[] frames = actionFrames[i];
+            if (frames == null || frames.Length == 0)
+            {
+                continue;
+            }
+
+            string actionName = i < actionNames.Length ? actionNames[i] : $"Action{i}";
+            actions.Add(new ActionData
+            {
+                index = i,
+                name = actionName,
+                frameIndices = ClampFrameIndices(frames, frameCount)
+            });
+        }
+
+        return actions.Count > 0 ? actions.ToArray() : null;
+    }
+
+    private static int[] ClampFrameIndices(int[] sourceFrames, int frameCount)
+    {
+        int[] frames = new int[sourceFrames.Length];
+        for (int i = 0; i < sourceFrames.Length; i++)
+        {
+            int frame = sourceFrames[i];
+            frames[i] = frame < 0 ? frame : Mathf.Clamp(frame, 0, Mathf.Max(0, frameCount - 1));
+        }
+
+        return frames;
+    }
+
     private static class RawMobDataParser
     {
         public static RawMobData TryParse(string json)
@@ -741,6 +949,7 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
                 type_data = ExtractInt(json, "\"type_data\"", 0),
                 sprites = ParseSprites(spritesSection),
                 frames = ParseFrames(framesSection),
+                data = ParseActionData(ExtractArraySection(json, "\"data\"")),
                 animations = ParseIntArray(ExtractArraySection(json, "\"animations\""))
             };
         }
@@ -787,6 +996,22 @@ public class Mob77JsonAnimationBridge : MonoBehaviour
             }
 
             return frames.ToArray();
+        }
+
+        private static int[][] ParseActionData(string section)
+        {
+            if (section == null)
+            {
+                return null;
+            }
+
+            List<int[]> actions = new List<int[]>();
+            foreach (string actionText in ExtractArrayItems(section))
+            {
+                actions.Add(ParseIntArray(actionText));
+            }
+
+            return actions.Count > 0 ? actions.ToArray() : null;
         }
 
         private static int[] ParseIntArray(string section)
