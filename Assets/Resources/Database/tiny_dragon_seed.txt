@@ -8,7 +8,7 @@ PRAGMA foreign_keys = ON;
 INSERT OR IGNORE INTO Zone (
   id, name, description, orderIndex, minLevelRequired, backgroundKey
 ) VALUES (
-  'zone_earth_start', 'Earth Start', 'Starter area for Tiny Dragon.', 0, 1, 'DragonBall/Level_01/Backgrounds'
+  'zone_earth_start', 'Earth Start', 'Starter area for Tiny-Dragon.', 0, 1, 'DragonBall/Level_01/Backgrounds'
 );
 
 INSERT OR IGNORE INTO Stage (

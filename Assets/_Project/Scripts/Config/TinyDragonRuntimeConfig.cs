@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TinyDragon.Config
 {
-    [CreateAssetMenu(menuName = "Tiny Dragon/Runtime Config", fileName = "TinyDragonRuntimeConfig")]
+    [CreateAssetMenu(menuName = "Tiny-Dragon/Runtime Config", fileName = "TinyDragonRuntimeConfig")]
     public sealed class TinyDragonRuntimeConfig : ScriptableObject
     {
         [SerializeField] private SceneCatalog scenes = new SceneCatalog();
@@ -25,7 +25,7 @@ namespace TinyDragon.Config
         public string mainMenuSceneName = "MainMenu";
         public string newGameSceneName = "LangAru";
         public string gameOverMenuSceneName = "Level_01_Origin";
-        public string guideSceneName = "Level_01_guide";
+        public string guideSceneName = "Level_01_Origin";
         public string playerImmortalSceneName = "LangAru";
         public string introNextSceneName = "Level_01_Origin";
         public string level02SceneName = "Level_02";

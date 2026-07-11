@@ -13,8 +13,6 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private Vector3 damagePopupOffset = new Vector3(0f, 1.1f, 0f);
     [SerializeField] private Color damagePopupColor = new Color(1f, 0.15f, 0.05f);
 
-    // Guide-scene immortality is handled exclusively by PlayerDeathSceneHandler.
-
     private int currentHealth;
     private int flatDamageReduction;
     private int damageReductionPercent;

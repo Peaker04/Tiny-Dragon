@@ -16,7 +16,7 @@ MonoBehaviour:
     mainMenuSceneName: MainMenu
     newGameSceneName: LangAru
     gameOverMenuSceneName: Level_01_Origin
-    guideSceneName: Level_01_guide
+    guideSceneName: Level_01_Origin
     playerImmortalSceneName: LangAru
     introNextSceneName: Level_01_Origin
     level02SceneName: Level_02

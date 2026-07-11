@@ -30,7 +30,7 @@ namespace TinyDragon.Data
             if (connectionType == null)
             {
                 Debug.LogWarning(
-                    "SQLite provider not found. Add Microsoft.Data.Sqlite + SQLitePCLRaw plugins to enable Tiny Dragon database saves."
+                    "SQLite provider not found. Add Microsoft.Data.Sqlite + SQLitePCLRaw plugins to enable Tiny-Dragon database saves."
                 );
                 return false;
             }

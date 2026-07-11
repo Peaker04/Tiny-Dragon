@@ -1,4 +1,4 @@
-# Tiny Dragon
+# Tiny-Dragon
 
 Unity project organized under `Assets/_Project` for game-specific assets, scripts, scenes, prefabs, and settings.
 

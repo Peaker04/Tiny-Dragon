@@ -14,6 +14,7 @@ namespace TinyDragon.Data
         private const string DefaultSaveSlotId = "save_slot_1";
 
         private static TinyDragonSaveManager instance;
+        private static bool deathRespawnFullRestorePending;
 
         [SerializeField] private TextAsset schemaSql;
         [SerializeField] private TextAsset seedSql;
@@ -39,10 +40,16 @@ namespace TinyDragon.Data
 
         public string DatabasePath => Path.Combine(Application.persistentDataPath, databaseFileName);
 
+        public void MarkDeathRespawnFullRestore()
+        {
+            deathRespawnFullRestorePending = true;
+        }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatic()
         {
             instance = null;
+            deathRespawnFullRestorePending = false;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -130,7 +137,7 @@ namespace TinyDragon.Data
             EnsureStarterInventory();
             EnsureBalanceDefaults();
             isReady = true;
-            Debug.Log($"Tiny Dragon database ready: {DatabasePath}");
+            Debug.Log($"Tiny-Dragon database ready: {DatabasePath}");
         }
 
         public void SaveCurrentPlayer()
@@ -311,11 +318,29 @@ namespace TinyDragon.Data
             }
 
             InventoryViewData inventory = LoadInventory();
+            bool restoreFullResources = deathRespawnFullRestorePending;
+            deathRespawnFullRestorePending = false;
+
+            int totalMaxHealth = PlayerRuntimeStatApplier.GetTotalMaxHealth(inventory);
+            int restoredMaxHealth = Mathf.Max(snapshot.MaxHealth, totalMaxHealth);
+            int restoredCurrentHealth = restoreFullResources ? restoredMaxHealth : snapshot.CurrentHealth;
+
             playerHealth.RestoreHealth(
-                snapshot.CurrentHealth,
-                Mathf.Max(snapshot.MaxHealth, PlayerRuntimeStatApplier.GetTotalMaxHealth(inventory))
+                restoredCurrentHealth,
+                restoredMaxHealth
             );
-            PlayerRuntimeStatApplier.Apply(playerHealth.gameObject, inventory);
+            PlayerRuntimeStatApplier.Apply(playerHealth.gameObject, inventory, restoreFullResources);
+
+            if (restoreFullResources)
+            {
+                SaveCurrentHealth(playerHealth.CurrentHealth, playerHealth.MaxHealth);
+
+                int totalMaxKi = PlayerRuntimeStatApplier.GetTotalMaxKi(inventory);
+                if (totalMaxKi > 0)
+                {
+                    SaveCurrentKi(totalMaxKi, totalMaxKi);
+                }
+            }
 
             if (snapshot.SceneName != SceneManager.GetActiveScene().name)
             {
@@ -407,7 +432,7 @@ namespace TinyDragon.Data
             string sceneName = SceneManager.GetActiveScene().name;
             if (string.IsNullOrWhiteSpace(sceneName))
             {
-                sceneName = "Level_01_guide";
+                sceneName = "Level_01_Origin";
             }
 
             string stageId = GetStageIdForScene(sceneName) ?? "stage_guide";
@@ -439,7 +464,7 @@ namespace TinyDragon.Data
         {
             ExecuteNonQuery(
                 "UPDATE Player SET displayName = CASE WHEN displayName = 'Player' THEN 'DragonBoy250' ELSE displayName END, " +
-                "currentSceneName = CASE WHEN currentSceneName = 'Level_01' THEN 'Level_01_guide' ELSE currentSceneName END, " +
+                "currentSceneName = CASE WHEN currentSceneName IN ('Level_01', 'Level_01_guide') THEN 'Level_01_Origin' ELSE currentSceneName END, " +
                 "avatarPath = 'UI/Currency/gem_green' " +
                 "WHERE id = @playerId;",
                 command => SqliteDatabase.AddParameter(command, "@playerId", DefaultPlayerId)
@@ -884,7 +909,7 @@ namespace TinyDragon.Data
 
             if (schemaSql == null)
             {
-                Debug.LogWarning("Tiny Dragon schema SQL TextAsset is missing.");
+                Debug.LogWarning("Tiny-Dragon schema SQL TextAsset is missing.");
             }
         }
     }

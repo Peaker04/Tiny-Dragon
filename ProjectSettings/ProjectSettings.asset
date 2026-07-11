@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: Tiny Dragon
+  productName: Tiny-Dragon
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -602,14 +602,14 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Tiny Dragon
+  metroPackageName: Tiny-Dragon
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: Tiny Dragon
+  metroApplicationDescription: Tiny-Dragon
   wsaImages: {}
   metroTileShortName: 
   metroTileShowName: 0
@@ -684,7 +684,7 @@ PlayerSettings:
   cloudProjectId: 040aa03b-01c3-4de8-92a9-957e8e66c484
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Tiny Dragon
+  projectName: Tiny-Dragon
   organizationId: kyttde180211
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

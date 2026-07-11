@@ -39,6 +39,9 @@ public class EnemyHealth : MonoBehaviour
     /// <summary>Fired when this enemy's HP reaches zero, just before the GameObject is destroyed.</summary>
     public event System.Action<EnemyHealth> Died;
 
+    /// <summary>Fired after an incoming hit has passed damage filters and reduced this enemy's health.</summary>
+    public event System.Action<EnemyHealth, int> Damaged;
+
     private void Awake()
     {
         if (!Application.isPlaying) return;
@@ -125,6 +128,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = Mathf.Max(currentHealth - actualDamage, 0);
         UpdateHealthBar();
         ShowDamagePopup(actualDamage);
+        Damaged?.Invoke(this, actualDamage);
         Debug.Log($"Enemy took {actualDamage} damage. HP: {currentHealth}/{maxHealth}", this);
 
         if (currentHealth <= 0)
@@ -184,6 +188,16 @@ public class EnemyHealth : MonoBehaviour
                 GameplayBalanceDefaults.BossEnergyDamage
             );
         }
+
+        FideBossAI fideBoss = GetComponent<FideBossAI>();
+        if (fideBoss != null)
+        {
+            fideBoss.ApplyCombatStats(
+                balance.BaseSpd,
+                balance.BaseAtk,
+                GameplayBalanceDefaults.BossEnergyDamage
+            );
+        }
     }
 
     private string ResolveBalanceEnemyId()
@@ -193,7 +207,9 @@ public class EnemyHealth : MonoBehaviour
             return balanceEnemyId;
         }
 
-        return GetComponent<BossAI>() != null ? "enemy_boss_act_1" : "enemy_monster_1";
+        return GetComponent<BossAI>() != null || GetComponent<FideBossAI>() != null
+            ? "enemy_boss_act_1"
+            : "enemy_monster_1";
     }
 
     private void ShowDamagePopup(int damage)

@@ -76,7 +76,17 @@ namespace TinyDragon.Data
             return Mathf.Max(PlayerRuntimeStats.FromInventory(inventory).MaxHealth, 1);
         }
 
-        public static void Apply(GameObject playerObject, InventoryViewData inventory)
+        public static int GetTotalMaxKi(InventoryViewData inventory)
+        {
+            if (!HasInventory(inventory))
+            {
+                return 0;
+            }
+
+            return Mathf.Max(PlayerRuntimeStats.FromInventory(inventory).MaxKi, 0);
+        }
+
+        public static void Apply(GameObject playerObject, InventoryViewData inventory, bool restoreFullResources = false)
         {
             if (playerObject == null || !HasInventory(inventory))
             {
@@ -114,7 +124,7 @@ namespace TinyDragon.Data
                     GameplayBalanceDefaults.PowerShotCooldown,
                     GameplayBalanceDefaults.PowerShotManaCostRatio
                 );
-                playerAttack.RestoreMana(stats.CurrentKi, stats.MaxKi);
+                playerAttack.RestoreMana(restoreFullResources ? stats.MaxKi : stats.CurrentKi, stats.MaxKi);
             }
         }
 
