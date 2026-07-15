@@ -49,6 +49,18 @@ public class PlayerSceneTransition : MonoBehaviour
     {
         RestoreSceneCamera();
 
+        // [SceneRule] Auto-clear các màn trước khi vào Level_03 (chế độ test)
+        // - Khi player đến được màn 3, tự động đánh dấu các màn trước đó đã clear
+        // - Mục đích: cho phép quay về các màn cũ để test mà không cần đánh lại
+        // - Khi build chính thức, có thể comment hoặc xóa block này
+        if (gameObject.scene.name == "Level_03")
+        {
+            SceneClearTracker.MarkSceneCleared("LangAru");
+            SceneClearTracker.MarkSceneCleared("ThungLungTre");
+            SceneClearTracker.MarkSceneCleared("DoiHoaCuc");
+            SceneClearTracker.MarkSceneCleared("VoDaiXenBoHung");
+        }
+
         // [SceneRule] Kiểm tra scene hiện tại đã được clear trước đó chưa
         // - SceneClearTracker.IsSceneCleared(): kiểm tra HashSet<string> clearedScenes
         // - Nếu scene đã clear: dùng Invoke("DelayedEnemyCleanup", 0f) để dọn quái sau tất cả Start()
