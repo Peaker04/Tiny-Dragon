@@ -116,6 +116,18 @@ namespace TinyDragon.Data
                 );
                 playerAttack.RestoreMana(stats.CurrentKi, stats.MaxKi);
             }
+
+            // [Bug#1] Đồng bộ ATK stat từ inventory vào PlayerComboAttack.baseDamage
+            // - Nếu không có dòng này, punch/kick luôn gây damage mặc định = 12 (GameplayBalanceDefaults.PlayerBaseAttack)
+            // - Dù người chơi mặc item +ATK, combo damage vẫn không tăng lên
+            // Luồng: PlayerRuntimeStatApplier.Apply() -> stats.Attack (từ inventory + items bonus)
+            //     -> PlayerComboAttack.ApplyBaseDamage(stats.Attack) -> baseDamage = Mathf.Max(attack, 1)
+            //     -> sau đó PlayerComboAttack.TryExecutePunch/Kick() dùng baseDamage này để gọi meleeHitbox.DealDamage()
+            PlayerComboAttack comboAttack = playerObject.GetComponent<PlayerComboAttack>();
+            if (comboAttack != null)
+            {
+                comboAttack.ApplyBaseDamage(stats.Attack);
+            }
         }
 
         private static bool HasInventory(InventoryViewData inventory)
