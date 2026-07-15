@@ -39,6 +39,9 @@ public class EnemyHealth : MonoBehaviour
     /// <summary>Fired when this enemy's HP reaches zero, just before the GameObject is destroyed.</summary>
     public event System.Action<EnemyHealth> Died;
 
+    /// <summary>Fired after this enemy receives positive post-filter damage.</summary>
+    public event System.Action<EnemyHealth, int> Damaged;
+
     private void Awake()
     {
         if (!Application.isPlaying) return;
@@ -126,6 +129,7 @@ public class EnemyHealth : MonoBehaviour
         UpdateHealthBar();
         ShowDamagePopup(actualDamage);
         Debug.Log($"Enemy took {actualDamage} damage. HP: {currentHealth}/{maxHealth}", this);
+        Damaged?.Invoke(this, actualDamage);
 
         if (currentHealth <= 0)
         {
