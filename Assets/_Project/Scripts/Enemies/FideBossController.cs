@@ -27,12 +27,12 @@ public sealed class FideBossController : MonoBehaviour
     private static readonly int[] BarrageFrames = { 26, 27, 28, 29, 30 };
     private static readonly int[] HeavyFrames = { 30, 31, 32 };
 
-    private enum FideSkill { BasicPunch, Dragon, Antomic, Masenko, Galick, DeathBeam, AfterimageDash, GravityCage, MeteorBarrage, PlanetBreaker, CounterStance, AerialDive, SkyRush, VanishingRush, DeathBeamBarrage, TeleportCross, NovaBurst, DeathSaucerStorm, SolarBomb }
-    private enum CueAction { None, Warning, HitCircle, Projectile, Beam, DashBehind, Cage, Meteors, UltimateRing, CounterWindow, AerialDive, SkyRush, VanishingRush, BeamBarrage, TeleportCross, NovaBurst, SpiralStorm }
+    private enum FideSkill { BasicPunch, Dragon, Antomic, Masenko, Galick, DeathBeam, AfterimageDash, GravityCage, MeteorBarrage, PlanetBreaker, CounterStance, AerialDive, SkyRush, VanishingRush, DeathBeamBarrage, TeleportCross, NovaBurst, DeathSaucerStorm, SolarBomb, Kamehameha }
+    private enum CueAction { None, Warning, HitCircle, Projectile, Beam, DashBehind, Cage, Meteors, UltimateRing, CounterWindow, AerialDive, SkyRush, VanishingRush, BeamBarrage, TeleportCross, NovaBurst, SpiralStorm, KamehamehaCharge, KamehamehaBeam }
     private static readonly KeyCode[] NumberRowKeys = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9, KeyCode.Alpha0 };
     private static readonly KeyCode[] NumberPadKeys = { KeyCode.Keypad1, KeyCode.Keypad2, KeyCode.Keypad3, KeyCode.Keypad4, KeyCode.Keypad5, KeyCode.Keypad6, KeyCode.Keypad7, KeyCode.Keypad8, KeyCode.Keypad9, KeyCode.Keypad0 };
     private static readonly FideSkill[] NumberSkills = { FideSkill.BasicPunch, FideSkill.Dragon, FideSkill.Antomic, FideSkill.Masenko, FideSkill.Galick, FideSkill.DeathBeam, FideSkill.AfterimageDash, FideSkill.GravityCage, FideSkill.MeteorBarrage, FideSkill.PlanetBreaker };
-    private static readonly FideSkill[] ShiftNumberSkills = { FideSkill.CounterStance, FideSkill.AerialDive, FideSkill.SkyRush, FideSkill.VanishingRush, FideSkill.DeathBeamBarrage, FideSkill.TeleportCross, FideSkill.NovaBurst, FideSkill.DeathSaucerStorm, FideSkill.SolarBomb };
+    private static readonly FideSkill[] ShiftNumberSkills = { FideSkill.CounterStance, FideSkill.AerialDive, FideSkill.SkyRush, FideSkill.VanishingRush, FideSkill.DeathBeamBarrage, FideSkill.TeleportCross, FideSkill.NovaBurst, FideSkill.DeathSaucerStorm, FideSkill.SolarBomb, FideSkill.Kamehameha };
 
     private readonly struct Cue
     {
@@ -96,6 +96,11 @@ public sealed class FideBossController : MonoBehaviour
     [SerializeField] private int solarBombDamage = 48;
     [SerializeField, Range(.05f, .8f)] private float solarBombAmbientLight = .22f;
     [SerializeField, Range(.03f, .2f)] private float solarBombEnergyStreamInterval = .055f;
+
+    [Header("Kamehameha Placement")]
+    [SerializeField] private Vector2 kamehamehaChargeOffsetPixels = new Vector2(13f, 10f);
+    [SerializeField] private Vector2 kamehamehaBeamOffset = new Vector2(.4f, .31f);
+    [SerializeField] private float kamehamehaBeamScreenPadding = 2.5f;
 
     [Header("Combat")]
     [SerializeField] private float playerHitInvulnerability = 0.22f;
@@ -357,6 +362,12 @@ public sealed class FideBossController : MonoBehaviour
             case CueAction.SpiralStorm:
                 StartCoroutine(SpiralStorm(cue.Damage));
                 break;
+            case CueAction.KamehamehaCharge:
+                SpawnKamehamehaCharge(cue.Radius);
+                break;
+            case CueAction.KamehamehaBeam:
+                SpawnKamehamehaBeam(target, cue.Radius, cue.Damage);
+                break;
         }
     }
 
@@ -370,6 +381,105 @@ public sealed class FideBossController : MonoBehaviour
         yield return new WaitForSeconds(warningDuration);
         SpawnLine(center, direction, length, width * 1.35f, .16f, new Color(1f, .15f, .85f, .9f));
         DamagePlayerInBeam(origin, direction, length, width, damage);
+    }
+
+    private void SpawnKamehamehaCharge(float duration)
+    {
+        Sprite charge = RuntimeSprite.KamehamehaCharge;
+        if (charge == null) return;
+
+        GameObject effect = new GameObject("FideKamehamehaCharge");
+        effect.transform.SetParent(transform, false);
+        effect.transform.localPosition = FacingOffset(kamehamehaChargeOffsetPixels / 32f);
+        effect.transform.localScale = Vector3.one * 1.55f;
+
+        GameObject glow = new GameObject("FideKamehamehaChargeGlow");
+        glow.transform.SetParent(effect.transform, false);
+        glow.transform.localScale = Vector3.one * 1.42f;
+        SpriteRenderer glowRenderer = glow.AddComponent<SpriteRenderer>();
+        glowRenderer.sprite = charge;
+        glowRenderer.color = new Color(.25f, .95f, 1f, .48f);
+        glowRenderer.sortingOrder = KamehamehaSortingOrder(7);
+        RuntimeSprite.ApplyUnlit(glowRenderer);
+
+        SpriteRenderer renderer = effect.AddComponent<SpriteRenderer>();
+        renderer.sprite = charge;
+        renderer.color = new Color(1f, 1f, 1f, 1f);
+        renderer.sortingOrder = KamehamehaSortingOrder(8);
+        RuntimeSprite.ApplyUnlit(renderer);
+
+        FideBossChargeEffect pulse = effect.AddComponent<FideBossChargeEffect>();
+        pulse.Initialize(renderer, Mathf.Max(SkillTick, duration));
+    }
+
+    private void SpawnKamehamehaBeam(Vector2 target, float width, int damage)
+    {
+        Sprite[] frames = RuntimeSprite.KamehamehaBeamFrames;
+        if (frames.Length == 0) return;
+
+        Vector2 origin = (Vector2)transform.position + FacingOffset(kamehamehaBeamOffset);
+        Vector2 direction = facingRight ? Vector2.right : Vector2.left;
+        float length = GetKamehamehaScreenLength(origin);
+        float duration = frames.Length * .38f;
+        GameObject beam = new GameObject("FideKamehamehaBeam");
+        beam.transform.position = origin;
+        beam.transform.right = direction;
+        beam.transform.localScale = Vector3.one * 2.35f;
+
+        SpriteRenderer renderer = beam.AddComponent<SpriteRenderer>();
+        renderer.sprite = frames[0];
+        renderer.color = new Color(.82f, 1f, 1f, .98f);
+        renderer.sortingOrder = KamehamehaSortingOrder(6);
+        RuntimeSprite.ApplyUnlit(renderer);
+
+        FideBossEffectStrip strip = beam.AddComponent<FideBossEffectStrip>();
+        strip.Initialize(frames, renderer, duration / frames.Length);
+        SpawnKamehamehaBeamTail(origin, direction, length, duration);
+        DamagePlayerInBeam(origin, direction, length, width, damage);
+    }
+
+    private float GetKamehamehaScreenLength(Vector2 origin)
+    {
+        float edgeX = facingRight ? arenaMaxX : arenaMinX;
+        Camera camera = Camera.main;
+        if (camera != null)
+        {
+            float depth = Mathf.Abs(camera.transform.position.z - transform.position.z);
+            Vector3 viewportPoint = new Vector3(facingRight ? 1f : 0f, .5f, depth);
+            float cameraEdgeX = camera.ViewportToWorldPoint(viewportPoint).x;
+            edgeX = facingRight ? Mathf.Max(edgeX, cameraEdgeX) : Mathf.Min(edgeX, cameraEdgeX);
+        }
+
+        return Mathf.Max(1f, Mathf.Abs(edgeX - origin.x) + kamehamehaBeamScreenPadding);
+    }
+
+    private void SpawnKamehamehaBeamTail(Vector2 origin, Vector2 direction, float totalLength, float duration)
+    {
+        Sprite[] frames = RuntimeSprite.KamehamehaBeamTailFrames;
+        if (frames.Length == 0) return;
+
+        const float headLength = 4.2f;
+        float tailLength = Mathf.Max(0f, totalLength - headLength);
+        if (tailLength <= .05f) return;
+
+        GameObject tail = new GameObject("FideKamehamehaBeamTail");
+        tail.transform.position = origin + direction * headLength;
+        tail.transform.right = direction;
+        tail.transform.localScale = new Vector3(tailLength, 2.35f, 1f);
+
+        SpriteRenderer renderer = tail.AddComponent<SpriteRenderer>();
+        renderer.sprite = frames[0];
+        renderer.color = new Color(.82f, 1f, 1f, .96f);
+        renderer.sortingOrder = KamehamehaSortingOrder(5);
+        RuntimeSprite.ApplyUnlit(renderer);
+
+        FideBossEffectStrip strip = tail.AddComponent<FideBossEffectStrip>();
+        strip.Initialize(frames, renderer, duration / frames.Length);
+    }
+
+    private int KamehamehaSortingOrder(int offset)
+    {
+        return (spriteRenderer != null ? spriteRenderer.sortingOrder : 80) + offset;
     }
 
     private IEnumerator CreateGravityCage(Vector2 center, int damage)
@@ -877,6 +987,12 @@ public sealed class FideBossController : MonoBehaviour
 
     private void SampleSkillAnimation(FideSkill skill, float time, int fallbackFrame)
     {
+        if (skill == FideSkill.Kamehameha)
+        {
+            ShowFrame(fallbackFrame);
+            return;
+        }
+
         AnimationClip clip = animationLibrary != null ? animationLibrary.GetClip((int)skill) : null;
         if (clip == null)
         {
@@ -998,6 +1114,7 @@ public sealed class FideBossController : MonoBehaviour
         Add(new SkillDefinition(FideSkill.NovaBurst, "Emperor Nova", 2, 0f, 3.5f, 5.4f, new[] { 18, 19, 20, 21, 22, 30, 31, 32, 0 }, new[] { new Cue(2, 35, Vector2.zero, CueAction.Warning, 2.5f), new Cue(5, 35, Vector2.zero, CueAction.NovaBurst, 0f, 38) }));
         Add(new SkillDefinition(FideSkill.DeathSaucerStorm, "Death Saucer Storm", 3, 2f, 14f, 4.8f, new[] { 18, 19, 20, 21, 22, 26, 27, 28, 29, 30, 31, 0 }, new[] { new Cue(2, 35, Vector2.zero, CueAction.Warning, 2.6f), new Cue(6, 35, Vector2.zero, CueAction.SpiralStorm, 0f, 18) }));
         Add(new SkillDefinition(FideSkill.SolarBomb, "Solar Bomb", 2, 2f, 14f, 6.8f, Array.Empty<int>(), Array.Empty<Cue>()));
+        Add(new SkillDefinition(FideSkill.Kamehameha, "Kamehameha", 2, 3f, 14f, 4.6f, Enumerable.Repeat(19, 24).Concat(Enumerable.Repeat(20, 38)).ToArray(), new[] { new Cue(0, 0, Vector2.zero, CueAction.KamehamehaCharge, 1.15f), new Cue(24, 0, Vector2.zero, CueAction.KamehamehaBeam, .62f, 46) }));
     }
 
     private void Add(SkillDefinition skill) => skills[skill.Id] = skill;
@@ -1023,7 +1140,7 @@ public sealed class FideBossController : MonoBehaviour
         GUI.Label(new Rect(28, 42, 390, 20), $"HP {health.CurrentHealth}/{health.MaxHealth}    FULL SKILLSET    AI {(aiEnabled ? "ON" : "OFF")}");
         GUI.Label(new Rect(28, 64, 330, 20), $"Casting: {currentSkillLabel}    Frame: {currentFrameIndex:00}");
         GUI.Label(new Rect(28, 86, 730, 20), "1 Punch | 2 Dragon | 3 Flurry | 4 Masenko | 5 Galick | 6 Beam | 7 Teleport | 8 Cage | 9 Meteor | 0 Breaker");
-        GUI.Label(new Rect(28, 108, 730, 20), "Shift+1 Counter | +2 Dive | +3 Sky Rush | +4 Vanish | +5 Barrage | +6 Cross | +7 Nova | +8 Storm | +9 Solar Bomb");
+        GUI.Label(new Rect(28, 108, 730, 20), "Shift+1 Counter | +2 Dive | +3 Sky Rush | +4 Vanish | +5 Barrage | +6 Cross | +7 Nova | +8 Storm | +9 Solar | +0 Kamehameha");
         GUI.Label(new Rect(28, 130, 300, 20), "F1: Toggle boss AI");
     }
 }
@@ -1244,6 +1361,41 @@ public sealed class FideBossEffectStrip : MonoBehaviour
     }
 }
 
+public sealed class FideBossChargeEffect : MonoBehaviour
+{
+    private SpriteRenderer targetRenderer;
+    private float duration;
+    private float elapsed;
+    private float baseAlpha;
+    private float baseScale = 1f;
+
+    public void Initialize(SpriteRenderer renderer, float lifeTime)
+    {
+        targetRenderer = renderer;
+        duration = Mathf.Max(.05f, lifeTime);
+        baseAlpha = renderer != null ? renderer.color.a : 1f;
+        baseScale = Mathf.Max(.01f, transform.localScale.x);
+    }
+
+    private void Update()
+    {
+        elapsed += Time.deltaTime;
+        float progress = Mathf.Clamp01(elapsed / duration);
+        float pulse = 1f + Mathf.Sin(elapsed * 36f) * .12f;
+        transform.localScale = Vector3.one * (baseScale * pulse);
+        transform.Rotate(0f, 0f, 180f * Time.deltaTime);
+
+        if (targetRenderer != null)
+        {
+            Color color = targetRenderer.color;
+            color.a = baseAlpha * (1f - Mathf.SmoothStep(.65f, 1f, progress));
+            targetRenderer.color = color;
+        }
+
+        if (progress >= 1f) Destroy(gameObject);
+    }
+}
+
 public sealed class FideBossEnergyStream : MonoBehaviour
 {
     private Transform target;
@@ -1327,6 +1479,9 @@ internal static class RuntimeSprite
     private static Sprite ring;
     private static Sprite energyOrb;
     private static Sprite beam;
+    private static Sprite kamehamehaCharge;
+    private static Sprite[] kamehamehaBeamFrames;
+    private static Sprite[] kamehamehaBeamTailFrames;
     private static Sprite[] solarBombFrames;
     private static Material unlitMaterial;
     private const string KenneyPath = "Effects/KenneyParticlePack/";
@@ -1334,6 +1489,9 @@ internal static class RuntimeSprite
     public static Sprite Ring => ring ??= CreateRing();
     public static Sprite EnergyOrb => energyOrb ??= LoadKenneySprite("magic_03", 512f) ?? CreateEnergyOrb();
     public static Sprite Beam => beam ??= LoadKenneySprite("trace_03", 512f) ?? CreateBeam();
+    public static Sprite KamehamehaCharge => kamehamehaCharge ??= LoadFideSprite("51", 96f, new Vector2(.5f, .5f));
+    public static Sprite[] KamehamehaBeamFrames => kamehamehaBeamFrames ??= LoadKamehamehaBeamFrames();
+    public static Sprite[] KamehamehaBeamTailFrames => kamehamehaBeamTailFrames ??= LoadKamehamehaBeamTailFrames();
     public static Sprite[] SolarBombFrames => solarBombFrames ??= LoadSolarBombFrames();
 
     public static void ApplyUnlit(SpriteRenderer renderer)
@@ -1410,6 +1568,61 @@ internal static class RuntimeSprite
         if (texture == null) return null;
         texture.filterMode = FilterMode.Bilinear;
         return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f), pixelsPerUnit);
+    }
+
+    private static Sprite LoadFideSprite(string name, float pixelsPerUnit, Vector2 pivot)
+    {
+        Texture2D texture = Resources.Load<Texture2D>("Effects/Fide/" + name);
+        if (texture == null) return null;
+        texture.filterMode = FilterMode.Bilinear;
+        return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), pivot, pixelsPerUnit);
+    }
+
+    private static Sprite[] LoadKamehamehaBeamFrames()
+    {
+        Texture2D texture = Resources.Load<Texture2D>("Effects/Fide/kamehameha");
+        if (texture == null) return Array.Empty<Sprite>();
+
+        texture.filterMode = FilterMode.Bilinear;
+        const float pixelsPerUnit = 360f;
+        return new[]
+        {
+            Sprite.Create(texture, RectFromTop(texture, 1850, 2025), new Vector2(0f, .5f), pixelsPerUnit),
+            Sprite.Create(texture, RectFromTop(texture, 1510, 1680), new Vector2(0f, .5f), pixelsPerUnit),
+            Sprite.Create(texture, RectFromTop(texture, 1090, 1345), new Vector2(0f, .5f), pixelsPerUnit),
+            Sprite.Create(texture, RectFromTop(texture, 555, 940), new Vector2(0f, .5f), pixelsPerUnit),
+            Sprite.Create(texture, RectFromTop(texture, 60, 455), new Vector2(0f, .5f), pixelsPerUnit)
+        };
+    }
+
+    private static Sprite[] LoadKamehamehaBeamTailFrames()
+    {
+        Texture2D texture = Resources.Load<Texture2D>("Effects/Fide/kamehameha");
+        if (texture == null) return Array.Empty<Sprite>();
+
+        texture.filterMode = FilterMode.Bilinear;
+        const float pixelsPerUnit = 360f;
+        const int tailX = 360;
+        return new[]
+        {
+            Sprite.Create(texture, RectFromTop(texture, 1850, 2025, tailX, texture.width - tailX), new Vector2(0f, .5f), pixelsPerUnit),
+            Sprite.Create(texture, RectFromTop(texture, 1510, 1680, tailX, texture.width - tailX), new Vector2(0f, .5f), pixelsPerUnit),
+            Sprite.Create(texture, RectFromTop(texture, 1090, 1345, tailX, texture.width - tailX), new Vector2(0f, .5f), pixelsPerUnit),
+            Sprite.Create(texture, RectFromTop(texture, 555, 940, tailX, texture.width - tailX), new Vector2(0f, .5f), pixelsPerUnit),
+            Sprite.Create(texture, RectFromTop(texture, 60, 455, tailX, texture.width - tailX), new Vector2(0f, .5f), pixelsPerUnit)
+        };
+    }
+
+    private static Rect RectFromTop(Texture2D texture, int topInclusive, int bottomInclusive)
+    {
+        int height = bottomInclusive - topInclusive + 1;
+        return new Rect(0, texture.height - bottomInclusive - 1, texture.width, height);
+    }
+
+    private static Rect RectFromTop(Texture2D texture, int topInclusive, int bottomInclusive, int x, int width)
+    {
+        int height = bottomInclusive - topInclusive + 1;
+        return new Rect(x, texture.height - bottomInclusive - 1, width, height);
     }
 
     private static Sprite[] LoadSolarBombFrames()

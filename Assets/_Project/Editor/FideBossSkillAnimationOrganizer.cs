@@ -44,7 +44,8 @@ public static class FideBossSkillAnimationOrganizer
         new Definition("teleport_cross", 25, 13, 14, 25, 13, 14, 25, 13, 14, 9, 0),
         new Definition("emperor_nova", 18, 19, 20, 21, 22, 30, 31, 32, 0),
         new Definition("death_saucer_storm", 18, 19, 20, 21, 22, 26, 27, 28, 29, 30, 31, 0),
-        new Definition("solar_bomb", 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21)
+        new Definition("solar_bomb", 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21),
+        new Definition("kamehameha", Enumerable.Repeat(19, 24).Concat(Enumerable.Repeat(20, 38)).ToArray())
     };
 
     static FideBossSkillAnimationOrganizer()
