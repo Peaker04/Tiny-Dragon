@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private PlayerInputReader inputReader;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float jumpForce = 15f;
+    [SerializeField] private float jumpForce = 20f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.2f;
