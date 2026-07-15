@@ -1,19 +1,22 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using TinyDragon.Data;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 
 namespace TinyDragon.UI
 {
     public class MainMenu : MonoBehaviour
     {
         [Header("Debug / Settings")]
+        [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
         [SerializeField] private string nextSceneName = "LangAru";
 
         public void PlayGame()
         {
             PlayerAttack.ResetManaForNewRun();
             TinyDragonSaveManager.Instance.ResetCurrentKiToMax();
-            SceneManager.LoadScene(nextSceneName);
+            string configuredScene = TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig).Scenes.newGameSceneName;
+            SceneNavigator.LoadSceneIfSet(string.IsNullOrWhiteSpace(configuredScene) ? nextSceneName : configuredScene);
         }
 
         public void QuitGame()

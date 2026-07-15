@@ -1,3 +1,4 @@
+using TinyDragon.Combat;
 using TinyDragon.Data;
 using UnityEngine;
 
@@ -45,6 +46,7 @@ public class ProjectileShooter : MonoBehaviour
 
         return ShootProjectile(
             projectileDamage,
+            PlayerDamageSource.NormalShot,
             projectileSpeed,
             projectileLifetime,
             projectileScale,
@@ -61,6 +63,7 @@ public class ProjectileShooter : MonoBehaviour
     {
         return ShootProjectile(
             powerShotDamage,
+            PlayerDamageSource.PowerShot,
             powerShotSpeed,
             powerShotLifetime,
             powerShotScale,
@@ -91,6 +94,7 @@ public class ProjectileShooter : MonoBehaviour
 
     private bool ShootProjectile(
         int damage,
+        PlayerDamageSource damageSource,
         float speed,
         float lifetime,
         float scale,
@@ -124,6 +128,7 @@ public class ProjectileShooter : MonoBehaviour
             projectileDirection,
             speed,
             damage,
+            damageSource,
             lifetime,
             sprite,
             scale,

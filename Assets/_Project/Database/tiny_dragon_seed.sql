@@ -8,7 +8,7 @@ PRAGMA foreign_keys = ON;
 INSERT OR IGNORE INTO Zone (
   id, name, description, orderIndex, minLevelRequired, backgroundKey
 ) VALUES (
-  'zone_earth_start', 'Earth Start', 'Starter area for Tiny Dragon.', 0, 1, 'DragonBall/Level_01/Backgrounds'
+  'zone_earth_start', 'Earth Start', 'Starter area for Tiny-Dragon.', 0, 1, 'DragonBall/Level_01/Backgrounds'
 );
 
 INSERT OR IGNORE INTO Stage (
@@ -21,7 +21,7 @@ INSERT OR IGNORE INTO Stage (
     'GUIDE',
     'Training Guide',
     'Tutorial and first movement area.',
-    'Level_01_guide',
+    'Level_01_Origin',
     0,
     1,
     0,
@@ -38,6 +38,30 @@ INSERT OR IGNORE INTO Stage (
     1,
     50,
     20
+  ),
+  (
+    'stage_level_03',
+    'zone_earth_start',
+    'BOSS',
+    'Level 03',
+    'Level 03 combat route.',
+    'Level_03',
+    2,
+    1,
+    75,
+    30
+  ),
+  (
+    'stage_vegeta_city',
+    'zone_earth_start',
+    'FINAL_BOSS',
+    'Thanh Pho Vegeta',
+    'Vegeta city boss battle.',
+    'ThanhPhoVegeta',
+    3,
+    1,
+    150,
+    60
   );
 
 INSERT OR IGNORE INTO Enemy (

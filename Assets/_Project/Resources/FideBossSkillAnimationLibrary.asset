@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4be5afa17976a8d458e478ad205d53a2, type: 3}
+  m_Name: FideBossSkillAnimationLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::FideBossAnimationLibrary
+  clips:
+  - {fileID: 7400000, guid: 79d71e0c3bab9d340a8e6bc502384059, type: 2}
+  - {fileID: 7400000, guid: 2c16b8079717cd142834ceaa25e40f3f, type: 2}
+  - {fileID: 7400000, guid: 4aad55188273cde42b557626eb91353e, type: 2}
+  - {fileID: 7400000, guid: 6aeb9bffb5a4bf0468fcf28e07c59824, type: 2}
+  - {fileID: 7400000, guid: c78bf367acb9fba41a62b94747e5d0d0, type: 2}
+  - {fileID: 7400000, guid: 0da32163659251346a26fbf442b188e9, type: 2}
+  - {fileID: 7400000, guid: e6f4e0d031668c64b8b12ff3bfdee78a, type: 2}
+  - {fileID: 7400000, guid: 1fa8348b7e8f3a74bb114675590d06b0, type: 2}
+  - {fileID: 7400000, guid: 38fc6427910297e41a43d7a96fcf2b68, type: 2}
+  - {fileID: 7400000, guid: a7dbc13dd3a31bc4b8bb1107b774c973, type: 2}
+  - {fileID: 7400000, guid: 5aac882c0093e9040afebc646a6ddb6c, type: 2}
+  - {fileID: 7400000, guid: 84adcc14536cc6b49bfc80b841ac016a, type: 2}
+  - {fileID: 7400000, guid: 82dad6301615f5f449e108dfafa0a878, type: 2}
+  - {fileID: 7400000, guid: e3ace946631511e4d811375a0d243290, type: 2}
+  - {fileID: 7400000, guid: 6390ef52635b32347ac8714a79aa8fca, type: 2}
+  - {fileID: 7400000, guid: 5d48844e642a01949b9dcc773eb9b459, type: 2}
+  - {fileID: 7400000, guid: b9edd591e0d56b741944fe49e01bac30, type: 2}
+  - {fileID: 7400000, guid: 5ae8fd6d590cc954fb88f39ce75d19f7, type: 2}
+  - {fileID: 7400000, guid: 6696fdfecf9dd304a9475672fc06192c, type: 2}
+  - {fileID: 7400000, guid: f11f9c6244e282843beb7573a1bf09b8, type: 2}

@@ -1,14 +1,16 @@
 using System;
 using TinyDragon.Data;
+using TinyDragon.Config;
+using TinyDragon.Combat;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    private const string DefaultDamagePopupPrefabPath = "Combat/DamagePopup";
-
     private static Sprite healthBarSprite;
     private static Material healthBarMaterial;
 
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private string displayName = "Khủng long";
     [SerializeField] private string balanceEnemyId;
     [SerializeField] private int maxHealth = GameplayBalanceDefaults.NormalEnemyHealth;
@@ -29,20 +31,26 @@ public class EnemyHealth : MonoBehaviour
     private SpriteRenderer healthBarBack;
     private SpriteRenderer healthBarFill;
     private ComponentPool<FloatingDamageText> damagePopupPool;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     public int CurrentHealth => currentHealth;
     public int MaxHealth => maxHealth;
     public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+    public string BalanceEnemyId => ResolveBalanceEnemyId();
 
     /// <summary>Fired when this enemy's HP reaches zero, just before the GameObject is destroyed.</summary>
     public event Action<int, bool> Damaged;
     public event System.Action<EnemyHealth> Died;
+
+    /// <summary>Fired after this enemy receives positive post-filter damage.</summary>
+    public event System.Action<EnemyHealth, int> HealthDamaged;
 
     private void Awake()
     {
         if (!Application.isPlaying) return;
         ApplyDatabaseBalanceIfAvailable();
         EnsureDamagePopupPool();
+        EnsureGoldDropper();
         ResetHealth();
     }
 
@@ -99,6 +107,11 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        TakeDamage(damage, PlayerDamageSource.Generic);
+    }
+
+    public void TakeDamage(int damage, PlayerDamageSource source)
+    {
         if (damage <= 0 || currentHealth <= 0)
         {
             return;
@@ -108,7 +121,7 @@ public class EnemyHealth : MonoBehaviour
         IEnemyDamageFilter filter = GetComponent<IEnemyDamageFilter>();
         if (filter != null)
         {
-            actualDamage = filter.FilterDamage(damage);
+            actualDamage = filter.FilterDamage(damage, source);
         }
 
         if (actualDamage <= 0)
@@ -121,6 +134,7 @@ public class EnemyHealth : MonoBehaviour
         ShowDamagePopup(actualDamage);
         Damaged?.Invoke(actualDamage, currentHealth <= 0);
         Debug.Log($"Enemy took {actualDamage} damage. HP: {currentHealth}/{maxHealth}", this);
+        HealthDamaged?.Invoke(this, actualDamage);
 
         if (currentHealth <= 0)
         {
@@ -301,7 +315,7 @@ public class EnemyHealth : MonoBehaviour
 
         if (damagePopupPrefab == null)
         {
-            GameObject damagePopupPrefabObject = Resources.Load<GameObject>(DefaultDamagePopupPrefabPath);
+            GameObject damagePopupPrefabObject = ResourceLoader.Load<GameObject>(Config.Resources.damagePopupPrefabPath);
             if (damagePopupPrefabObject != null)
             {
                 damagePopupPrefab = damagePopupPrefabObject.GetComponent<FloatingDamageText>();
@@ -315,6 +329,14 @@ public class EnemyHealth : MonoBehaviour
                 RuntimeSceneRoot.GetChild("DamagePopupPool"),
                 damagePopupPoolPrewarmCount
             );
+        }
+    }
+
+    private void EnsureGoldDropper()
+    {
+        if (GetComponent<EnemyGoldDropper>() == null)
+        {
+            gameObject.AddComponent<EnemyGoldDropper>();
         }
     }
 }

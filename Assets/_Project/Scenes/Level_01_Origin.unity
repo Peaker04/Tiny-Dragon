@@ -808,6 +808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2deb006f370c37840a63b625de1248f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TinyDragon.UI.MainMenu
+  runtimeConfig: {fileID: 0}
   nextSceneName: LangAru
 --- !u!1 &1378136468
 GameObject:

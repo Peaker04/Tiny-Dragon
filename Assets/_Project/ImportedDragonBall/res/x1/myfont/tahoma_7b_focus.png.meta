@@ -1,0 +1,5460 @@
+fileFormatVersion: 2
+guid: 81346eda2321e98479cc9565dea7aef7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7140102454941979486
+    second: tahoma_7b_focus_0
+  - first:
+      213: -9198421452783247288
+    second: tahoma_7b_focus_1
+  - first:
+      213: 4147526540960770888
+    second: tahoma_7b_focus_2
+  - first:
+      213: 913039552028200110
+    second: tahoma_7b_focus_3
+  - first:
+      213: -7300349458950041700
+    second: tahoma_7b_focus_4
+  - first:
+      213: -1892890250045925486
+    second: tahoma_7b_focus_5
+  - first:
+      213: 431285694813930450
+    second: tahoma_7b_focus_6
+  - first:
+      213: -5610775794341283340
+    second: tahoma_7b_focus_7
+  - first:
+      213: 2581442598781036895
+    second: tahoma_7b_focus_8
+  - first:
+      213: -4172347024893938870
+    second: tahoma_7b_focus_9
+  - first:
+      213: 771112947002795166
+    second: tahoma_7b_focus_10
+  - first:
+      213: 5672200151487420307
+    second: tahoma_7b_focus_11
+  - first:
+      213: 3083985169894919765
+    second: tahoma_7b_focus_12
+  - first:
+      213: -882235007776773867
+    second: tahoma_7b_focus_13
+  - first:
+      213: 3136853420482607311
+    second: tahoma_7b_focus_14
+  - first:
+      213: -8894757433296200525
+    second: tahoma_7b_focus_15
+  - first:
+      213: -8419844980399297081
+    second: tahoma_7b_focus_16
+  - first:
+      213: -6648515777873824320
+    second: tahoma_7b_focus_17
+  - first:
+      213: 3478982670688889299
+    second: tahoma_7b_focus_18
+  - first:
+      213: -6350138429638211850
+    second: tahoma_7b_focus_19
+  - first:
+      213: -4978622364864286423
+    second: tahoma_7b_focus_20
+  - first:
+      213: 3753033317211252716
+    second: tahoma_7b_focus_21
+  - first:
+      213: 7503651739562113374
+    second: tahoma_7b_focus_22
+  - first:
+      213: -4631970071130935847
+    second: tahoma_7b_focus_23
+  - first:
+      213: 2370591207496389506
+    second: tahoma_7b_focus_24
+  - first:
+      213: 6147883082099675373
+    second: tahoma_7b_focus_25
+  - first:
+      213: 5107363104295880321
+    second: tahoma_7b_focus_26
+  - first:
+      213: -7812996476502786771
+    second: tahoma_7b_focus_27
+  - first:
+      213: -4742926226055024128
+    second: tahoma_7b_focus_28
+  - first:
+      213: -1362825176823479489
+    second: tahoma_7b_focus_29
+  - first:
+      213: -327729153586006645
+    second: tahoma_7b_focus_30
+  - first:
+      213: 8616659910365207984
+    second: tahoma_7b_focus_31
+  - first:
+      213: -9003070176588423712
+    second: tahoma_7b_focus_32
+  - first:
+      213: -3130259744275354925
+    second: tahoma_7b_focus_33
+  - first:
+      213: -6981597386236193587
+    second: tahoma_7b_focus_34
+  - first:
+      213: -4425092895033425999
+    second: tahoma_7b_focus_35
+  - first:
+      213: 6505092907733955216
+    second: tahoma_7b_focus_36
+  - first:
+      213: 7000017897403880901
+    second: tahoma_7b_focus_37
+  - first:
+      213: 1108529647118440071
+    second: tahoma_7b_focus_38
+  - first:
+      213: 4799651371772221339
+    second: tahoma_7b_focus_39
+  - first:
+      213: 4618119096071617377
+    second: tahoma_7b_focus_40
+  - first:
+      213: -703028988861296583
+    second: tahoma_7b_focus_41
+  - first:
+      213: -2984486176863923358
+    second: tahoma_7b_focus_42
+  - first:
+      213: 7225174041215563469
+    second: tahoma_7b_focus_43
+  - first:
+      213: -702860595779787222
+    second: tahoma_7b_focus_44
+  - first:
+      213: 8338921998396041239
+    second: tahoma_7b_focus_45
+  - first:
+      213: -1637198984343442615
+    second: tahoma_7b_focus_46
+  - first:
+      213: -3107998336370861436
+    second: tahoma_7b_focus_47
+  - first:
+      213: 1829829476380097859
+    second: tahoma_7b_focus_48
+  - first:
+      213: 6651561970358653522
+    second: tahoma_7b_focus_49
+  - first:
+      213: -4557697119455219083
+    second: tahoma_7b_focus_50
+  - first:
+      213: -2827799400557457170
+    second: tahoma_7b_focus_51
+  - first:
+      213: 5729598257200724421
+    second: tahoma_7b_focus_52
+  - first:
+      213: 7579832431043391630
+    second: tahoma_7b_focus_53
+  - first:
+      213: -1092165101221161797
+    second: tahoma_7b_focus_54
+  - first:
+      213: -5562617861883021351
+    second: tahoma_7b_focus_55
+  - first:
+      213: -4928944170758228959
+    second: tahoma_7b_focus_56
+  - first:
+      213: -3832261941064095677
+    second: tahoma_7b_focus_57
+  - first:
+      213: 7902204046862440604
+    second: tahoma_7b_focus_58
+  - first:
+      213: -1833389629696509633
+    second: tahoma_7b_focus_59
+  - first:
+      213: -8596198561496227500
+    second: tahoma_7b_focus_60
+  - first:
+      213: 6533000923130723703
+    second: tahoma_7b_focus_61
+  - first:
+      213: -4699079441396620721
+    second: tahoma_7b_focus_62
+  - first:
+      213: -887267424565670172
+    second: tahoma_7b_focus_63
+  - first:
+      213: -2833629556189070874
+    second: tahoma_7b_focus_64
+  - first:
+      213: 8450626264556501834
+    second: tahoma_7b_focus_65
+  - first:
+      213: 443173482720186109
+    second: tahoma_7b_focus_66
+  - first:
+      213: 7306719121399972163
+    second: tahoma_7b_focus_67
+  - first:
+      213: 4644631362434786152
+    second: tahoma_7b_focus_68
+  - first:
+      213: -860198096149716710
+    second: tahoma_7b_focus_69
+  - first:
+      213: 7892506985835555658
+    second: tahoma_7b_focus_70
+  - first:
+      213: -136724365565396606
+    second: tahoma_7b_focus_71
+  - first:
+      213: -3271910089086533076
+    second: tahoma_7b_focus_72
+  - first:
+      213: 740181941864758341
+    second: tahoma_7b_focus_73
+  - first:
+      213: -2938201768600663819
+    second: tahoma_7b_focus_74
+  - first:
+      213: 3558574506395656493
+    second: tahoma_7b_focus_75
+  - first:
+      213: -4314964682784829504
+    second: tahoma_7b_focus_76
+  - first:
+      213: 4717654714399609408
+    second: tahoma_7b_focus_77
+  - first:
+      213: -6735565106522349032
+    second: tahoma_7b_focus_78
+  - first:
+      213: 3214670404718287355
+    second: tahoma_7b_focus_79
+  - first:
+      213: -163728133915796836
+    second: tahoma_7b_focus_80
+  - first:
+      213: -6884363473472825442
+    second: tahoma_7b_focus_81
+  - first:
+      213: -5719264510535799031
+    second: tahoma_7b_focus_82
+  - first:
+      213: -5423589159321486431
+    second: tahoma_7b_focus_83
+  - first:
+      213: -1045068180061237091
+    second: tahoma_7b_focus_84
+  - first:
+      213: 5870981143236157822
+    second: tahoma_7b_focus_85
+  - first:
+      213: -9016914894820725826
+    second: tahoma_7b_focus_86
+  - first:
+      213: 15043412412437750
+    second: tahoma_7b_focus_87
+  - first:
+      213: -9051915316988168958
+    second: tahoma_7b_focus_88
+  - first:
+      213: 7132680461737478703
+    second: tahoma_7b_focus_89
+  - first:
+      213: -6314202177142804652
+    second: tahoma_7b_focus_90
+  - first:
+      213: -1221048146630381749
+    second: tahoma_7b_focus_91
+  - first:
+      213: 3586481568251248843
+    second: tahoma_7b_focus_92
+  - first:
+      213: -619790397735985536
+    second: tahoma_7b_focus_93
+  - first:
+      213: 7516780474181035554
+    second: tahoma_7b_focus_94
+  - first:
+      213: 944990949342437722
+    second: tahoma_7b_focus_95
+  - first:
+      213: -5703746479697384332
+    second: tahoma_7b_focus_96
+  - first:
+      213: 672433299223742419
+    second: tahoma_7b_focus_97
+  - first:
+      213: 3695918504174477241
+    second: tahoma_7b_focus_98
+  - first:
+      213: -88823263186166752
+    second: tahoma_7b_focus_99
+  - first:
+      213: -5192754655521296599
+    second: tahoma_7b_focus_100
+  - first:
+      213: -7934036002551649319
+    second: tahoma_7b_focus_101
+  - first:
+      213: 794683406507158992
+    second: tahoma_7b_focus_102
+  - first:
+      213: 5115600626892888872
+    second: tahoma_7b_focus_103
+  - first:
+      213: 1851603271409400086
+    second: tahoma_7b_focus_104
+  - first:
+      213: -2248890813736031699
+    second: tahoma_7b_focus_105
+  - first:
+      213: 7875805827458791326
+    second: tahoma_7b_focus_106
+  - first:
+      213: 1519985679805331278
+    second: tahoma_7b_focus_107
+  - first:
+      213: -7653382170188632193
+    second: tahoma_7b_focus_108
+  - first:
+      213: -7454476094107623895
+    second: tahoma_7b_focus_109
+  - first:
+      213: -7283984013161780780
+    second: tahoma_7b_focus_110
+  - first:
+      213: -4846934171298127046
+    second: tahoma_7b_focus_111
+  - first:
+      213: 5183618096607362740
+    second: tahoma_7b_focus_112
+  - first:
+      213: 7299395621969900473
+    second: tahoma_7b_focus_113
+  - first:
+      213: 1998855258262920076
+    second: tahoma_7b_focus_114
+  - first:
+      213: -6566516140026091533
+    second: tahoma_7b_focus_115
+  - first:
+      213: 6689505986656581846
+    second: tahoma_7b_focus_116
+  - first:
+      213: 5072324798423825477
+    second: tahoma_7b_focus_117
+  - first:
+      213: -7700192091701878431
+    second: tahoma_7b_focus_118
+  - first:
+      213: 2813636080785965513
+    second: tahoma_7b_focus_119
+  - first:
+      213: -7683004757744771723
+    second: tahoma_7b_focus_120
+  - first:
+      213: 7213242196378287669
+    second: tahoma_7b_focus_121
+  - first:
+      213: -4094807684250805915
+    second: tahoma_7b_focus_122
+  - first:
+      213: 6599738686111908904
+    second: tahoma_7b_focus_123
+  - first:
+      213: -8079958168338121368
+    second: tahoma_7b_focus_124
+  - first:
+      213: -868777348606817458
+    second: tahoma_7b_focus_125
+  - first:
+      213: 4259892132460865605
+    second: tahoma_7b_focus_126
+  - first:
+      213: -3749657458828588702
+    second: tahoma_7b_focus_127
+  - first:
+      213: -8106796062010507820
+    second: tahoma_7b_focus_128
+  - first:
+      213: 2480989280666051881
+    second: tahoma_7b_focus_129
+  - first:
+      213: -4421203093084292816
+    second: tahoma_7b_focus_130
+  - first:
+      213: 195630433243550336
+    second: tahoma_7b_focus_131
+  - first:
+      213: -7966531827763280360
+    second: tahoma_7b_focus_132
+  - first:
+      213: -527913338114924128
+    second: tahoma_7b_focus_133
+  - first:
+      213: 9157555005610151312
+    second: tahoma_7b_focus_134
+  - first:
+      213: -4605412402882480727
+    second: tahoma_7b_focus_135
+  - first:
+      213: -437070985577873080
+    second: tahoma_7b_focus_136
+  - first:
+      213: 1216092950543122987
+    second: tahoma_7b_focus_137
+  - first:
+      213: 1526222590614598954
+    second: tahoma_7b_focus_138
+  - first:
+      213: -5375156311191956152
+    second: tahoma_7b_focus_139
+  - first:
+      213: -2206440091921908176
+    second: tahoma_7b_focus_140
+  - first:
+      213: -2033619759103531451
+    second: tahoma_7b_focus_141
+  - first:
+      213: -5669100318250580992
+    second: tahoma_7b_focus_142
+  - first:
+      213: 8341510532147333221
+    second: tahoma_7b_focus_143
+  - first:
+      213: -2671075680451666958
+    second: tahoma_7b_focus_144
+  - first:
+      213: 2771194487045018585
+    second: tahoma_7b_focus_145
+  - first:
+      213: 3808505482179106302
+    second: tahoma_7b_focus_146
+  - first:
+      213: 7279048535233372258
+    second: tahoma_7b_focus_147
+  - first:
+      213: 3652317737977771625
+    second: tahoma_7b_focus_148
+  - first:
+      213: -5900870785542857785
+    second: tahoma_7b_focus_149
+  - first:
+      213: -2608863289735437524
+    second: tahoma_7b_focus_150
+  - first:
+      213: -2462848676602511273
+    second: tahoma_7b_focus_151
+  - first:
+      213: -3267128065273655554
+    second: tahoma_7b_focus_152
+  - first:
+      213: 1231847839024940821
+    second: tahoma_7b_focus_153
+  - first:
+      213: 842392716466589323
+    second: tahoma_7b_focus_154
+  - first:
+      213: -1383469475171438038
+    second: tahoma_7b_focus_155
+  - first:
+      213: -6813038617730480402
+    second: tahoma_7b_focus_156
+  - first:
+      213: -6779304278246479022
+    second: tahoma_7b_focus_157
+  - first:
+      213: 5776373741431785077
+    second: tahoma_7b_focus_158
+  - first:
+      213: -8679918507123161620
+    second: tahoma_7b_focus_159
+  - first:
+      213: 302857305671514242
+    second: tahoma_7b_focus_160
+  - first:
+      213: 7480229005301174464
+    second: tahoma_7b_focus_161
+  - first:
+      213: 5660213412038287931
+    second: tahoma_7b_focus_162
+  - first:
+      213: 636861881135512421
+    second: tahoma_7b_focus_163
+  - first:
+      213: -2705760271220297765
+    second: tahoma_7b_focus_164
+  - first:
+      213: 8721000690865993044
+    second: tahoma_7b_focus_165
+  - first:
+      213: -4726118297343263841
+    second: tahoma_7b_focus_166
+  - first:
+      213: -5977553180156605975
+    second: tahoma_7b_focus_167
+  - first:
+      213: -7638723509202309416
+    second: tahoma_7b_focus_168
+  - first:
+      213: 5247414000993611469
+    second: tahoma_7b_focus_169
+  - first:
+      213: -3284072987109362774
+    second: tahoma_7b_focus_170
+  - first:
+      213: 5802361905322948398
+    second: tahoma_7b_focus_171
+  - first:
+      213: 1199459301846997609
+    second: tahoma_7b_focus_172
+  - first:
+      213: -7997709685694888827
+    second: tahoma_7b_focus_173
+  - first:
+      213: -246861773838392507
+    second: tahoma_7b_focus_174
+  - first:
+      213: -4089832416444186464
+    second: tahoma_7b_focus_175
+  - first:
+      213: 7980461631812934307
+    second: tahoma_7b_focus_176
+  - first:
+      213: -9099871107929326895
+    second: tahoma_7b_focus_177
+  - first:
+      213: 913571189705489424
+    second: tahoma_7b_focus_178
+  - first:
+      213: 7933482042020764934
+    second: tahoma_7b_focus_179
+  - first:
+      213: 8544289320583319503
+    second: tahoma_7b_focus_180
+  - first:
+      213: 3047408200506141075
+    second: tahoma_7b_focus_181
+  - first:
+      213: -3622730098243249377
+    second: tahoma_7b_focus_182
+  - first:
+      213: 5136130009262205557
+    second: tahoma_7b_focus_183
+  - first:
+      213: -8830947062125131468
+    second: tahoma_7b_focus_184
+  - first:
+      213: -928323920548297868
+    second: tahoma_7b_focus_185
+  - first:
+      213: 5844922764055697127
+    second: tahoma_7b_focus_186
+  - first:
+      213: -192559153183906131
+    second: tahoma_7b_focus_187
+  - first:
+      213: 1270283681804135360
+    second: tahoma_7b_focus_188
+  - first:
+      213: 4619992634895579955
+    second: tahoma_7b_focus_189
+  - first:
+      213: 6525082211284407350
+    second: tahoma_7b_focus_190
+  - first:
+      213: 6278369407058052668
+    second: tahoma_7b_focus_191
+  - first:
+      213: 5276783704407976516
+    second: tahoma_7b_focus_192
+  - first:
+      213: -2571087073326430049
+    second: tahoma_7b_focus_193
+  - first:
+      213: 6894030787191813108
+    second: tahoma_7b_focus_194
+  - first:
+      213: 930838001074700711
+    second: tahoma_7b_focus_195
+  - first:
+      213: 6762718672802694120
+    second: tahoma_7b_focus_196
+  - first:
+      213: -5583004493495929434
+    second: tahoma_7b_focus_197
+  - first:
+      213: 5334719276761642401
+    second: tahoma_7b_focus_198
+  - first:
+      213: -7700614410143706696
+    second: tahoma_7b_focus_199
+  - first:
+      213: 8941085100645572344
+    second: tahoma_7b_focus_200
+  - first:
+      213: -6123634365423275486
+    second: tahoma_7b_focus_201
+  - first:
+      213: 2121294364415583996
+    second: tahoma_7b_focus_202
+  - first:
+      213: 3711975284009620861
+    second: tahoma_7b_focus_203
+  - first:
+      213: 9164574786980042482
+    second: tahoma_7b_focus_204
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: tahoma_7b_focus_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1222
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5316b65a5db61360800000000000000
+      internalID: 7140102454941979486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_1
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1223
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 840a58c8c64a85080800000000000000
+      internalID: -9198421452783247288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1211
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84ba87a1a69fe8930800000000000000
+      internalID: 4147526540960770888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_3
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1210
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eacc58492a4cbac00800000000000000
+      internalID: 913039552028200110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1200
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9f411398d2ffaa90800000000000000
+      internalID: -7300349458950041700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_5
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1201
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2975637b85a1bb5e0800000000000000
+      internalID: -1892890250045925486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1189
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d3871ced0c3cf500800000000000000
+      internalID: 431285694813930450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_7
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1190
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f97de764258222b0800000000000000
+      internalID: -5610775794341283340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1178
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f59a764dd5023d320800000000000000
+      internalID: 2581442598781036895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_9
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1179
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a43f985ac78d816c0800000000000000
+      internalID: -4172347024893938870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1167
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e946ec7c32b83ba00800000000000000
+      internalID: 771112947002795166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_11
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1168
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39713543cf3b7be40800000000000000
+      internalID: 5672200151487420307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1156
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55ec8202c248cca20800000000000000
+      internalID: 3083985169894919765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_13
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1157
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5192d094feba1c3f0800000000000000
+      internalID: -882235007776773867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1145
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc8b550f097588b20800000000000000
+      internalID: 3136853420482607311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_15
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1144
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bc5d19ad397f8480800000000000000
+      internalID: -8894757433296200525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1134
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cda17fb993b62b80800000000000000
+      internalID: -8419844980399297081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_17
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1135
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c53048102abbb3a0800000000000000
+      internalID: -6648515777873824320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1123
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d9a62a7e44d74030800000000000000
+      internalID: 3478982670688889299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_19
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1124
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f68bd22eb6cfd7a0800000000000000
+      internalID: -6350138429638211850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1113
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 921f277465168eab0800000000000000
+      internalID: -4978622364864286423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_21
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1111
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce72596eae3751430800000000000000
+      internalID: 3753033317211252716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_22
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1094
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5977d64083522860800000000000000
+      internalID: 7503651739562113374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_23
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1100
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ddeff3f2cfe7bfb0800000000000000
+      internalID: -4631970071130935847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_24
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1089
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2839c7ea42806e020800000000000000
+      internalID: 2370591207496389506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1073
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de05f2d171ba15550800000000000000
+      internalID: 6147883082099675373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_26
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1067
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1860e72feaff0e640800000000000000
+      internalID: 5107363104295880321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_27
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1035
+        width: 7
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2d3ca28919a29390800000000000000
+      internalID: -7812996476502786771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_28
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1056
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0023b1cf9bdbd2eb0800000000000000
+      internalID: -4742926226055024128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_29
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1047
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f334a74e8b5461de0800000000000000
+      internalID: -1362825176823479489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_30
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1036
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8577f9321ca37bf0800000000000000
+      internalID: -327729153586006645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_31
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1013
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bddaa31986849770800000000000000
+      internalID: 8616659910365207984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_32
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1025
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ed988cef5bae0380800000000000000
+      internalID: -9003070176588423712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_33
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1014
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3da23cfe8551f84d0800000000000000
+      internalID: -3130259744275354925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_34
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1002
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc49894da226c1f90800000000000000
+      internalID: -6981597386236193587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_35
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1003
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bf7d650579e692c0800000000000000
+      internalID: -4425092895033425999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_36
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 992
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 092356cb88bb64a50800000000000000
+      internalID: 6505092907733955216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_37
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 990
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c59224a03f052160800000000000000
+      internalID: 7000017897403880901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_38
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 978
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 786db7f37d9426f00800000000000000
+      internalID: 1108529647118440071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_39
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 981
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9713343e79cb9240800000000000000
+      internalID: 4799651371772221339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 967
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16bfbcb99dad61040800000000000000
+      internalID: 4618119096071617377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_41
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 970
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 930de140cd65e36f0800000000000000
+      internalID: -703028988861296583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_42
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 959
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26356f672a9f496d0800000000000000
+      internalID: -2984486176863923358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_43
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 956
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc6f6078289f44460800000000000000
+      internalID: 7225174041215563469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_44
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 936
+        width: 7
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a262de51300fe36f0800000000000000
+      internalID: -702860595779787222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_45
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 948
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7182614406dc9b370800000000000000
+      internalID: 8338921998396041239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_46
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 937
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94b249fa2308749e0800000000000000
+      internalID: -1637198984343442615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_47
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 926
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48a1c1edafb2ed4d0800000000000000
+      internalID: -3107998336370861436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 924
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34dbc23c63cd46910800000000000000
+      internalID: 1829829476380097859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_49
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 915
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25299bcde581f4c50800000000000000
+      internalID: 6651561970358653522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_50
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 914
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 572fc091e9ecfb0c0800000000000000
+      internalID: -4557697119455219083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_51
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 904
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee0d5b17d63a1c8d0800000000000000
+      internalID: -2827799400557457170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_52
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 902
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c9752a124f938f40800000000000000
+      internalID: 5729598257200724421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_53
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 893
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e80b355bf69f03960800000000000000
+      internalID: 7579832431043391630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_54
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 885
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb452a180a9d7d0f0800000000000000
+      internalID: -1092165101221161797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_55
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 882
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d73831d68c9dc2b0800000000000000
+      internalID: -5562617861883021351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 870
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1243930346fd89bb0800000000000000
+      internalID: -4928944170758228959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_57
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 871
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34820ac911211dac0800000000000000
+      internalID: -3832261941064095677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_58
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 860
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c98d3e386b44aad60800000000000000
+      internalID: 7902204046862440604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_59
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 863
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f39fd0378dd7e86e0800000000000000
+      internalID: -1833389629696509633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_60
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 846
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4512b43f3fa24b880800000000000000
+      internalID: -8596198561496227500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_61
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 849
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77d718ce9b1e9aa50800000000000000
+      internalID: 6533000923130723703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_62
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 838
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f42a634152489ceb0800000000000000
+      internalID: -4699079441396620721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_63
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 826
+        width: 5
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4eeccf17afacfa3f0800000000000000
+      internalID: -887267424565670172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_64
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 827
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e97d4e8eececa8d0800000000000000
+      internalID: -2833629556189070874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_65
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 815
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4bf97470d7a64570800000000000000
+      internalID: 8450626264556501834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_66
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 816
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfec86b3fe7762600800000000000000
+      internalID: 443173482720186109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_67
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 804
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3418998045ea66560800000000000000
+      internalID: 7306719121399972163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_68
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 805
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8636096ad9b057040800000000000000
+      internalID: 4644631362434786152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_69
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 793
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a11678a9366ff04f0800000000000000
+      internalID: -860198096149716710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_70
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 794
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4b640e8941d78d60800000000000000
+      internalID: 7892506985835555658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_71
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 782
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2897556f9e14a1ef0800000000000000
+      internalID: -136724365565396606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_72
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 783
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c220bfafb17d792d0800000000000000
+      internalID: -3271910089086533076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_73
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 772
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54cf102fd87a54a00800000000000000
+      internalID: 740181941864758341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_74
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 771
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f802280f096937d0800000000000000
+      internalID: -2938201768600663819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_75
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 761
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d216970d8a8926130800000000000000
+      internalID: 3558574506395656493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_76
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 758
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cf01409b7a2e14c0800000000000000
+      internalID: -4314964682784829504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_77
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 749
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0425cb0b7f9787140800000000000000
+      internalID: 4717654714399609408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_78
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 750
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8122830e8377682a0800000000000000
+      internalID: -6735565106522349032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_79
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 738
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf9d13773bdcc9c20800000000000000
+      internalID: 3214670404718287355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_80
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 739
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9a163231225abdf0800000000000000
+      internalID: -163728133915796836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_81
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 727
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e975af255e3d570a0800000000000000
+      internalID: -6884363473472825442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_82
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 728
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90fe309ca3711a0b0800000000000000
+      internalID: -5719264510535799031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_83
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 717
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1abbbfe156a8bb4b0800000000000000
+      internalID: -5423589159321486431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_84
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 716
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d90d269f60c2f71f0800000000000000
+      internalID: -1045068180061237091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_85
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 705
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e71ab957e3ae97150800000000000000
+      internalID: 5870981143236157822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_86
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 706
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebb28444dab7dd280800000000000000
+      internalID: -9016914894820725826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_87
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 692
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f49d0567e1753000800000000000000
+      internalID: 15043412412437750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_88
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 695
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 205b0027af2216280800000000000000
+      internalID: -9051915316988168958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_89
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 684
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2a4b32e61f5cf260800000000000000
+      internalID: 7132680461737478703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_90
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 683
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45fa76fe2927f58a0800000000000000
+      internalID: -6314202177142804652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_91
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 672
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4f62761e27fd0fe0800000000000000
+      internalID: -1221048146630381749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_92
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 673
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc00a1dfbfdb5c130800000000000000
+      internalID: 3586481568251248843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_93
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 661
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08e9fb3caef0667f0800000000000000
+      internalID: -619790397735985536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_94
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 662
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22627220408f05860800000000000000
+      internalID: 7516780474181035554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_95
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 650
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a51e38bf2484d1d00800000000000000
+      internalID: 944990949342437722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_96
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 651
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47ca0c4ebc838d0b0800000000000000
+      internalID: -5703746479697384332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_97
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 639
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d7006fd586f45900800000000000000
+      internalID: 672433299223742419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_98
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 640
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bfdc183c4a8a4330800000000000000
+      internalID: 3695918504174477241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_99
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 628
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02c5ff576bf64cef0800000000000000
+      internalID: -88823263186166752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_100
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 617
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92fa5e73721afe7b0800000000000000
+      internalID: -5192754655521296599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_101
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 629
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9dbafb0ca44a4e190800000000000000
+      internalID: -7934036002551649319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_102
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 618
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0dda1c90958470b00800000000000000
+      internalID: 794683406507158992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_103
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 607
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82b57b2aaa34ef640800000000000000
+      internalID: 5115600626892888872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_104
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 606
+        width: 5
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 619fe497d5732b910800000000000000
+      internalID: 1851603271409400086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_105
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 596
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2aef9458b55ac0e0800000000000000
+      internalID: -2248890813736031699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_106
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 595
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e97f1a91cab7c4d60800000000000000
+      internalID: 7875805827458791326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_107
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 585
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e473a7c2ce2181510800000000000000
+      internalID: 1519985679805331278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_108
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 584
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7f299f2779b9c590800000000000000
+      internalID: -7653382170188632193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_109
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 574
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92ed218ec716c8890800000000000000
+      internalID: -7454476094107623895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_110
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 573
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d92ed9d1271aea90800000000000000
+      internalID: -7283984013161780780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_111
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 562
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a33a2162d0b3cbcb0800000000000000
+      internalID: -4846934171298127046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_112
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 551
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4be7193e139efe740800000000000000
+      internalID: 5183618096607362740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_113
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 561
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b3be82f4a9ac4560800000000000000
+      internalID: 7299395621969900473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_114
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 552
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8bde2a544c5dbb10800000000000000
+      internalID: 1998855258262920076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_115
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 540
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f720ed8c5c0fd4a0800000000000000
+      internalID: -6566516140026091533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_116
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 541
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d8b3899046e5dc50800000000000000
+      internalID: 6689505986656581846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_117
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 529
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54cf473a784846640800000000000000
+      internalID: 5072324798423825477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_118
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 530
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16166d7071c632590800000000000000
+      internalID: -7700192091701878431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_119
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 516
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c14872bb1b0c0720800000000000000
+      internalID: 2813636080785965513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_120
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 519
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57d9cfe01eb706590800000000000000
+      internalID: -7683004757744771723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_121
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 507
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53e7cf96f859a1460800000000000000
+      internalID: 7213242196378287669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_122
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 508
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 569d0bc3b125c27c0800000000000000
+      internalID: -4094807684250805915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_123
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 496
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8248a1c3e5bf69b50800000000000000
+      internalID: 6599738686111908904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_124
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 497
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86db038fad83edf80800000000000000
+      internalID: -8079958168338121368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_125
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 486
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4b826bba9b71f3f0800000000000000
+      internalID: -868777348606817458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_126
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 485
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 548afc8135d2e1b30800000000000000
+      internalID: 4259892132460865605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_127
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 474
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 269c021686a86fbc0800000000000000
+      internalID: -3749657458828588702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_128
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 475
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ddf359eeefde7f80800000000000000
+      internalID: -8106796062010507820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_129
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 463
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 925e6ad1b9e3e6220800000000000000
+      internalID: 2480989280666051881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_130
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 464
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0393adc163bb4a2c0800000000000000
+      internalID: -4421203093084292816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_131
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 453
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 082dcb0b7d407b200800000000000000
+      internalID: 195630433243550336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_132
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 452
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 816835ad281317190800000000000000
+      internalID: -7966531827763280360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_133
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 441
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a12871bd997ca8f0800000000000000
+      internalID: -527913338114924128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_134
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 442
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09d4e7042cb261f70800000000000000
+      internalID: 9157555005610151312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_135
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 431
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a5f202f1d94610c0800000000000000
+      internalID: -4605412402882480727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_136
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 428
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 841400b11463fe9f0800000000000000
+      internalID: -437070985577873080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_137
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 348
+        width: 6
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b22cafa681e60e010800000000000000
+      internalID: 1216092950543122987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_138
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 420
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2572c12c5b3e2510800000000000000
+      internalID: 1526222590614598954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_139
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 409
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 845543350db9765b0800000000000000
+      internalID: -5375156311191956152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_140
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 398
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03e70d63d662161e0800000000000000
+      internalID: -2206440091921908176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_141
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 387
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5462b6a8a9127c3e0800000000000000
+      internalID: -2033619759103531451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_142
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 376
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 004ce96fb4f4351b0800000000000000
+      internalID: -5669100318250580992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_143
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 365
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56842de32aff2c370800000000000000
+      internalID: 8341510532147333221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_144
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 354
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2fb5e7212de6eead0800000000000000
+      internalID: -2671075680451666958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_145
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 6
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d3d6db14b2457620800000000000000
+      internalID: 2771194487045018585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_146
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 343
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef5d966ce878ad430800000000000000
+      internalID: 3808505482179106302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_147
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 332
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 260a965a310640560800000000000000
+      internalID: 7279048535233372258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_148
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 321
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 966f503c1a3afa230800000000000000
+      internalID: 3652317737977771625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_149
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 309
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cbdc32e845eb1ea0800000000000000
+      internalID: -5900870785542857785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_150
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 308
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2323cb09a47bcbd0800000000000000
+      internalID: -2608863289735437524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_151
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 299
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75001976d2432ddd0800000000000000
+      internalID: -2462848676602511273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_152
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 298
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efe87a9a554d8a2d0800000000000000
+      internalID: -3267128065273655554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_153
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 287
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5170a6e3517681110800000000000000
+      internalID: 1231847839024940821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_154
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 286
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8e0e5266b7c0bb00800000000000000
+      internalID: 842392716466589323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_155
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 276
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a227fce97ddeccce0800000000000000
+      internalID: -1383469475171438038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_156
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 277
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee6082569793371a0800000000000000
+      internalID: -6813038617730480402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_157
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 265
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25b25de5da21be1a0800000000000000
+      internalID: -6779304278246479022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_158
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 266
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5768fe3305dc92050800000000000000
+      internalID: 5776373741431785077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_159
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 254
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce5c59f1b1cba8780800000000000000
+      internalID: -8679918507123161620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_160
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 255
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 288be2a6d17f33400800000000000000
+      internalID: 302857305671514242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_161
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 243
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c0dc8bf5ac1fc760800000000000000
+      internalID: 7480229005301174464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_162
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 244
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b32a171fb1e1d8e40800000000000000
+      internalID: 5660213412038287931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_163
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 233
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56bb114b18696d800800000000000000
+      internalID: 636861881135512421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_164
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 230
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdfac8a7e55337ad0800000000000000
+      internalID: -2705760271220297765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_165
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 221
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 455f0092ce7370970800000000000000
+      internalID: 8721000690865993044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_166
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 222
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9b7168d274796eb0800000000000000
+      internalID: -4726118297343263841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_167
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 210
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e942c69d077b0da0800000000000000
+      internalID: -5977553180156605975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_168
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 211
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8de2298a07dcdf590800000000000000
+      internalID: -7638723509202309416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_169
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 200
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcea2ae5b3f82d840800000000000000
+      internalID: 5247414000993611469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_170
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 199
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa3f3ea9401ac62d0800000000000000
+      internalID: -3284072987109362774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_171
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 188
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2778012961268050800000000000000
+      internalID: 5802361905322948398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_172
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 189
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96ad02941e555a010800000000000000
+      internalID: 1199459301846997609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_173
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 178
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 584847f1a6d620190800000000000000
+      internalID: -7997709685694888827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_174
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 177
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5436dbd4688f29cf0800000000000000
+      internalID: -246861773838392507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_175
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 167
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a087fa061ffd37c0800000000000000
+      internalID: -4089832416444186464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_176
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 164
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3aa18d3629b40ce60800000000000000
+      internalID: 7980461631812934307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_177
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 156
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1da3806c073c6b180800000000000000
+      internalID: -9099871107929326895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_178
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 155
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01c3d6f1828adac00800000000000000
+      internalID: 913571189705489424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_179
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 145
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60d969242e3691e60800000000000000
+      internalID: 7933482042020764934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_180
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 144
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcf48831ed9639670800000000000000
+      internalID: 8544289320583319503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_181
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 134
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 399e7cccc919a4a20800000000000000
+      internalID: 3047408200506141075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_182
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 133
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1b58117b2a79bdc0800000000000000
+      internalID: -3622730098243249377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_183
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 121
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57a2c42f703374740800000000000000
+      internalID: 5136130009262205557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_184
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 122
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43980c37f6c227580800000000000000
+      internalID: -8830947062125131468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_185
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 111
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 473883f005eed13f0800000000000000
+      internalID: -928323920548297868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_186
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 112
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e6522349465d1150800000000000000
+      internalID: 5844922764055697127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_187
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 98
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da6293c6874e35df0800000000000000
+      internalID: -192559153183906131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_188
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 101
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cb29e14744f0a110800000000000000
+      internalID: 1270283681804135360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_189
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 87
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33b3fdbd2d28d1040800000000000000
+      internalID: 4619992634895579955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_190
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 90
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 634d3d523bfbd8a50800000000000000
+      internalID: 6525082211284407350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_191
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 79
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c36006426bf312750800000000000000
+      internalID: 6278369407058052668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_192
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 76
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44aaec152d6ea3940800000000000000
+      internalID: 5276783704407976516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_193
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 68
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9887c3dde9a15cd0800000000000000
+      internalID: -2571087073326430049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_194
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 67
+        width: 5
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f3bc2d89748caf50800000000000000
+      internalID: 6894030787191813108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_195
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 57
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a10e7dea300bec00800000000000000
+      internalID: 930838001074700711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_196
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 45
+        width: 5
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e34e407dc00add50800000000000000
+      internalID: 6762718672802694120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_197
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 46
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a5f3c14efe2582b0800000000000000
+      internalID: -5583004493495929434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_198
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 34
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a57ecbeaeab80a40800000000000000
+      internalID: 5334719276761642401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_199
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 23
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b1512b5efbe12590800000000000000
+      internalID: -7700614410143706696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_200
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 33
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fe5482f68d151c70800000000000000
+      internalID: 8941085100645572344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_201
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 24
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22232923dfa740ba0800000000000000
+      internalID: -6123634365423275486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_202
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 12
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf6670f3cf9507d10800000000000000
+      internalID: 2121294364415583996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_203
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 13
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d755c6a9ad5938330800000000000000
+      internalID: 3711975284009620861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7b_focus_204
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f65277763c1f2f70800000000000000
+      internalID: 9164574786980042482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      tahoma_7b_focus_0: 7140102454941979486
+      tahoma_7b_focus_1: -9198421452783247288
+      tahoma_7b_focus_10: 771112947002795166
+      tahoma_7b_focus_100: -5192754655521296599
+      tahoma_7b_focus_101: -7934036002551649319
+      tahoma_7b_focus_102: 794683406507158992
+      tahoma_7b_focus_103: 5115600626892888872
+      tahoma_7b_focus_104: 1851603271409400086
+      tahoma_7b_focus_105: -2248890813736031699
+      tahoma_7b_focus_106: 7875805827458791326
+      tahoma_7b_focus_107: 1519985679805331278
+      tahoma_7b_focus_108: -7653382170188632193
+      tahoma_7b_focus_109: -7454476094107623895
+      tahoma_7b_focus_11: 5672200151487420307
+      tahoma_7b_focus_110: -7283984013161780780
+      tahoma_7b_focus_111: -4846934171298127046
+      tahoma_7b_focus_112: 5183618096607362740
+      tahoma_7b_focus_113: 7299395621969900473
+      tahoma_7b_focus_114: 1998855258262920076
+      tahoma_7b_focus_115: -6566516140026091533
+      tahoma_7b_focus_116: 6689505986656581846
+      tahoma_7b_focus_117: 5072324798423825477
+      tahoma_7b_focus_118: -7700192091701878431
+      tahoma_7b_focus_119: 2813636080785965513
+      tahoma_7b_focus_12: 3083985169894919765
+      tahoma_7b_focus_120: -7683004757744771723
+      tahoma_7b_focus_121: 7213242196378287669
+      tahoma_7b_focus_122: -4094807684250805915
+      tahoma_7b_focus_123: 6599738686111908904
+      tahoma_7b_focus_124: -8079958168338121368
+      tahoma_7b_focus_125: -868777348606817458
+      tahoma_7b_focus_126: 4259892132460865605
+      tahoma_7b_focus_127: -3749657458828588702
+      tahoma_7b_focus_128: -8106796062010507820
+      tahoma_7b_focus_129: 2480989280666051881
+      tahoma_7b_focus_13: -882235007776773867
+      tahoma_7b_focus_130: -4421203093084292816
+      tahoma_7b_focus_131: 195630433243550336
+      tahoma_7b_focus_132: -7966531827763280360
+      tahoma_7b_focus_133: -527913338114924128
+      tahoma_7b_focus_134: 9157555005610151312
+      tahoma_7b_focus_135: -4605412402882480727
+      tahoma_7b_focus_136: -437070985577873080
+      tahoma_7b_focus_137: 1216092950543122987
+      tahoma_7b_focus_138: 1526222590614598954
+      tahoma_7b_focus_139: -5375156311191956152
+      tahoma_7b_focus_14: 3136853420482607311
+      tahoma_7b_focus_140: -2206440091921908176
+      tahoma_7b_focus_141: -2033619759103531451
+      tahoma_7b_focus_142: -5669100318250580992
+      tahoma_7b_focus_143: 8341510532147333221
+      tahoma_7b_focus_144: -2671075680451666958
+      tahoma_7b_focus_145: 2771194487045018585
+      tahoma_7b_focus_146: 3808505482179106302
+      tahoma_7b_focus_147: 7279048535233372258
+      tahoma_7b_focus_148: 3652317737977771625
+      tahoma_7b_focus_149: -5900870785542857785
+      tahoma_7b_focus_15: -8894757433296200525
+      tahoma_7b_focus_150: -2608863289735437524
+      tahoma_7b_focus_151: -2462848676602511273
+      tahoma_7b_focus_152: -3267128065273655554
+      tahoma_7b_focus_153: 1231847839024940821
+      tahoma_7b_focus_154: 842392716466589323
+      tahoma_7b_focus_155: -1383469475171438038
+      tahoma_7b_focus_156: -6813038617730480402
+      tahoma_7b_focus_157: -6779304278246479022
+      tahoma_7b_focus_158: 5776373741431785077
+      tahoma_7b_focus_159: -8679918507123161620
+      tahoma_7b_focus_16: -8419844980399297081
+      tahoma_7b_focus_160: 302857305671514242
+      tahoma_7b_focus_161: 7480229005301174464
+      tahoma_7b_focus_162: 5660213412038287931
+      tahoma_7b_focus_163: 636861881135512421
+      tahoma_7b_focus_164: -2705760271220297765
+      tahoma_7b_focus_165: 8721000690865993044
+      tahoma_7b_focus_166: -4726118297343263841
+      tahoma_7b_focus_167: -5977553180156605975
+      tahoma_7b_focus_168: -7638723509202309416
+      tahoma_7b_focus_169: 5247414000993611469
+      tahoma_7b_focus_17: -6648515777873824320
+      tahoma_7b_focus_170: -3284072987109362774
+      tahoma_7b_focus_171: 5802361905322948398
+      tahoma_7b_focus_172: 1199459301846997609
+      tahoma_7b_focus_173: -7997709685694888827
+      tahoma_7b_focus_174: -246861773838392507
+      tahoma_7b_focus_175: -4089832416444186464
+      tahoma_7b_focus_176: 7980461631812934307
+      tahoma_7b_focus_177: -9099871107929326895
+      tahoma_7b_focus_178: 913571189705489424
+      tahoma_7b_focus_179: 7933482042020764934
+      tahoma_7b_focus_18: 3478982670688889299
+      tahoma_7b_focus_180: 8544289320583319503
+      tahoma_7b_focus_181: 3047408200506141075
+      tahoma_7b_focus_182: -3622730098243249377
+      tahoma_7b_focus_183: 5136130009262205557
+      tahoma_7b_focus_184: -8830947062125131468
+      tahoma_7b_focus_185: -928323920548297868
+      tahoma_7b_focus_186: 5844922764055697127
+      tahoma_7b_focus_187: -192559153183906131
+      tahoma_7b_focus_188: 1270283681804135360
+      tahoma_7b_focus_189: 4619992634895579955
+      tahoma_7b_focus_19: -6350138429638211850
+      tahoma_7b_focus_190: 6525082211284407350
+      tahoma_7b_focus_191: 6278369407058052668
+      tahoma_7b_focus_192: 5276783704407976516
+      tahoma_7b_focus_193: -2571087073326430049
+      tahoma_7b_focus_194: 6894030787191813108
+      tahoma_7b_focus_195: 930838001074700711
+      tahoma_7b_focus_196: 6762718672802694120
+      tahoma_7b_focus_197: -5583004493495929434
+      tahoma_7b_focus_198: 5334719276761642401
+      tahoma_7b_focus_199: -7700614410143706696
+      tahoma_7b_focus_2: 4147526540960770888
+      tahoma_7b_focus_20: -4978622364864286423
+      tahoma_7b_focus_200: 8941085100645572344
+      tahoma_7b_focus_201: -6123634365423275486
+      tahoma_7b_focus_202: 2121294364415583996
+      tahoma_7b_focus_203: 3711975284009620861
+      tahoma_7b_focus_204: 9164574786980042482
+      tahoma_7b_focus_21: 3753033317211252716
+      tahoma_7b_focus_22: 7503651739562113374
+      tahoma_7b_focus_23: -4631970071130935847
+      tahoma_7b_focus_24: 2370591207496389506
+      tahoma_7b_focus_25: 6147883082099675373
+      tahoma_7b_focus_26: 5107363104295880321
+      tahoma_7b_focus_27: -7812996476502786771
+      tahoma_7b_focus_28: -4742926226055024128
+      tahoma_7b_focus_29: -1362825176823479489
+      tahoma_7b_focus_3: 913039552028200110
+      tahoma_7b_focus_30: -327729153586006645
+      tahoma_7b_focus_31: 8616659910365207984
+      tahoma_7b_focus_32: -9003070176588423712
+      tahoma_7b_focus_33: -3130259744275354925
+      tahoma_7b_focus_34: -6981597386236193587
+      tahoma_7b_focus_35: -4425092895033425999
+      tahoma_7b_focus_36: 6505092907733955216
+      tahoma_7b_focus_37: 7000017897403880901
+      tahoma_7b_focus_38: 1108529647118440071
+      tahoma_7b_focus_39: 4799651371772221339
+      tahoma_7b_focus_4: -7300349458950041700
+      tahoma_7b_focus_40: 4618119096071617377
+      tahoma_7b_focus_41: -703028988861296583
+      tahoma_7b_focus_42: -2984486176863923358
+      tahoma_7b_focus_43: 7225174041215563469
+      tahoma_7b_focus_44: -702860595779787222
+      tahoma_7b_focus_45: 8338921998396041239
+      tahoma_7b_focus_46: -1637198984343442615
+      tahoma_7b_focus_47: -3107998336370861436
+      tahoma_7b_focus_48: 1829829476380097859
+      tahoma_7b_focus_49: 6651561970358653522
+      tahoma_7b_focus_5: -1892890250045925486
+      tahoma_7b_focus_50: -4557697119455219083
+      tahoma_7b_focus_51: -2827799400557457170
+      tahoma_7b_focus_52: 5729598257200724421
+      tahoma_7b_focus_53: 7579832431043391630
+      tahoma_7b_focus_54: -1092165101221161797
+      tahoma_7b_focus_55: -5562617861883021351
+      tahoma_7b_focus_56: -4928944170758228959
+      tahoma_7b_focus_57: -3832261941064095677
+      tahoma_7b_focus_58: 7902204046862440604
+      tahoma_7b_focus_59: -1833389629696509633
+      tahoma_7b_focus_6: 431285694813930450
+      tahoma_7b_focus_60: -8596198561496227500
+      tahoma_7b_focus_61: 6533000923130723703
+      tahoma_7b_focus_62: -4699079441396620721
+      tahoma_7b_focus_63: -887267424565670172
+      tahoma_7b_focus_64: -2833629556189070874
+      tahoma_7b_focus_65: 8450626264556501834
+      tahoma_7b_focus_66: 443173482720186109
+      tahoma_7b_focus_67: 7306719121399972163
+      tahoma_7b_focus_68: 4644631362434786152
+      tahoma_7b_focus_69: -860198096149716710
+      tahoma_7b_focus_7: -5610775794341283340
+      tahoma_7b_focus_70: 7892506985835555658
+      tahoma_7b_focus_71: -136724365565396606
+      tahoma_7b_focus_72: -3271910089086533076
+      tahoma_7b_focus_73: 740181941864758341
+      tahoma_7b_focus_74: -2938201768600663819
+      tahoma_7b_focus_75: 3558574506395656493
+      tahoma_7b_focus_76: -4314964682784829504
+      tahoma_7b_focus_77: 4717654714399609408
+      tahoma_7b_focus_78: -6735565106522349032
+      tahoma_7b_focus_79: 3214670404718287355
+      tahoma_7b_focus_8: 2581442598781036895
+      tahoma_7b_focus_80: -163728133915796836
+      tahoma_7b_focus_81: -6884363473472825442
+      tahoma_7b_focus_82: -5719264510535799031
+      tahoma_7b_focus_83: -5423589159321486431
+      tahoma_7b_focus_84: -1045068180061237091
+      tahoma_7b_focus_85: 5870981143236157822
+      tahoma_7b_focus_86: -9016914894820725826
+      tahoma_7b_focus_87: 15043412412437750
+      tahoma_7b_focus_88: -9051915316988168958
+      tahoma_7b_focus_89: 7132680461737478703
+      tahoma_7b_focus_9: -4172347024893938870
+      tahoma_7b_focus_90: -6314202177142804652
+      tahoma_7b_focus_91: -1221048146630381749
+      tahoma_7b_focus_92: 3586481568251248843
+      tahoma_7b_focus_93: -619790397735985536
+      tahoma_7b_focus_94: 7516780474181035554
+      tahoma_7b_focus_95: 944990949342437722
+      tahoma_7b_focus_96: -5703746479697384332
+      tahoma_7b_focus_97: 672433299223742419
+      tahoma_7b_focus_98: 3695918504174477241
+      tahoma_7b_focus_99: -88823263186166752
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

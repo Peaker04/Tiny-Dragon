@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b2ef338a4ee44fdbbf03aedb71e0854, type: 3}
+  m_Name: TinyDragonRuntimeConfig
+  m_EditorClassIdentifier: 
+  scenes:
+    mainMenuSceneName: MainMenu
+    newGameSceneName: LangAru
+    gameOverMenuSceneName: Level_01_Origin
+    guideSceneName: Level_01_Origin
+    playerImmortalSceneName: LangAru
+    introNextSceneName: Level_01_Origin
+    level02SceneName: Level_02
+    hiddenHudScenes:
+    - Level_01_Origin
+  resources:
+    databaseSchemaPath: Database/tiny_dragon_schema
+    databaseSeedPath: Database/tiny_dragon_seed
+    backgroundMusicClipPath: Music/XenoverseTrack16Loop
+    damagePopupPrefabPath: Combat/DamagePopup
+    playerProjectilePrefabPath: Combat/PlayerProjectile
+    enemyProjectilePrefabPath: Combat/EnemyProjectile
+    inventoryCanvasPrefabPath: UI/InventoryCanvas
+    goldCoinSpritePath: UI/Currency/coin_stack
+    hudPanelSpritePath: res/x4/mainimage/myTexture2dpanel
+    hudPanelSpriteName: myTexture2dpanel_0
+    hudHealthSpritePath: res/x4/mainimage/myTexture2dHP
+    hudHealthSpriteName: myTexture2dHP_0
+    hudKiSpritePath: res/x4/mainimage/myTexture2dMP
+    hudKiSpriteName: myTexture2dMP_0
+  gameplay:
+    level02MaxEnemiesOnGround: 2
+    level02RespawnKilledEnemies: 0
+    level02TotalEnemiesBeforeBoss: 2
+    level02SpawnBossAfterNormalEnemies: 1
+  ui:
+    inventoryActiveTabColor: {r: 151, g: 238, b: 159, a: 255}
+    inventoryInactiveTabColor: {r: 255, g: 238, b: 205, a: 255}
+    inventoryActiveTabTextColor: {r: 24, g: 91, b: 43, a: 255}
+    inventoryInactiveTabTextColor: {r: 91, g: 74, b: 58, a: 255}
+    hudTargetNameColor: {r: 22, g: 87, b: 33, a: 255}
+    hudTargetHpColor: {r: 24, g: 81, b: 32, a: 255}
+    hudTextShadowColor: {r: 255, g: 255, b: 255, a: 160}
+  level03:
+    requiredFragments: 2
+    shieldIntroDelay: 0.8
+    shieldHitAnnouncementDuration: 0.75
+    fragmentAnnouncementDuration: 1
+    mergeAnnouncementDuration: 1.2
+    preMergeDelay: 0.25
+    mergeDuration: 0.75
+    postMergeEffectDelay: 0.75
+    bossVulnerableAnnouncementDuration: 2
+    hideCompleteGemDelay: 1.5
+    platformFadeDelay: 0.15
+    platformTransitionDuration: 0.25
+    fragmentMoveDuration: 0.32
+    fragmentPixelsPerUnit: 512
+    mergePoint: {x: 0, y: 15, z: 0}
+    fragmentStandOffset: {x: 0, y: 0.06, z: 0}
+    platformColliderSize: {x: 2.6, y: 0.15}
+    platformColliderOffset: {x: 0, y: -0.075}
+    platformVisualScale: {x: 1.35, y: 0.22, z: 1}
+    platformGroupA:
+    - {x: -6, y: -2.5, z: 0}
+    - {x: 0, y: -2.5, z: 0}
+    - {x: 6, y: -2.5, z: 0}
+    - {x: -6, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 6, y: 1, z: 0}
+    - {x: -6, y: 5, z: 0}
+    - {x: 0, y: 5, z: 0}
+    - {x: 6, y: 5, z: 0}
+    - {x: -6, y: 9, z: 0}
+    - {x: 0, y: 9, z: 0}
+    - {x: 6, y: 9, z: 0}
+    - {x: -6, y: 13, z: 0}
+    - {x: 0, y: 13, z: 0}
+    - {x: 6, y: 13, z: 0}
+    platformGroupB:
+    - {x: -4, y: -1, z: 0}
+    - {x: 2, y: -1, z: 0}
+    - {x: 8, y: -1, z: 0}
+    - {x: -8, y: 3, z: 0}
+    - {x: -2, y: 3, z: 0}
+    - {x: 4, y: 3, z: 0}
+    - {x: -4, y: 7, z: 0}
+    - {x: 2, y: 7, z: 0}
+    - {x: 8, y: 7, z: 0}
+    - {x: -8, y: 11, z: 0}
+    - {x: -2, y: 11, z: 0}
+    - {x: 4, y: 11, z: 0}
+    - {x: -4, y: 14.5, z: 0}
+    - {x: 2, y: 14.5, z: 0}
+    - {x: 8, y: 14.5, z: 0}

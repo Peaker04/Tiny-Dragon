@@ -1,4 +1,7 @@
+using TinyDragon.Combat.Projectiles;
 using TinyDragon.Data;
+using TinyDragon.Shared.Animation;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -27,12 +30,14 @@ public class BossAI : MonoBehaviour
     [SerializeField] private float energyCooldown = 2.4f;
     [SerializeField] private float energyProjectileDelay = 0.28f;
     [SerializeField] private int energyDamage = GameplayBalanceDefaults.BossEnergyDamage;
-    [SerializeField] private float projectileSpeed = 5f;
-    [SerializeField] private float projectileLifetime = 3f;
     [SerializeField] private float projectileScale = 0.45f;
     [SerializeField] private Vector2 projectileSpawnOffset = new Vector2(0.8f, 0.15f);
     [SerializeField] private Sprite projectileSprite;
+    [SerializeField] private Sprite[] projectileAnimationSprites;
+    [SerializeField] private float projectileAnimationFrameRate = 12f;
+    [SerializeField] private bool useAnimationBridgeProjectileEffect = true;
     [SerializeField] private bool projectileFacesRightByDefault = true;
+    [SerializeField] private EnemyProjectileShooter projectileShooter;
     [SerializeField] private string energyTriggerName = "EnergyBlast";
     [SerializeField] private string energyStateName = "Boss_energy_blast";
 
@@ -45,6 +50,8 @@ public class BossAI : MonoBehaviour
 
     [Header("Animator")]
     [SerializeField] private string movingParameterName = "MoveDash";
+    [SerializeField] private string idleStateName = "Boss_idle";
+    [SerializeField] private string movingStateName = "Boss_move_dash";
     [SerializeField] private string hitTriggerName = "Hit";
 
     private Rigidbody2D rb;
@@ -59,19 +66,35 @@ public class BossAI : MonoBehaviour
     private bool hasPendingEnergyShot;
     private bool isMovingAnimation;
     private string currentAttackState;
+    private bool hasArenaAwarenessBounds;
+    private float arenaAwarenessMinX;
+    private float arenaAwarenessMaxX;
+    private float arenaAwarenessMinY;
+    private float arenaAwarenessMaxY;
+    private float detectionVerticalTolerance;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        detectionVerticalTolerance = Mathf.Max(verticalTolerance, 0f);
+        if (projectileShooter == null)
+        {
+            projectileShooter = GetComponent<EnemyProjectileShooter>();
+        }
+
+        if (projectileShooter == null)
+        {
+            projectileShooter = gameObject.AddComponent<EnemyProjectileShooter>();
+        }
     }
 
     private void Start()
     {
         if (player == null)
         {
-            PlayerController playerController = FindAnyObjectByType<PlayerController>();
+            PlayerController playerController = ObjectLookup.Any<PlayerController>();
             if (playerController != null)
             {
                 player = playerController.transform;
@@ -82,6 +105,64 @@ public class BossAI : MonoBehaviour
         {
             playerHealth = player.GetComponent<PlayerHealth>();
         }
+
+        ConfigureProjectileEffectFromSource();
+        ConfigureProjectileShooterVisual();
+    }
+
+    private void ConfigureProjectileEffectFromSource()
+    {
+        if (!useAnimationBridgeProjectileEffect || HasAnimationSprites(projectileAnimationSprites))
+        {
+            return;
+        }
+
+        IProjectileEffectSource effectSource = FindProjectileEffectSource();
+        if (effectSource == null)
+        {
+            return;
+        }
+
+        if (!effectSource.TryGetProjectileEffect(out Sprite[] effectSprites, out float effectFrameRate))
+        {
+            return;
+        }
+
+        projectileAnimationSprites = effectSprites;
+        projectileAnimationFrameRate = Mathf.Max(1f, effectFrameRate);
+        projectileSprite = effectSprites[0];
+    }
+
+    private void ConfigureProjectileShooterVisual()
+    {
+        if (projectileShooter == null)
+        {
+            return;
+        }
+
+        projectileShooter.ConfigureVisual(new ProjectileVisualProfile
+        {
+            sprite = projectileSprite,
+            animationSprites = projectileAnimationSprites,
+            animationFrameRate = projectileAnimationFrameRate,
+            scale = projectileScale,
+            spawnOffset = projectileSpawnOffset,
+            facesRightByDefault = projectileFacesRightByDefault
+        });
+    }
+
+    private IProjectileEffectSource FindProjectileEffectSource()
+    {
+        MonoBehaviour[] components = GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour component in components)
+        {
+            if (component is IProjectileEffectSource effectSource)
+            {
+                return effectSource;
+            }
+        }
+
+        return null;
     }
 
     private void FixedUpdate()
@@ -103,10 +184,17 @@ public class BossAI : MonoBehaviour
             return;
         }
 
+        if (!IsPlayerInsideArenaAwareness())
+        {
+            SetMoving(false);
+            StopMoving();
+            return;
+        }
+
         float horizontalDistance = Mathf.Abs(player.position.x - transform.position.x);
         float verticalDistance = Mathf.Abs(player.position.y - transform.position.y);
 
-        if (horizontalDistance > detectRange || verticalDistance > verticalTolerance)
+        if (horizontalDistance > detectRange || verticalDistance > detectionVerticalTolerance)
         {
             SetMoving(false);
             StopMoving();
@@ -114,20 +202,24 @@ public class BossAI : MonoBehaviour
         }
 
         FacePlayer();
+        bool isWithinAttackHeight = verticalDistance <= verticalTolerance;
 
-        if (horizontalDistance <= meleeRange && Time.time >= nextMeleeTime)
+        if (isWithinAttackHeight && horizontalDistance <= meleeRange && Time.time >= nextMeleeTime)
         {
             DoMeleeAttack();
             return;
         }
 
-        if (useComboAttack && horizontalDistance <= comboRange && Time.time >= nextComboTime)
+        if (isWithinAttackHeight && useComboAttack && horizontalDistance <= comboRange && Time.time >= nextComboTime)
         {
             DoComboAttack();
             return;
         }
 
-        if (horizontalDistance <= energyRange && horizontalDistance > meleeRange && Time.time >= nextEnergyTime)
+        if (isWithinAttackHeight
+            && horizontalDistance <= energyRange
+            && horizontalDistance > meleeRange
+            && Time.time >= nextEnergyTime)
         {
             DoEnergyAttack();
             return;
@@ -155,9 +247,87 @@ public class BossAI : MonoBehaviour
         energyDamage = Mathf.Max(rangedDamage, 1);
     }
 
+    public void ApplyPhaseMultipliers(float movementMultiplier, float attackIntervalMultiplier)
+    {
+        moveSpeed = Mathf.Max(moveSpeed * movementMultiplier, 0.1f);
+        meleeCooldown = Mathf.Max(meleeCooldown * attackIntervalMultiplier, 0.01f);
+        energyCooldown = Mathf.Max(energyCooldown * attackIntervalMultiplier, 0.01f);
+        comboCooldown = Mathf.Max(comboCooldown * attackIntervalMultiplier, 0.01f);
+    }
+
+    public void ConfigureAnimationProfile(
+        string movingParameter,
+        string idleState,
+        string movingState,
+        string meleeTrigger,
+        string meleeState,
+        string energyTrigger,
+        string energyState,
+        string comboTrigger,
+        string comboState,
+        string hitTrigger)
+    {
+        movingParameterName = movingParameter ?? string.Empty;
+        idleStateName = string.IsNullOrWhiteSpace(idleState) ? idleStateName : idleState;
+        movingStateName = string.IsNullOrWhiteSpace(movingState) ? movingStateName : movingState;
+        meleeTriggerName = string.IsNullOrWhiteSpace(meleeTrigger) ? meleeTriggerName : meleeTrigger;
+        meleeStateName = string.IsNullOrWhiteSpace(meleeState) ? meleeStateName : meleeState;
+        energyTriggerName = string.IsNullOrWhiteSpace(energyTrigger) ? energyTriggerName : energyTrigger;
+        energyStateName = string.IsNullOrWhiteSpace(energyState) ? energyStateName : energyState;
+        comboTriggerName = string.IsNullOrWhiteSpace(comboTrigger) ? comboTriggerName : comboTrigger;
+        comboStateName = string.IsNullOrWhiteSpace(comboState) ? comboStateName : comboState;
+        hitTriggerName = string.IsNullOrWhiteSpace(hitTrigger) ? hitTriggerName : hitTrigger;
+    }
+
+    public void SetArenaAwareness(float horizontalRange, float verticalRange)
+    {
+        detectRange = Mathf.Max(detectRange, horizontalRange);
+        energyRange = Mathf.Max(energyRange, horizontalRange);
+        verticalTolerance = Mathf.Max(verticalTolerance, verticalRange);
+        detectionVerticalTolerance = Mathf.Max(detectionVerticalTolerance, verticalRange);
+        hasArenaAwarenessBounds = false;
+    }
+
+    public void SetDetectionAwareness(float horizontalRange, float verticalRange)
+    {
+        detectRange = Mathf.Max(detectRange, horizontalRange);
+        detectionVerticalTolerance = Mathf.Max(detectionVerticalTolerance, verticalRange);
+        hasArenaAwarenessBounds = false;
+    }
+
+    public void SetArenaAwarenessBounds(Bounds groundBounds, float horizontalPadding, float belowGroundTolerance, float aboveGroundTolerance)
+    {
+        detectRange = Mathf.Max(detectRange, groundBounds.size.x + horizontalPadding * 2f);
+        energyRange = Mathf.Max(energyRange, groundBounds.size.x + horizontalPadding * 2f);
+        verticalTolerance = Mathf.Max(verticalTolerance, belowGroundTolerance + aboveGroundTolerance);
+        detectionVerticalTolerance = Mathf.Max(
+            detectionVerticalTolerance,
+            belowGroundTolerance + aboveGroundTolerance);
+
+        arenaAwarenessMinX = groundBounds.min.x - horizontalPadding;
+        arenaAwarenessMaxX = groundBounds.max.x + horizontalPadding;
+        arenaAwarenessMinY = groundBounds.max.y - belowGroundTolerance;
+        arenaAwarenessMaxY = groundBounds.max.y + aboveGroundTolerance;
+        hasArenaAwarenessBounds = true;
+    }
+
+    private bool IsPlayerInsideArenaAwareness()
+    {
+        if (!hasArenaAwarenessBounds || player == null)
+        {
+            return true;
+        }
+
+        Vector3 playerPosition = player.position;
+        return playerPosition.x >= arenaAwarenessMinX
+            && playerPosition.x <= arenaAwarenessMaxX
+            && playerPosition.y >= arenaAwarenessMinY
+            && playerPosition.y <= arenaAwarenessMaxY;
+    }
+
     public void DealMeleeDamage()
     {
-        if (playerHealth == null || player == null)
+        if (playerHealth == null || player == null || !IsPlayerInsideArenaAwareness())
         {
             return;
         }
@@ -172,29 +342,33 @@ public class BossAI : MonoBehaviour
 
     public void ShootEnergyProjectile()
     {
-        if (player == null)
+        if (projectileShooter == null
+            || player == null
+            || !IsPlayerInsideArenaAwareness()
+            || Mathf.Abs(player.position.y - transform.position.y) > verticalTolerance)
         {
             return;
         }
 
-        float facingDirection = player.position.x >= transform.position.x ? 1f : -1f;
-        Vector3 spawnOffset = new Vector3(projectileSpawnOffset.x * facingDirection, projectileSpawnOffset.y, 0f);
-        Vector3 spawnPosition = transform.position + spawnOffset;
-        Vector2 projectileDirection = new Vector2(facingDirection, 0f);
+        projectileShooter.ShootAt(player.position, energyDamage);
+    }
 
-        GameObject projectileObject = new GameObject("Boss Energy Projectile");
-        projectileObject.transform.position = spawnPosition;
+    private static bool HasAnimationSprites(Sprite[] sprites)
+    {
+        if (sprites == null || sprites.Length == 0)
+        {
+            return false;
+        }
 
-        EnemyProjectile projectile = projectileObject.AddComponent<EnemyProjectile>();
-        projectile.Initialize(
-            projectileDirection,
-            projectileSpeed,
-            energyDamage,
-            projectileLifetime,
-            projectileSprite,
-            projectileScale,
-            projectileFacesRightByDefault
-        );
+        foreach (Sprite sprite in sprites)
+        {
+            if (sprite != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void ChasePlayer()
@@ -297,23 +471,26 @@ public class BossAI : MonoBehaviour
             return;
         }
 
-        foreach (AnimatorControllerParameter parameter in animator.parameters)
+        if (!string.IsNullOrWhiteSpace(movingParameterName))
         {
-            if (parameter.name != movingParameterName)
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
             {
-                continue;
-            }
+                if (parameter.name != movingParameterName)
+                {
+                    continue;
+                }
 
-            if (parameter.type == AnimatorControllerParameterType.Bool)
-            {
-                animator.SetBool(movingParameterName, isMoving);
-            }
-            else if (isMoving && parameter.type == AnimatorControllerParameterType.Trigger)
-            {
-                animator.SetTrigger(movingParameterName);
-            }
+                if (parameter.type == AnimatorControllerParameterType.Bool)
+                {
+                    animator.SetBool(movingParameterName, isMoving);
+                }
+                else if (isMoving && parameter.type == AnimatorControllerParameterType.Trigger)
+                {
+                    animator.SetTrigger(movingParameterName);
+                }
 
-            return;
+                return;
+            }
         }
 
         if (isMoving == isMovingAnimation)
@@ -322,7 +499,7 @@ public class BossAI : MonoBehaviour
         }
 
         isMovingAnimation = isMoving;
-        animator.CrossFade(isMoving ? "Boss_move_dash" : "Boss_idle", 0f);
+        animator.CrossFade(isMoving ? movingStateName : idleStateName, 0f);
     }
 
     private void PlayAnimation(string triggerName, string fallbackStateName)

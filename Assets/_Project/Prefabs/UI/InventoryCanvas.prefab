@@ -6818,7 +6818,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Tiny Dragon
+  m_Text: Tiny-Dragon
 --- !u!1 &5587259211538638941
 GameObject:
   m_ObjectHideFlags: 0

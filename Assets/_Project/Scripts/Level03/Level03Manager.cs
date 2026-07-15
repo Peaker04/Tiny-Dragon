@@ -1,6 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TinyDragon.Camera;
+using TinyDragon.Config;
+using TinyDragon.Shared.Animation;
+using TinyDragon.Shared.Unity;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
 
 public enum Level03State
 {
@@ -12,17 +20,19 @@ public enum Level03State
 }
 
 [DisallowMultipleComponent]
+[ExecuteAlways]
 public class Level03Manager : MonoBehaviour
 {
-    private sealed class PlatformGroupRuntime
-    {
-        public readonly List<SpriteRenderer> renderers = new List<SpriteRenderer>();
-        public readonly List<Collider2D> colliders = new List<Collider2D>();
-    }
+    private const int FragmentGridColumns = 3;
+    private const float BossDetectionBoundsPadding = 2f;
+    private const float BossDetectionFallbackRange = 100f;
 
     [Header("Level 02 Platform Visual")]
     [SerializeField] private Sprite platformBlockSprite;
     [SerializeField] private Color platformColor = Color.white;
+
+    [Header("Config")]
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
 
     [Header("Dragon Gem Assets")]
     [SerializeField] private Texture2D fragmentTexture;
@@ -34,20 +44,29 @@ public class Level03Manager : MonoBehaviour
     [SerializeField] private int requiredFragments = 2;
     [SerializeField] private float platformFadeDelay = 0.15f;
     [SerializeField] private float platformTransitionDuration = 0.25f;
+    [SerializeField] private float fragmentMoveDuration = 0.32f;
     [SerializeField] private float fragmentPixelsPerUnit = 512f;
     [SerializeField] private Vector3 mergePoint = new Vector3(0f, 15.0f, 0f);
 
     private readonly List<Level03DragonFragment> fragments = new List<Level03DragonFragment>();
-    private PlatformGroupRuntime platformGroupA;
-    private PlatformGroupRuntime platformGroupB;
+    private readonly List<int> fragmentTargetIndices = new List<int>();
+    private readonly List<Collider2D> playerSolidColliders = new List<Collider2D>();
+    private readonly List<Collider2D> bossSolidColliders = new List<Collider2D>();
+    private readonly List<Collider2D> deferredPlatformColliderDisables = new List<Collider2D>();
+    private Level03PlatformGroupRuntime platformGroupA;
+    private Level03PlatformGroupRuntime platformGroupB;
+    private Vector3[] fragmentTargetsA;
+    private Vector3[] fragmentTargetsB;
     private PlayerMovement playerMovement;
     private PlayerInputReader playerInput;
     private EnemyHealth bossHealth;
     private EnemyPatrol bossPatrol;
+    private BossAI bossAI;
     private Level03BossShield bossShield;
     private DragonGemEffectPlayer mergeEffect;
     private SpriteRenderer completeGemRenderer;
     private Coroutine platformTransition;
+    private Coroutine deferredPlatformColliderDisableRoutine;
     private CameraFollow sceneCamera;
     private bool isGroupAActive = true;
     private int collectedFragments;
@@ -56,13 +75,66 @@ public class Level03Manager : MonoBehaviour
     private GUIStyle counterStyle;
     private GUIStyle announcementStyle;
     private Material spriteUnlitMaterial;
+#if UNITY_EDITOR
+    private bool editorBuildQueued;
+#endif
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
+    private Level03EncounterConfig EncounterConfig => Config.Level03;
 
     public Level03State CurrentState { get; private set; } = Level03State.BossShielded;
     public bool CanCollectFragments => CurrentState == Level03State.BossShielded
         || CurrentState == Level03State.CollectingFragments;
 
+    private void Awake()
+    {
+        ApplyConfigDefaults();
+    }
+
+#if UNITY_EDITOR
+    private void OnEnable()
+    {
+        QueueEditorBuild();
+    }
+
+    private void OnValidate()
+    {
+        QueueEditorBuild();
+    }
+
+    private void QueueEditorBuild()
+    {
+        if (Application.isPlaying || editorBuildQueued)
+        {
+            return;
+        }
+
+        editorBuildQueued = true;
+        EditorApplication.delayCall += BuildEditableHierarchy;
+    }
+
+    [ContextMenu("Build Editable Level 03 Objects")]
+    private void BuildEditableHierarchy()
+    {
+        editorBuildQueued = false;
+        if (this == null || Application.isPlaying || !gameObject.scene.IsValid())
+        {
+            return;
+        }
+
+        ApplyConfigDefaults();
+        BuildEncounterHierarchy(false);
+        EditorUtility.SetDirty(this);
+        EditorSceneManager.MarkSceneDirty(gameObject.scene);
+    }
+#endif
+
     private IEnumerator Start()
     {
+        if (!Application.isPlaying)
+        {
+            yield break;
+        }
+
         yield return null;
 
         if (!ResolveSceneActors())
@@ -71,14 +143,16 @@ public class Level03Manager : MonoBehaviour
             yield break;
         }
 
-        BuildEncounterHierarchy();
+        BuildEncounterHierarchy(true);
+        EnforceLevel03SolidCollisions();
         bossShield.ActivateShield(this);
+        SetBossCombatController(true);
         bossHealth.Died += HandleBossDied;
         playerMovement.JumpPerformed += HandlePlayerJumpPerformed;
 
         CurrentState = Level03State.BossShielded;
-        ShowAnnouncement("Boss đang được bảo vệ - hãy tìm 2 mảnh Ngọc Rồng!", 2f);
-        yield return new WaitForSeconds(0.8f);
+        ShowAnnouncement($"Boss đang được bảo vệ - hãy tìm {requiredFragments} mảnh Ngọc Rồng!", 2f);
+        yield return new WaitForSeconds(EncounterConfig.shieldIntroDelay);
 
         if (CurrentState == Level03State.BossShielded)
         {
@@ -100,7 +174,14 @@ public class Level03Manager : MonoBehaviour
 
         if (spriteUnlitMaterial != null)
         {
-            Destroy(spriteUnlitMaterial);
+            if (Application.isPlaying)
+            {
+                Destroy(spriteUnlitMaterial);
+            }
+            else
+            {
+                DestroyImmediate(spriteUnlitMaterial);
+            }
         }
     }
 
@@ -108,7 +189,7 @@ public class Level03Manager : MonoBehaviour
     {
         if (CanCollectFragments)
         {
-            ShowAnnouncement("Shielded! Thu thập đủ 2 mảnh Ngọc Rồng.", 0.75f);
+            ShowAnnouncement($"Shielded! Thu thập đủ {requiredFragments} mảnh Ngọc Rồng.", EncounterConfig.shieldHitAnnouncementDuration);
         }
     }
 
@@ -120,7 +201,7 @@ public class Level03Manager : MonoBehaviour
         }
 
         collectedFragments = Mathf.Min(collectedFragments + 1, requiredFragments);
-        ShowAnnouncement($"Dragon Fragment: {collectedFragments}/{requiredFragments}", 1f);
+        ShowAnnouncement($"Dragon Fragment: {collectedFragments}/{requiredFragments}", EncounterConfig.fragmentAnnouncementDuration);
 
         if (collectedFragments >= requiredFragments)
         {
@@ -130,90 +211,378 @@ public class Level03Manager : MonoBehaviour
 
     private bool ResolveSceneActors()
     {
-        sceneCamera = FindAnyObjectByType<CameraFollow>();
-        playerMovement = FindAnyObjectByType<PlayerMovement>();
+        sceneCamera = ObjectLookup.Any<CameraFollow>();
+        playerMovement = ObjectLookup.Any<PlayerMovement>();
         if (playerMovement != null)
         {
             playerInput = playerMovement.GetComponent<PlayerInputReader>();
+            EnsurePlayerDeathSceneHandler();
         }
 
-        Mob77JsonAnimationBridge mob77 = FindAnyObjectByType<Mob77JsonAnimationBridge>();
-        if (mob77 != null)
+        JsonMultipartAnimationBridge animationBridge = ObjectLookup.Any<JsonMultipartAnimationBridge>();
+        if (animationBridge != null)
         {
-            bossHealth = mob77.GetComponent<EnemyHealth>();
-            bossPatrol = mob77.GetComponent<EnemyPatrol>();
-            bossShield = mob77.GetComponent<Level03BossShield>();
+            bossHealth = animationBridge.GetComponent<EnemyHealth>();
+            bossPatrol = animationBridge.GetComponent<EnemyPatrol>();
+            bossAI = animationBridge.GetComponent<BossAI>();
+            if (bossAI == null)
+            {
+                bossAI = animationBridge.gameObject.AddComponent<BossAI>();
+            }
+            ConfigureLevel03BossAnimation();
+            ConfigureLevel03BossDetection();
+
+            bossShield = animationBridge.GetComponent<Level03BossShield>();
             if (bossShield == null)
             {
-                bossShield = mob77.gameObject.AddComponent<Level03BossShield>();
+                bossShield = animationBridge.gameObject.AddComponent<Level03BossShield>();
             }
+
+            SetBossCombatController(false);
         }
 
         if (playerMovement == null || bossHealth == null || bossShield == null)
         {
-            Debug.LogError("Level03Manager requires PlayerMovement and the Mob77 boss in Level_03.", this);
+            Debug.LogError("Level03Manager requires PlayerMovement and a JSON multipart boss in Level_03.", this);
             return false;
         }
 
         return true;
     }
 
-    private void BuildEncounterHierarchy()
+    private void EnsurePlayerDeathSceneHandler()
     {
-        Transform flyingPlatforms = CreateRoot("FlyingPlatforms", transform);
-        Transform groupARoot = CreateRoot("PlatformGroup_A", flyingPlatforms);
-        Transform groupBRoot = CreateRoot("PlatformGroup_B", flyingPlatforms);
+        if (playerMovement == null)
+        {
+            return;
+        }
 
-        platformGroupA = new PlatformGroupRuntime();
-        platformGroupB = new PlatformGroupRuntime();
+        PlayerHealth playerHealth = playerMovement.GetComponent<PlayerHealth>();
+        if (playerHealth == null)
+        {
+            return;
+        }
 
-        Vector3 platformA1 = new Vector3(-3.5f, -2.5f, 0f);
-        Vector3 platformA2 = new Vector3(3.0f, 1.0f, 0f);
-        Vector3 platformA3 = new Vector3(-4.0f, 5.0f, 0f);
-        Vector3 platformA4 = new Vector3(3.5f, 9.0f, 0f);
-        Vector3 platformA5 = new Vector3(-2.5f, 13.0f, 0f);
+        if (playerMovement.GetComponent<PlayerDeathSceneHandler>() == null)
+        {
+            playerMovement.gameObject.AddComponent<PlayerDeathSceneHandler>();
+        }
+    }
 
-        Vector3 platformB1 = new Vector3(0.0f, -1.0f, 0f);
-        Vector3 platformB2 = new Vector3(-1.0f, 3.0f, 0f);
-        Vector3 platformB3 = new Vector3(0.0f, 7.0f, 0f);
-        Vector3 platformB4 = new Vector3(1.0f, 11.0f, 0f);
-        Vector3 platformB5 = new Vector3(1.0f, 15.0f, 0f);
+    private void ConfigureLevel03BossAnimation()
+    {
+        if (bossAI == null)
+        {
+            return;
+        }
 
-        CreatePlatform("Platform_A1", platformA1, groupARoot, platformGroupA);
-        CreatePlatform("Platform_A2", platformA2, groupARoot, platformGroupA);
-        CreatePlatform("Platform_A3", platformA3, groupARoot, platformGroupA);
-        CreatePlatform("Platform_A4", platformA4, groupARoot, platformGroupA);
-        CreatePlatform("Platform_A5", platformA5, groupARoot, platformGroupA);
+        bossAI.ConfigureAnimationProfile(
+            string.Empty,
+            "walk",
+            "walk",
+            "attack",
+            "Attack",
+            "rangeAttack",
+            "rangeAttack",
+            "attack",
+            "Attack",
+            "Hit");
+    }
 
-        CreatePlatform("Platform_B1", platformB1, groupBRoot, platformGroupB);
-        CreatePlatform("Platform_B2", platformB2, groupBRoot, platformGroupB);
-        CreatePlatform("Platform_B3", platformB3, groupBRoot, platformGroupB);
-        CreatePlatform("Platform_B4", platformB4, groupBRoot, platformGroupB);
-        CreatePlatform("Platform_B5", platformB5, groupBRoot, platformGroupB);
+    private void ConfigureLevel03BossDetection()
+    {
+        if (bossAI == null)
+        {
+            return;
+        }
 
-        SetPlatformGroupState(platformGroupA, 1f, true);
-        SetPlatformGroupState(platformGroupB, 0f, false);
+        MapBounds2D mapBounds = ObjectLookup.Any<MapBounds2D>();
+        if (mapBounds != null)
+        {
+            Bounds bounds = mapBounds.GetBounds();
+            bossAI.SetDetectionAwareness(
+                bounds.size.x + BossDetectionBoundsPadding * 2f,
+                bounds.size.y + BossDetectionBoundsPadding * 2f);
+            return;
+        }
 
-        Transform fragmentRoot = CreateRoot("DragonFragments", transform);
-        CreateFragments(
-            fragmentRoot,
-            new Vector3[] { platformA1, platformA2, platformA3, platformA4, platformA5 },
-            new Vector3[] { platformB1, platformB2, platformB3, platformB4, platformB5 });
+        bossAI.SetDetectionAwareness(BossDetectionFallbackRange, BossDetectionFallbackRange);
+    }
 
-        Transform completeRoot = CreateRoot("DragonGemComplete", transform);
-        completeRoot.position = mergePoint;
-        completeGemRenderer = completeRoot.gameObject.AddComponent<SpriteRenderer>();
-        completeGemRenderer.sprite = CreateFullTextureSprite(completeGemTexture, fragmentPixelsPerUnit);
+    private void SetBossCombatController(bool enabledState)
+    {
+        if (bossPatrol != null)
+        {
+            bossPatrol.enabled = false;
+        }
+        if (bossAI != null)
+        {
+            bossAI.enabled = false;
+        }
+
+        if (bossAI != null)
+        {
+            bossAI.enabled = enabledState;
+        }
+
+        EnforceLevel03SolidCollisions();
+    }
+
+    private void EnforceLevel03SolidCollisions()
+    {
+        if (!Application.isPlaying)
+        {
+            return;
+        }
+
+        RefreshActorSolidColliders();
+        SetIgnoredCollisionPairs(playerSolidColliders, bossSolidColliders, true);
+        EnforcePlatformCollision(platformGroupA);
+        EnforcePlatformCollision(platformGroupB);
+    }
+
+    private void RefreshActorSolidColliders()
+    {
+        playerSolidColliders.Clear();
+        bossSolidColliders.Clear();
+
+        if (playerMovement != null)
+        {
+            AddSolidColliders(playerMovement.gameObject, playerSolidColliders);
+        }
+
+        if (bossHealth != null)
+        {
+            AddSolidColliders(bossHealth.gameObject, bossSolidColliders);
+        }
+    }
+
+    private void EnforcePlatformCollision(Level03PlatformGroupRuntime group)
+    {
+        if (group == null)
+        {
+            return;
+        }
+
+        SetIgnoredCollisionPairs(playerSolidColliders, group.colliders, false);
+        SetIgnoredCollisionPairs(bossSolidColliders, group.colliders, true);
+    }
+
+    private void DisablePlatformCollidersWhenActorsClear(Level03PlatformGroupRuntime group)
+    {
+        if (group == null)
+        {
+            return;
+        }
+
+        RefreshActorSolidColliders();
+        for (int i = 0; i < group.colliders.Count; i++)
+        {
+            Collider2D collider = group.colliders[i];
+            if (collider == null)
+            {
+                continue;
+            }
+
+            if (IsTouchingAnyPlayer(collider))
+            {
+                collider.enabled = true;
+                if (!deferredPlatformColliderDisables.Contains(collider))
+                {
+                    deferredPlatformColliderDisables.Add(collider);
+                }
+                continue;
+            }
+
+            collider.enabled = false;
+        }
+
+        if (deferredPlatformColliderDisables.Count > 0 && deferredPlatformColliderDisableRoutine == null)
+        {
+            deferredPlatformColliderDisableRoutine = StartCoroutine(DisableDeferredPlatformColliders());
+        }
+    }
+
+    private IEnumerator DisableDeferredPlatformColliders()
+    {
+        WaitForFixedUpdate wait = new WaitForFixedUpdate();
+        while (deferredPlatformColliderDisables.Count > 0)
+        {
+            RefreshActorSolidColliders();
+            for (int i = deferredPlatformColliderDisables.Count - 1; i >= 0; i--)
+            {
+                Collider2D collider = deferredPlatformColliderDisables[i];
+                if (collider == null)
+                {
+                    deferredPlatformColliderDisables.RemoveAt(i);
+                    continue;
+                }
+
+                if (IsColliderInActivePlatformGroup(collider))
+                {
+                    deferredPlatformColliderDisables.RemoveAt(i);
+                    continue;
+                }
+
+                if (IsTouchingAnyPlayer(collider))
+                {
+                    continue;
+                }
+
+                collider.enabled = false;
+                deferredPlatformColliderDisables.RemoveAt(i);
+            }
+
+            yield return wait;
+        }
+
+        deferredPlatformColliderDisableRoutine = null;
+    }
+
+    private bool IsColliderInActivePlatformGroup(Collider2D collider)
+    {
+        Level03PlatformGroupRuntime activeGroup = isGroupAActive ? platformGroupA : platformGroupB;
+        return activeGroup != null && activeGroup.colliders.Contains(collider);
+    }
+
+    private bool IsTouchingAnyPlayer(Collider2D platformCollider)
+    {
+        return IsTouchingAny(platformCollider, playerSolidColliders);
+    }
+
+    private static bool IsTouchingAny(Collider2D collider, List<Collider2D> otherColliders)
+    {
+        if (collider == null || otherColliders == null)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < otherColliders.Count; i++)
+        {
+            Collider2D other = otherColliders[i];
+            if (other != null && collider.IsTouching(other))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static void AddSolidColliders(GameObject root, List<Collider2D> colliders)
+    {
+        if (root == null)
+        {
+            return;
+        }
+
+        Collider2D[] rootColliders = root.GetComponentsInChildren<Collider2D>(true);
+        for (int i = 0; i < rootColliders.Length; i++)
+        {
+            Collider2D collider = rootColliders[i];
+            if (collider == null || collider.isTrigger)
+            {
+                continue;
+            }
+
+            colliders.Add(collider);
+        }
+    }
+
+    private static void SetIgnoredCollisionPairs(List<Collider2D> firstGroup, List<Collider2D> secondGroup, bool ignore)
+    {
+        if (firstGroup == null || secondGroup == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < firstGroup.Count; i++)
+        {
+            Collider2D first = firstGroup[i];
+            if (first == null)
+            {
+                continue;
+            }
+
+            for (int j = 0; j < secondGroup.Count; j++)
+            {
+                Collider2D second = secondGroup[j];
+                if (second == null || first == second || first.attachedRigidbody == second.attachedRigidbody)
+                {
+                    continue;
+                }
+
+                Physics2D.IgnoreCollision(first, second, ignore);
+            }
+        }
+    }
+
+    private void ApplyConfigDefaults()
+    {
+        Level03EncounterConfig config = EncounterConfig;
+        requiredFragments = Mathf.Max(1, config.requiredFragments);
+        platformFadeDelay = config.platformFadeDelay;
+        platformTransitionDuration = config.platformTransitionDuration;
+        fragmentMoveDuration = config.fragmentMoveDuration;
+        fragmentPixelsPerUnit = config.fragmentPixelsPerUnit;
+        mergePoint = config.mergePoint;
+    }
+
+    private void BuildEncounterHierarchy(bool runtimeState)
+    {
+        fragments.Clear();
+        fragmentTargetIndices.Clear();
+        Transform flyingPlatforms = GetOrCreateRoot("FlyingPlatforms", transform);
+        Transform groupARoot = GetOrCreateRoot("PlatformGroup_A", flyingPlatforms);
+        Transform groupBRoot = GetOrCreateRoot("PlatformGroup_B", flyingPlatforms);
+
+        platformGroupA = new Level03PlatformGroupRuntime();
+        platformGroupB = new Level03PlatformGroupRuntime();
+
+        Vector3[] platformsA = CopyPlatformPositions(EncounterConfig.platformGroupA);
+        Vector3[] platformsB = CopyPlatformPositions(EncounterConfig.platformGroupB);
+
+        CreatePlatforms("Platform_A", platformsA, groupARoot, platformGroupA);
+        CreatePlatforms("Platform_B", platformsB, groupBRoot, platformGroupB);
+
+        if (runtimeState)
+        {
+            Level03PlatformGroupRuntime.SetState(platformGroupA, 1f, true);
+            Level03PlatformGroupRuntime.SetState(platformGroupB, 0f, false);
+        }
+        else
+        {
+            Level03PlatformGroupRuntime.SetState(platformGroupA, 1f, true);
+            Level03PlatformGroupRuntime.SetState(platformGroupB, 1f, true);
+        }
+
+        Transform fragmentRoot = GetOrCreateRoot("DragonFragments", transform);
+        CreateFragments(fragmentRoot, platformsA, platformsB);
+
+        Transform existingCompleteRoot = transform.Find("DragonGemComplete");
+        Transform completeRoot = GetOrCreateRoot("DragonGemComplete", transform);
+        if (existingCompleteRoot != null)
+        {
+            mergePoint = completeRoot.position;
+        }
+        else
+        {
+            completeRoot.position = mergePoint;
+        }
+        completeGemRenderer = GetOrCreateComponent<SpriteRenderer>(completeRoot.gameObject);
+        completeGemRenderer.sprite = Level03SpriteFactory.CreateFullTextureSprite(completeGemTexture, fragmentPixelsPerUnit);
         completeGemRenderer.sharedMaterial = GetSpriteUnlitMaterial();
         completeGemRenderer.sortingOrder = 25;
         completeGemRenderer.transform.localScale = Vector3.one * 0.65f;
-        completeGemRenderer.enabled = false;
+        completeGemRenderer.enabled = !runtimeState;
 
-        Transform effectsRoot = CreateRoot("Effects", transform);
-        Transform mergeEffectRoot = CreateRoot("MergeEffect", effectsRoot);
+        Transform effectsRoot = GetOrCreateRoot("Effects", transform);
+        Transform mergeEffectRoot = GetOrCreateRoot("MergeEffect", effectsRoot);
         mergeEffectRoot.position = mergePoint;
-        mergeEffect = mergeEffectRoot.gameObject.AddComponent<DragonGemEffectPlayer>();
+        mergeEffect = GetOrCreateComponent<DragonGemEffectPlayer>(mergeEffectRoot.gameObject);
         mergeEffect.Configure(mergeEffectTexture, mergeEffectData);
+
+        EnforceLevel03SolidCollisions();
     }
 
     private void CreateFragments(
@@ -229,53 +598,44 @@ public class Level03Manager : MonoBehaviour
 
         int halfWidth = fragmentTexture.width / 2;
         Color32[] pixels = fragmentTexture.GetPixels32();
-        Sprite leftFragment = CreateTrimmedSprite(
+        Sprite leftFragment = Level03SpriteFactory.CreateTrimmedSprite(
             fragmentTexture,
             pixels,
             0,
             halfWidth,
             fragmentPixelsPerUnit);
-        Sprite rightFragment = CreateTrimmedSprite(
+        Sprite rightFragment = Level03SpriteFactory.CreateTrimmedSprite(
             fragmentTexture,
             pixels,
             halfWidth,
             fragmentTexture.width,
             fragmentPixelsPerUnit);
 
-        Vector3 fragmentStandOffset = new Vector3(0f, 0.06f, 0f);
+        Vector3 fragmentStandOffset = EncounterConfig.fragmentStandOffset;
+        fragmentTargetsA = BuildFragmentTargets(platformsA, fragmentStandOffset);
+        fragmentTargetsB = BuildFragmentTargets(platformsB, fragmentStandOffset);
 
-        Vector3[] pathOne =
-        {
-            platformsA[1] + fragmentStandOffset, // A2
-            platformsB[2] + fragmentStandOffset, // B3
-            platformsA[3] + fragmentStandOffset, // A4
-            platformsB[4] + fragmentStandOffset  // B5
-        };
-        
-        Vector3[] pathTwo =
-        {
-            platformsB[1] + fragmentStandOffset, // B2
-            platformsA[2] + fragmentStandOffset, // A3
-            platformsB[3] + fragmentStandOffset, // B4
-            platformsA[4] + fragmentStandOffset  // A5
-        };
+        int firstStartIndex = PickSpawnTargetIndex(fragmentTargetsA, 0, 1, -1);
+        int secondStartIndex = PickSpawnTargetIndex(fragmentTargetsA, 2, 4, firstStartIndex);
 
-        fragments.Add(CreateFragment("Fragment_01", 1, leftFragment, pathOne, parent));
-        fragments.Add(CreateFragment("Fragment_02", 2, rightFragment, pathTwo, parent));
+        fragments.Add(CreateFragment("Fragment_01", 1, leftFragment, fragmentTargetsA[firstStartIndex], parent));
+        fragmentTargetIndices.Add(firstStartIndex);
+        fragments.Add(CreateFragment("Fragment_02", 2, rightFragment, fragmentTargetsA[secondStartIndex], parent));
+        fragmentTargetIndices.Add(secondStartIndex);
     }
 
     private Level03DragonFragment CreateFragment(
         string objectName,
         int index,
         Sprite sprite,
-        Vector3[] path,
+        Vector3 startPosition,
         Transform parent)
     {
-        GameObject fragmentObject = new GameObject(objectName);
-        fragmentObject.transform.SetParent(parent, true);
+        Transform fragmentTransform = GetOrCreateRoot(objectName, parent);
+        GameObject fragmentObject = fragmentTransform.gameObject;
         fragmentObject.transform.localScale = Vector3.one * 0.8f;
-        Level03DragonFragment fragment = fragmentObject.AddComponent<Level03DragonFragment>();
-        fragment.Initialize(this, index, sprite, path, GetSpriteUnlitMaterial());
+        Level03DragonFragment fragment = GetOrCreateComponent<Level03DragonFragment>(fragmentObject);
+        fragment.Initialize(this, index, sprite, startPosition, GetSpriteUnlitMaterial());
         return fragment;
     }
 
@@ -283,28 +643,29 @@ public class Level03Manager : MonoBehaviour
         string objectName,
         Vector3 position,
         Transform parent,
-        PlatformGroupRuntime group)
+        Level03PlatformGroupRuntime group)
     {
-        GameObject platform = new GameObject(objectName);
+        Transform platformTransform = GetOrCreateRoot(objectName, parent);
+        GameObject platform = platformTransform.gameObject;
         platform.layer = LayerMask.NameToLayer("Ground");
-        platform.transform.SetParent(parent, true);
         platform.transform.position = position;
 
-        BoxCollider2D collider = platform.AddComponent<BoxCollider2D>();
-        collider.size = new Vector2(2.6f, 0.15f);
-        collider.offset = new Vector2(0f, -0.075f);
+        BoxCollider2D collider = GetOrCreateComponent<BoxCollider2D>(platform);
+        collider.isTrigger = false;
+        collider.size = EncounterConfig.platformColliderSize;
+        collider.offset = EncounterConfig.platformColliderOffset;
         group.colliders.Add(collider);
 
-        GameObject visual = new GameObject("BlockVisual");
-        visual.transform.SetParent(platform.transform, false);
+        Transform visualTransform = GetOrCreateRoot("BlockVisual", platform.transform);
+        GameObject visual = visualTransform.gameObject;
 
-        SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+        SpriteRenderer renderer = GetOrCreateComponent<SpriteRenderer>(visual);
         renderer.sprite = platformBlockSprite;
         renderer.sharedMaterial = GetSpriteUnlitMaterial();
         renderer.color = platformColor;
         renderer.sortingOrder = 2;
 
-        Vector3 visualScale = new Vector3(1.35f, 0.22f, 1f);
+        Vector3 visualScale = EncounterConfig.platformVisualScale;
         visual.transform.localScale = visualScale;
         if (platformBlockSprite != null)
         {
@@ -316,6 +677,114 @@ public class Level03Manager : MonoBehaviour
         }
 
         group.renderers.Add(renderer);
+    }
+
+    private void CreatePlatforms(
+        string platformPrefix,
+        Vector3[] positions,
+        Transform parent,
+        Level03PlatformGroupRuntime group)
+    {
+        for (int i = 0; i < positions.Length; i++)
+        {
+            CreatePlatform($"{platformPrefix}{i + 1}", positions[i], parent, group);
+        }
+    }
+
+    private static Transform GetOrCreateRoot(string objectName, Transform parent)
+    {
+        Transform child = parent.Find(objectName);
+        if (child != null)
+        {
+            return child;
+        }
+
+        GameObject created = new GameObject(objectName);
+        created.transform.SetParent(parent, false);
+        return created.transform;
+    }
+
+    private static T GetOrCreateComponent<T>(GameObject target) where T : Component
+    {
+        T component = target.GetComponent<T>();
+        return component != null ? component : target.AddComponent<T>();
+    }
+
+    private static Vector3[] CopyPlatformPositions(Vector3[] sourcePositions)
+    {
+        if (sourcePositions == null || sourcePositions.Length == 0)
+        {
+            return new Vector3[0];
+        }
+
+        Vector3[] positions = new Vector3[sourcePositions.Length];
+        for (int i = 0; i < sourcePositions.Length; i++)
+        {
+            positions[i] = sourcePositions[i];
+        }
+
+        return positions;
+    }
+
+    private static Vector3[] BuildFragmentTargets(
+        Vector3[] platforms,
+        Vector3 offset)
+    {
+        if (platforms == null || platforms.Length == 0)
+        {
+            return new[] { offset };
+        }
+
+        Vector3[] targets = new Vector3[platforms.Length];
+        for (int i = 0; i < platforms.Length; i++)
+        {
+            targets[i] = platforms[i] + offset;
+        }
+
+        return targets;
+    }
+
+    private static int PickSpawnTargetIndex(Vector3[] targets, int minTier, int maxTier, int avoidIndex)
+    {
+        if (targets == null || targets.Length == 0)
+        {
+            return 0;
+        }
+
+        if (targets.Length == 1)
+        {
+            return Mathf.Clamp(avoidIndex == 0 ? targets.Length - 1 : 0, 0, targets.Length - 1);
+        }
+
+        List<int> candidates = new List<int>();
+        for (int i = 0; i < targets.Length; i++)
+        {
+            int tier = GetFragmentTier(i);
+            if (tier >= minTier && tier <= maxTier && i != avoidIndex)
+            {
+                candidates.Add(i);
+            }
+        }
+
+        if (candidates.Count == 0)
+        {
+            for (int i = 0; i < targets.Length; i++)
+            {
+                if (i != avoidIndex)
+                {
+                    candidates.Add(i);
+                }
+            }
+        }
+
+        if (candidates.Count == 0)
+        {
+            return 0;
+        }
+
+        return Application.isPlaying
+            ? candidates[Random.Range(0, candidates.Count)]
+            : candidates[0];
     }
 
     private void HandlePlayerJumpPerformed()
@@ -335,15 +804,180 @@ public class Level03Manager : MonoBehaviour
             isGroupAActive ? platformGroupB : platformGroupA,
             isGroupAActive ? platformGroupA : platformGroupB));
 
+        MoveFragmentsToRuleTargets(isGroupAActive ? fragmentTargetsA : fragmentTargetsB);
+    }
+
+    private void MoveFragmentsToRuleTargets(Vector3[] targets)
+    {
+        if (targets == null || targets.Length == 0)
+        {
+            return;
+        }
+
+        HashSet<int> usedTargetIndices = new HashSet<int>();
         for (int i = 0; i < fragments.Count; i++)
         {
-            fragments[i]?.AdvanceToNextPoint();
+            Level03DragonFragment fragment = fragments[i];
+            if (fragment == null || fragment.IsCollected)
+            {
+                continue;
+            }
+
+            int currentIndex = i < fragmentTargetIndices.Count
+                ? Mathf.Clamp(fragmentTargetIndices[i], 0, targets.Length - 1)
+                : 0;
+            int selectedIndex = PickRuleTargetIndex(targets, currentIndex, fragment.FragmentIndex, usedTargetIndices);
+            usedTargetIndices.Add(selectedIndex);
+            SetFragmentTargetIndex(i, selectedIndex);
+            fragment.MoveTo(targets[selectedIndex], fragmentMoveDuration);
         }
     }
 
-    private IEnumerator TransitionPlatforms(PlatformGroupRuntime outgoing, PlatformGroupRuntime incoming)
+    private static int PickRuleTargetIndex(
+        Vector3[] targets,
+        int currentIndex,
+        int fragmentIndex,
+        HashSet<int> usedTargetIndices)
     {
-        SetColliderState(incoming, true);
+        List<int> candidates = BuildRuleCandidates(targets, currentIndex, usedTargetIndices);
+        if (candidates.Count == 0 && usedTargetIndices.Count > 0)
+        {
+            candidates = BuildRuleCandidates(targets, currentIndex, null);
+        }
+
+        if (candidates.Count == 0)
+        {
+            return Mathf.Clamp(currentIndex, 0, targets.Length - 1);
+        }
+
+        int totalWeight = 0;
+        int[] weights = new int[candidates.Count];
+        for (int i = 0; i < candidates.Count; i++)
+        {
+            int weight = ScoreFragmentTarget(currentIndex, candidates[i], fragmentIndex);
+            weights[i] = weight;
+            totalWeight += weight;
+        }
+
+        if (!Application.isPlaying)
+        {
+            int bestIndex = 0;
+            for (int i = 1; i < candidates.Count; i++)
+            {
+                if (weights[i] > weights[bestIndex])
+                {
+                    bestIndex = i;
+                }
+            }
+
+            return candidates[bestIndex];
+        }
+
+        int roll = Random.Range(0, totalWeight);
+        for (int i = 0; i < candidates.Count; i++)
+        {
+            roll -= weights[i];
+            if (roll < 0)
+            {
+                return candidates[i];
+            }
+        }
+
+        return candidates[candidates.Count - 1];
+    }
+
+    private static List<int> BuildRuleCandidates(
+        Vector3[] targets,
+        int currentIndex,
+        HashSet<int> usedTargetIndices)
+    {
+        List<int> candidates = new List<int>();
+        int currentTier = GetFragmentTier(currentIndex);
+        int currentColumn = GetFragmentColumn(currentIndex);
+
+        for (int i = 0; i < targets.Length; i++)
+        {
+            if (usedTargetIndices != null && usedTargetIndices.Contains(i))
+            {
+                continue;
+            }
+
+            int tierDelta = GetFragmentTier(i) - currentTier;
+            int columnDelta = Mathf.Abs(GetFragmentColumn(i) - currentColumn);
+            if (Mathf.Abs(tierDelta) <= 1 && columnDelta <= 1)
+            {
+                candidates.Add(i);
+            }
+        }
+
+        if (candidates.Count > 1)
+        {
+            candidates.Remove(currentIndex);
+        }
+
+        return candidates;
+    }
+
+    private static int ScoreFragmentTarget(int currentIndex, int targetIndex, int fragmentIndex)
+    {
+        int currentTier = GetFragmentTier(currentIndex);
+        int currentColumn = GetFragmentColumn(currentIndex);
+        int targetTier = GetFragmentTier(targetIndex);
+        int targetColumn = GetFragmentColumn(targetIndex);
+        int score = 10;
+
+        if (targetTier == currentTier + 1)
+        {
+            score += 45;
+        }
+
+        if (targetColumn != currentColumn)
+        {
+            score += 25;
+        }
+
+        if (currentTier >= 3 && targetTier == currentTier - 1)
+        {
+            score += 20;
+        }
+
+        if (fragmentIndex == 1 && targetColumn > currentColumn)
+        {
+            score += 10;
+        }
+
+        if (fragmentIndex == 2 && targetColumn < currentColumn)
+        {
+            score += 10;
+        }
+
+        return score;
+    }
+
+    private void SetFragmentTargetIndex(int fragmentListIndex, int targetIndex)
+    {
+        while (fragmentTargetIndices.Count <= fragmentListIndex)
+        {
+            fragmentTargetIndices.Add(0);
+        }
+
+        fragmentTargetIndices[fragmentListIndex] = targetIndex;
+    }
+
+    private static int GetFragmentTier(int targetIndex)
+    {
+        return targetIndex / FragmentGridColumns;
+    }
+
+    private static int GetFragmentColumn(int targetIndex)
+    {
+        return targetIndex % FragmentGridColumns;
+    }
+
+    private IEnumerator TransitionPlatforms(Level03PlatformGroupRuntime outgoing, Level03PlatformGroupRuntime incoming)
+    {
+        Level03PlatformGroupRuntime.SetColliderState(incoming, true);
+        EnforceLevel03SolidCollisions();
         float elapsed = 0f;
         float duration = Mathf.Max(platformTransitionDuration, 0.01f);
 
@@ -351,45 +985,42 @@ public class Level03Manager : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            SetRendererAlpha(incoming, t);
+            Level03PlatformGroupRuntime.SetRendererAlpha(incoming, t);
 
             float outgoingAlpha = t <= platformFadeDelay / duration
                 ? 1f
                 : 1f - Mathf.InverseLerp(platformFadeDelay / duration, 1f, t);
-            SetRendererAlpha(outgoing, outgoingAlpha);
+            Level03PlatformGroupRuntime.SetRendererAlpha(outgoing, outgoingAlpha);
             yield return null;
         }
 
-        SetRendererAlpha(incoming, 1f);
-        SetRendererAlpha(outgoing, 0f);
-        SetColliderState(outgoing, false);
+        Level03PlatformGroupRuntime.SetRendererAlpha(incoming, 1f);
+        Level03PlatformGroupRuntime.SetRendererAlpha(outgoing, 0f);
+        DisablePlatformCollidersWhenActorsClear(outgoing);
+        EnforceLevel03SolidCollisions();
         platformTransition = null;
     }
 
     private IEnumerator MergeDragonGem()
     {
         CurrentState = Level03State.DragonGemMerging;
-        ShowAnnouncement("Đang ghép Ngọc Rồng...", 1.2f);
+        ShowAnnouncement("Đang ghép Ngọc Rồng...", EncounterConfig.mergeAnnouncementDuration);
         SetPlayerControls(false);
+        SetBossCombatController(false);
 
         if (sceneCamera != null && completeGemRenderer != null)
         {
             sceneCamera.SetTarget(completeGemRenderer.transform);
         }
 
-        if (bossPatrol != null)
-        {
-            bossPatrol.enabled = false;
-        }
-
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(EncounterConfig.preMergeDelay);
 
         for (int i = 0; i < fragments.Count; i++)
         {
             fragments[i]?.PrepareForMerge();
         }
 
-        float mergeDuration = 0.75f;
+        float mergeDuration = EncounterConfig.mergeDuration;
         Vector3[] starts = new Vector3[fragments.Count];
         for (int i = 0; i < fragments.Count; i++)
         {
@@ -430,13 +1061,11 @@ public class Level03Manager : MonoBehaviour
         }
 
         mergeEffect?.PlayOnce();
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(EncounterConfig.postMergeEffectDelay);
 
+        HideEncounterPlatforms();
         bossShield.BreakShield();
-        if (bossPatrol != null)
-        {
-            bossPatrol.enabled = true;
-        }
+        SetBossCombatController(true);
 
         CurrentState = Level03State.BossVulnerable;
         SetPlayerControls(true);
@@ -444,13 +1073,32 @@ public class Level03Manager : MonoBehaviour
         {
             sceneCamera.ClearTarget();
         }
-        ShowAnnouncement("Boss Shield Broken! Phase 2 bắt đầu!", 2f);
+        ShowAnnouncement("Boss Shield Broken! Phase 2 bắt đầu!", EncounterConfig.bossVulnerableAnnouncementDuration);
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(EncounterConfig.hideCompleteGemDelay);
         if (completeGemRenderer != null)
         {
             completeGemRenderer.enabled = false;
         }
+    }
+
+    private void HideEncounterPlatforms()
+    {
+        if (platformTransition != null)
+        {
+            StopCoroutine(platformTransition);
+            platformTransition = null;
+        }
+
+        if (deferredPlatformColliderDisableRoutine != null)
+        {
+            StopCoroutine(deferredPlatformColliderDisableRoutine);
+            deferredPlatformColliderDisableRoutine = null;
+        }
+        deferredPlatformColliderDisables.Clear();
+
+        Level03PlatformGroupRuntime.SetState(platformGroupA, 0f, false);
+        Level03PlatformGroupRuntime.SetState(platformGroupB, 0f, false);
     }
 
     private void HandleBossDied(EnemyHealth defeatedBoss)
@@ -488,8 +1136,13 @@ public class Level03Manager : MonoBehaviour
 
     private void OnGUI()
     {
-        counterStyle ??= CreateGuiStyle(18, new Color(1f, 0.85f, 0.1f), FontStyle.Bold);
-        announcementStyle ??= CreateGuiStyle(24, Color.white, FontStyle.Bold);
+        if (!Application.isPlaying)
+        {
+            return;
+        }
+
+        counterStyle ??= Level03GuiStyles.Create(18, new Color(1f, 0.85f, 0.1f), FontStyle.Bold);
+        announcementStyle ??= Level03GuiStyles.Create(24, Color.white, FontStyle.Bold);
 
         GUI.Label(
             new Rect(Screen.width * 0.5f - 170f, 12f, 340f, 32f),
@@ -503,17 +1156,6 @@ public class Level03Manager : MonoBehaviour
                 announcement,
                 announcementStyle);
         }
-    }
-
-    private static GUIStyle CreateGuiStyle(int fontSize, Color color, FontStyle fontStyle)
-    {
-        return new GUIStyle(GUI.skin.label)
-        {
-            alignment = TextAnchor.MiddleCenter,
-            fontSize = fontSize,
-            fontStyle = fontStyle,
-            normal = { textColor = color }
-        };
     }
 
     private Material GetSpriteUnlitMaterial()
@@ -537,115 +1179,4 @@ public class Level03Manager : MonoBehaviour
         return spriteUnlitMaterial;
     }
 
-    private static Transform CreateRoot(string rootName, Transform parent)
-    {
-        GameObject root = new GameObject(rootName);
-        root.transform.SetParent(parent, false);
-        return root.transform;
-    }
-
-    private static Sprite CreateFullTextureSprite(Texture2D texture, float pixelsPerUnit)
-    {
-        return texture == null
-            ? null
-            : Sprite.Create(
-                texture,
-                new Rect(0f, 0f, texture.width, texture.height),
-                new Vector2(0.5f, 0.5f),
-                pixelsPerUnit);
-    }
-
-    private static Sprite CreateTrimmedSprite(
-        Texture2D texture,
-        Color32[] pixels,
-        int startX,
-        int endX,
-        float pixelsPerUnit)
-    {
-        int minX = endX;
-        int maxX = startX - 1;
-        int minY = texture.height;
-        int maxY = -1;
-
-        for (int y = 0; y < texture.height; y++)
-        {
-            int rowStart = y * texture.width;
-            for (int x = startX; x < endX; x++)
-            {
-                if (pixels[rowStart + x].a <= 8)
-                {
-                    continue;
-                }
-
-                minX = Mathf.Min(minX, x);
-                maxX = Mathf.Max(maxX, x);
-                minY = Mathf.Min(minY, y);
-                maxY = Mathf.Max(maxY, y);
-            }
-        }
-
-        if (maxX < minX || maxY < minY)
-        {
-            return Sprite.Create(
-                texture,
-                new Rect(startX, 0f, endX - startX, texture.height),
-                new Vector2(0.5f, 0f),
-                pixelsPerUnit);
-        }
-
-        const int padding = 2;
-        minX = Mathf.Max(startX, minX - padding);
-        maxX = Mathf.Min(endX - 1, maxX + padding);
-        minY = Mathf.Max(0, minY - padding);
-        maxY = Mathf.Min(texture.height - 1, maxY + padding);
-
-        return Sprite.Create(
-            texture,
-            new Rect(minX, minY, maxX - minX + 1, maxY - minY + 1),
-            new Vector2(0.5f, 0f),
-            pixelsPerUnit);
-    }
-
-    private static void SetPlatformGroupState(PlatformGroupRuntime group, float alpha, bool collidersEnabled)
-    {
-        SetRendererAlpha(group, alpha);
-        SetColliderState(group, collidersEnabled);
-    }
-
-    private static void SetRendererAlpha(PlatformGroupRuntime group, float alpha)
-    {
-        if (group == null)
-        {
-            return;
-        }
-
-        for (int i = 0; i < group.renderers.Count; i++)
-        {
-            SpriteRenderer renderer = group.renderers[i];
-            if (renderer == null)
-            {
-                continue;
-            }
-
-            Color color = renderer.color;
-            color.a = Mathf.Clamp01(alpha);
-            renderer.color = color;
-        }
-    }
-
-    private static void SetColliderState(PlatformGroupRuntime group, bool enabledState)
-    {
-        if (group == null)
-        {
-            return;
-        }
-
-        for (int i = 0; i < group.colliders.Count; i++)
-        {
-            if (group.colliders[i] != null)
-            {
-                group.colliders[i].enabled = enabledState;
-            }
-        }
-    }
 }
