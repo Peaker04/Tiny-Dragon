@@ -35,6 +35,7 @@ public class EnemyHealth : MonoBehaviour
     public int CurrentHealth => currentHealth;
     public int MaxHealth => maxHealth;
     public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+    public string BalanceEnemyId => ResolveBalanceEnemyId();
 
     /// <summary>Fired when this enemy's HP reaches zero, just before the GameObject is destroyed.</summary>
     public event System.Action<EnemyHealth> Died;
@@ -47,6 +48,7 @@ public class EnemyHealth : MonoBehaviour
         if (!Application.isPlaying) return;
         ApplyDatabaseBalanceIfAvailable();
         EnsureDamagePopupPool();
+        EnsureGoldDropper();
         ResetHealth();
     }
 
@@ -324,6 +326,14 @@ public class EnemyHealth : MonoBehaviour
                 RuntimeSceneRoot.GetChild("DamagePopupPool"),
                 damagePopupPoolPrewarmCount
             );
+        }
+    }
+
+    private void EnsureGoldDropper()
+    {
+        if (GetComponent<EnemyGoldDropper>() == null)
+        {
+            gameObject.AddComponent<EnemyGoldDropper>();
         }
     }
 }

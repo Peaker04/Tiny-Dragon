@@ -30,6 +30,7 @@ MonoBehaviour:
     playerProjectilePrefabPath: Combat/PlayerProjectile
     enemyProjectilePrefabPath: Combat/EnemyProjectile
     inventoryCanvasPrefabPath: UI/InventoryCanvas
+    goldCoinSpritePath: UI/Currency/coin_stack
     hudPanelSpritePath: res/x4/mainimage/myTexture2dpanel
     hudPanelSpriteName: myTexture2dpanel_0
     hudHealthSpritePath: res/x4/mainimage/myTexture2dHP

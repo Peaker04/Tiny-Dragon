@@ -246,6 +246,7 @@ namespace TinyDragon.UI
 
         private void EnsureBuilt()
         {
+            RemoveLegacyGoldCounter();
             if (frameImage != null && healthBarImage != null && kiBarImage != null && targetNameText != null && targetHpText != null)
             {
                 return;
@@ -257,6 +258,15 @@ namespace TinyDragon.UI
             }
 
             BuildHud();
+        }
+
+        private void RemoveLegacyGoldCounter()
+        {
+            Transform goldCounter = transform.Find("Gold Counter");
+            if (goldCounter != null)
+            {
+                Destroy(goldCounter.gameObject);
+            }
         }
 
         private bool CacheExistingHud()

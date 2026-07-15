@@ -189,12 +189,20 @@ namespace TinyDragon.UI
 
         private void OnEnable()
         {
-            if (Application.isPlaying) SceneManager.sceneLoaded += HandleSceneLoaded;
+            if (Application.isPlaying)
+            {
+                SceneManager.sceneLoaded += HandleSceneLoaded;
+                TinyDragonSaveManager.Instance.GoldChanged += HandleGoldChanged;
+            }
         }
 
         private void OnDisable()
         {
-            if (Application.isPlaying) SceneManager.sceneLoaded -= HandleSceneLoaded;
+            if (Application.isPlaying)
+            {
+                SceneManager.sceneLoaded -= HandleSceneLoaded;
+                TinyDragonSaveManager.Instance.GoldChanged -= HandleGoldChanged;
+            }
         }
 
         private void Update()
@@ -307,6 +315,14 @@ namespace TinyDragon.UI
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (!ShouldInventoryBeOpenable()) SetVisible(false);
+        }
+
+        private void HandleGoldChanged(int totalGold)
+        {
+            if (goldText != null)
+            {
+                goldText.text = totalGold.ToString();
+            }
         }
 
         private bool ShouldInventoryBeOpenable()

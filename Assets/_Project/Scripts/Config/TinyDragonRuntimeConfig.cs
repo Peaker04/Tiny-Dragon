@@ -42,6 +42,7 @@ namespace TinyDragon.Config
         public string playerProjectilePrefabPath = "Combat/PlayerProjectile";
         public string enemyProjectilePrefabPath = "Combat/EnemyProjectile";
         public string inventoryCanvasPrefabPath = "UI/InventoryCanvas";
+        public string goldCoinSpritePath = "UI/Currency/coin_stack";
 
         public string hudPanelSpritePath = "res/x4/mainimage/myTexture2dpanel";
         public string hudPanelSpriteName = "myTexture2dpanel_0";

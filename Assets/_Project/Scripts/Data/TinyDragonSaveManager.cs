@@ -26,6 +26,8 @@ namespace TinyDragon.Data
         private bool isReady;
         private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
+        public event Action<int> GoldChanged;
+
         public static TinyDragonSaveManager Instance
         {
             get
@@ -302,6 +304,44 @@ namespace TinyDragon.Data
                     SqliteDatabase.AddParameter(command, "@playerId", DefaultPlayerId);
                 }
             );
+
+            GoldChanged?.Invoke(Mathf.Max(gold, 0));
+        }
+
+        /// <summary>Atomically adds gold and notifies runtime UI of the resulting balance.</summary>
+        public bool TryAddGold(int amount, out int totalGold)
+        {
+            totalGold = 0;
+            if (amount <= 0 || !EnsureReady())
+            {
+                return false;
+            }
+
+            ExecuteNonQuery(
+                "UPDATE Player SET gold = gold + @amount WHERE id = @playerId;",
+                command =>
+                {
+                    SqliteDatabase.AddParameter(command, "@amount", amount);
+                    SqliteDatabase.AddParameter(command, "@playerId", DefaultPlayerId);
+                }
+            );
+
+            using (IDbCommand command = database.CreateCommand(
+                "SELECT gold FROM Player WHERE id = @playerId LIMIT 1;"
+            ))
+            {
+                SqliteDatabase.AddParameter(command, "@playerId", DefaultPlayerId);
+                object value = command.ExecuteScalar();
+                if (value == null || value == DBNull.Value)
+                {
+                    return false;
+                }
+
+                totalGold = Convert.ToInt32(value);
+            }
+
+            GoldChanged?.Invoke(totalGold);
+            return true;
         }
 
         public void ApplyLoadedPlayer(PlayerHealth playerHealth)
@@ -780,8 +820,8 @@ namespace TinyDragon.Data
                     {
                         SqliteDatabase.AddParameter(cmd, "@increment", upgradeRule.Increment);
                         SqliteDatabase.AddParameter(cmd, "@playerId", DefaultPlayerId);
-                    }
-                );
+                }
+            );
             }
 
             Debug.Log($"Upgraded {statType} by {upgradeRule.Increment}. Spent {upgradeRule.Cost} potential.");
