@@ -22,7 +22,6 @@ public class PlayerHealth : MonoBehaviour
     //     -> nếu không, nhận damage, set immuneUntil = Time.time + invincibilityDuration
     //     -> trong khoảng thời gian này mọi đòn tiếp theo đều bị bỏ qua
     [SerializeField] private float invincibilityDuration = 0.5f;
-    [SerializeField] private float knockbackForce = 2f;
     private float immuneUntil;
 
     private int currentHealth;
@@ -30,7 +29,6 @@ public class PlayerHealth : MonoBehaviour
     private int damageReductionPercent;
     private bool isDead;
     private ComponentPool<FloatingDamageText> damagePopupPool;
-    private PlayerMovement playerMovement;
     private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     public static event Action<PlayerHealth> PlayerAvailable;
@@ -46,10 +44,6 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         isDead = false;
         immuneUntil = 0f;
-        // [Bug#2] Lấy reference PlayerMovement để gọi knockback khi bị đánh
-        // - Dùng GetComponent thay vì serialized field vì PlayerMovement đã RequireComponent<Rigidbody2D>
-        //   và PlayerController đã đảm bảo tồn tại trên cùng GameObject
-        playerMovement = GetComponent<PlayerMovement>();
         EnsureDamagePopupPool();
     }
 
@@ -89,16 +83,6 @@ public class PlayerHealth : MonoBehaviour
 
         TinyDragonSaveManager.Instance.SaveCurrentHealth(currentHealth, maxHealth);
         ShowDamagePopup(effectiveDamage);
-
-        // [Bug#2] Knockback: đẩy player về phía sau dựa trên hướng đối diện facing direction
-        // - Dùng FacingDirection (1 = phải, -1 = trái) để đẩy ngược lại
-        // - knockbackForce = 10f (serialized, có thể tùy chỉnh trong Inspector)
-        // - Thành phần Y = 0 để knockback chỉ theo phương ngang, không ảnh hưởng nhảy
-        // - Luồng: TakeDamage() -> PlayerMovement.Knockback(direction * force)
-        //     -> Rigidbody2D.AddForce(impulse) -> physics engine xử lý di chuyển
-        float facingDir = playerMovement != null ? playerMovement.FacingDirection : 1f;
-        Vector2 knockbackDir = new Vector2(-facingDir, 0f).normalized;
-        playerMovement?.Knockback(knockbackDir * knockbackForce);
 
         HealthChanged?.Invoke(this);
         Debug.Log($"Player took {effectiveDamage} damage. HP: {currentHealth}/{maxHealth}");
