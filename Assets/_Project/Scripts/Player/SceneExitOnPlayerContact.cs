@@ -10,15 +10,6 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
     [SerializeField] private float targetFacingDirection = 1f;
     [SerializeField] private bool healOnExit;
 
-    // [SceneRule] isForwardExit = true (default): exit tiến sang map mới
-    //   - Kiểm tra còn quái không: nếu còn → chặn
-    //   - Nếu hết quái → đánh dấu scene đã clear, cho đi tiếp
-    // - isForwardExit = false: exit lùi về map cũ
-    //   - Bỏ qua kiểm tra quái, cho đi tự do
-    //   - Không đánh dấu scene clear (vì chưa hoàn thành)
-    //   - Dành cho các trigger đưa player về scene trước đó
-    [SerializeField] private bool isForwardExit = true;
-
     private bool isLoadingScene;
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -62,9 +53,13 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
             return;
         }
 
-        // [SceneRule] Exit tiến (isForwardExit = true): kiểm tra quái trước khi cho qua
-        // - isForwardExit = false: exit lùi về map cũ → bỏ qua kiểm tra, không mark clear
-        if (isForwardExit)
+        // [SceneRule] Tự động nhận biết tiến/lùi dựa trên scene đích
+        // - Nếu targetSceneName đã clear → đây là exit lùi về map cũ:
+        //     bỏ qua kiểm tra quái, cho qua luôn, không mark scene hiện tại
+        // - Nếu targetSceneName chưa clear → đây là exit tiến sang map mới:
+        //     kiểm tra còn quái không, nếu hết thì mark scene hiện tại clear + cho qua
+        bool goingBack = SceneClearTracker.IsSceneCleared(targetSceneName);
+        if (!goingBack)
         {
             if (AnyAliveEnemyInScene())
             {
@@ -72,10 +67,6 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
                 return;
             }
 
-            // [SceneRule] Khi tất cả quái đã chết và player rời scene → đánh dấu scene này đã clear
-            // - SceneClearTracker.MarkSceneCleared() lưu tên scene vào HashSet<string>
-            // - Lần sau vào lại scene này, PlayerSceneTransition.Start() sẽ dọn sạch quái
-            // - gameObject.scene.name: tên scene hiện tại (của trigger exit collider)
             SceneClearTracker.MarkSceneCleared(gameObject.scene.name);
         }
 
