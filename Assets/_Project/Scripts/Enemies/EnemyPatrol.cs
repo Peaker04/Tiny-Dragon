@@ -1,31 +1,52 @@
+using TinyDragon.Data;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 
+/// <summary>
+/// Controls enemy patrol, melee attack, and ranged attack behavior
+/// using an explicit state machine (EnemyState enum).
+/// Projectile management is delegated to EnemyProjectileShooter.
+/// </summary>
 public class EnemyPatrol : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 1.5f;
+    private enum EnemyState
+    {
+        Patrol,
+        Chase,
+        MeleeAttack,
+        RangedAttack
+    }
+
+    private enum RangedAttackMode
+    {
+        Projectile = 0,
+        DirectHit = 1
+    }
+
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
+    [SerializeField] private float moveSpeed = GameplayBalanceDefaults.NormalEnemySpeed;
     [SerializeField] private float leftDistance = 1.5f;
     [SerializeField] private float rightDistance = 1.5f;
     [SerializeField] private float pointReachDistance = 0.05f;
     [SerializeField] private float attackRange = 1.5f;
     [SerializeField] private float verticalAttackTolerance = 1f;
     [SerializeField] private float attackCooldown = 1f;
-    [SerializeField] private int attackDamage = 1;
+    [SerializeField] private int attackDamage = GameplayBalanceDefaults.NormalEnemyDamage;
     [SerializeField] private string attackTriggerName = "attack";
     [SerializeField] private string attackStateName = "Attack";
     [SerializeField] private float rangeAttackRange = 4f;
     [SerializeField] private float rangeAttackCooldown = 2f;
-    [SerializeField] private int rangeAttackDamage = 1;
-    [SerializeField] private float projectileSpeed = 5f;
-    [SerializeField] private float projectileLifetime = 3f;
-    [SerializeField] private float projectileScale = 0.35f;
-    [SerializeField] private Vector2 projectileSpawnOffset = new Vector2(0.45f, -0.05f);
-    [SerializeField] private Sprite projectileSprite;
-    [SerializeField] private bool projectileFacesRightByDefault = true;
+    [SerializeField] private int rangeAttackDamage = GameplayBalanceDefaults.NormalEnemyDamage;
+    [SerializeField] private RangedAttackMode rangedAttackMode = RangedAttackMode.Projectile;
     [SerializeField] private string rangeAttackTriggerName = "rangeAttack";
     [SerializeField] private string rangeAttackStateName = "rangeAttack";
     [SerializeField] private bool startMovingRight = true;
     [SerializeField] private bool flipWithDirection = true;
     [SerializeField] private bool facesRightByDefault = true;
+
+    [Header("Projectile (delegated to EnemyProjectileShooter)")]
+    [SerializeField] private EnemyProjectileShooter projectileShooter;
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
@@ -36,20 +57,40 @@ public class EnemyPatrol : MonoBehaviour
     private int direction;
     private float nextAttackTime;
     private float nextRangeAttackTime;
+    private EnemyState currentState = EnemyState.Patrol;
+    private bool hasPatrolBounds;
+    private float patrolMinX;
+    private float patrolMaxX;
+    private bool hasArenaAwarenessBounds;
+    private bool chasePlayerInsideArenaBounds;
+    private float arenaAwarenessMinX;
+    private float arenaAwarenessMaxX;
+    private float arenaAwarenessMinY;
+    private float arenaAwarenessMaxY;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     private void Awake()
     {
+        if (!Application.isPlaying) return;
+
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
+        if (projectileShooter == null)
+        {
+            projectileShooter = GetComponent<EnemyProjectileShooter>();
+        }
     }
 
     private void Start()
     {
+        if (!Application.isPlaying) return;
+
         patrolOrigin = transform.position;
         direction = startMovingRight ? 1 : -1;
 
-        PlayerController playerController = FindAnyObjectByType<PlayerController>();
+        PlayerController playerController = ObjectLookup.Any<PlayerController>();
         if (playerController != null)
         {
             player = playerController.transform;
@@ -57,27 +98,60 @@ public class EnemyPatrol : MonoBehaviour
 
             if (playerHealth == null)
             {
-                playerHealth = playerController.gameObject.AddComponent<PlayerHealth>();
+                Debug.LogWarning("PlayerHealth is missing on the player. Enemy attacks will not damage the player.", playerController);
             }
         }
     }
 
     private void FixedUpdate()
     {
+        currentState = DecideState();
+        TickState(currentState);
+    }
+
+    // --- State machine ---
+
+    private EnemyState DecideState()
+    {
         if (CanAttackPlayer())
         {
-            AttackPlayer();
-            return;
+            return EnemyState.MeleeAttack;
         }
 
         if (CanRangeAttackPlayer())
         {
-            RangeAttackPlayer();
-            return;
+            return EnemyState.RangedAttack;
         }
 
-        Patrol();
+        if (ShouldChasePlayer())
+        {
+            return EnemyState.Chase;
+        }
+
+        return EnemyState.Patrol;
     }
+
+    private void TickState(EnemyState state)
+    {
+        switch (state)
+        {
+            case EnemyState.MeleeAttack:
+                AttackPlayer();
+                break;
+            case EnemyState.RangedAttack:
+                RangeAttackPlayer();
+                break;
+            case EnemyState.Chase:
+                ChasePlayer();
+                break;
+            case EnemyState.Patrol:
+            default:
+                Patrol();
+                break;
+        }
+    }
+
+    // --- Patrol ---
 
     private void Patrol()
     {
@@ -96,9 +170,47 @@ public class EnemyPatrol : MonoBehaviour
         FlipToDirection(moveDirection);
     }
 
+    private bool ShouldChasePlayer()
+    {
+        if (!chasePlayerInsideArenaBounds || player == null || !IsPlayerInsideArenaAwareness())
+        {
+            return false;
+        }
+
+        float horizontalDistance = Mathf.Abs(player.position.x - transform.position.x);
+        float verticalDistance = Mathf.Abs(player.position.y - transform.position.y);
+        return horizontalDistance > rangeAttackRange && verticalDistance <= verticalAttackTolerance;
+    }
+
+    private void ChasePlayer()
+    {
+        float directionToPlayer = Mathf.Sign(player.position.x - transform.position.x);
+        float currentX = rb != null ? rb.position.x : transform.position.x;
+
+        if (hasPatrolBounds)
+        {
+            if ((directionToPlayer < 0f && currentX <= patrolMinX) || (directionToPlayer > 0f && currentX >= patrolMaxX))
+            {
+                StopMovingHorizontally();
+                FlipToDirection(directionToPlayer);
+                return;
+            }
+        }
+
+        MoveHorizontally(directionToPlayer);
+        FlipToDirection(directionToPlayer);
+    }
+
+    // --- Melee attack ---
+
     private bool CanAttackPlayer()
     {
         if (player == null)
+        {
+            return false;
+        }
+
+        if (!IsPlayerInsideArenaAwareness())
         {
             return false;
         }
@@ -107,21 +219,6 @@ public class EnemyPatrol : MonoBehaviour
         float verticalDistance = Mathf.Abs(player.position.y - transform.position.y);
 
         return horizontalDistance <= attackRange && verticalDistance <= verticalAttackTolerance;
-    }
-
-    private bool CanRangeAttackPlayer()
-    {
-        if (player == null)
-        {
-            return false;
-        }
-
-        float horizontalDistance = Mathf.Abs(player.position.x - transform.position.x);
-        float verticalDistance = Mathf.Abs(player.position.y - transform.position.y);
-
-        return horizontalDistance > attackRange
-            && horizontalDistance <= rangeAttackRange
-            && verticalDistance <= verticalAttackTolerance;
     }
 
     private void AttackPlayer()
@@ -139,6 +236,39 @@ public class EnemyPatrol : MonoBehaviour
         nextAttackTime = Time.time + attackCooldown;
     }
 
+    public void DealDamage()
+    {
+        if (!CanAttackPlayer() || playerHealth == null)
+        {
+            return;
+        }
+
+        Debug.Log($"Enemy dealt {attackDamage} damage to player.");
+        playerHealth.TakeDamage(attackDamage);
+    }
+
+    // --- Ranged attack ---
+
+    private bool CanRangeAttackPlayer()
+    {
+        if (player == null)
+        {
+            return false;
+        }
+
+        if (!IsPlayerInsideArenaAwareness())
+        {
+            return false;
+        }
+
+        float horizontalDistance = Mathf.Abs(player.position.x - transform.position.x);
+        float verticalDistance = Mathf.Abs(player.position.y - transform.position.y);
+
+        return horizontalDistance > attackRange
+            && horizontalDistance <= rangeAttackRange
+            && verticalDistance <= verticalAttackTolerance;
+    }
+
     private void RangeAttackPlayer()
     {
         StopMovingHorizontally();
@@ -150,9 +280,47 @@ public class EnemyPatrol : MonoBehaviour
         }
 
         PlayAnimation(rangeAttackTriggerName, rangeAttackStateName);
-        ShootProjectile();
+        if (rangedAttackMode == RangedAttackMode.DirectHit)
+        {
+            DealRangeDamage();
+        }
+        else
+        {
+            ShootProjectile();
+        }
+
         nextRangeAttackTime = Time.time + rangeAttackCooldown;
     }
+
+    private void DealRangeDamage()
+    {
+        if (!CanRangeAttackPlayer() || playerHealth == null)
+        {
+            return;
+        }
+
+        Debug.Log($"Enemy dealt {rangeAttackDamage} ranged damage to player.");
+        playerHealth.TakeDamage(rangeAttackDamage);
+    }
+
+    public void ShootProjectile()
+    {
+        if (player == null)
+        {
+            return;
+        }
+
+        if (projectileShooter != null)
+        {
+            projectileShooter.ShootAt(player.position, rangeAttackDamage);
+        }
+        else
+        {
+            Debug.LogWarning("EnemyProjectileShooter is not assigned. Add EnemyProjectileShooter component to this enemy.", this);
+        }
+    }
+
+    // --- Animation ---
 
     private void PlayAttackAnimation()
     {
@@ -184,48 +352,92 @@ public class EnemyPatrol : MonoBehaviour
         animator.CrossFade(stateName, 0f);
     }
 
-    public void DealDamage()
-    {
-        if (!CanAttackPlayer() || playerHealth == null)
-        {
-            return;
-        }
+    // --- Public config API ---
 
-        Debug.Log($"Enemy dealt {attackDamage} damage to player.");
-        playerHealth.TakeDamage(attackDamage);
+    public void ApplyCombatStats(
+        float speed,
+        int meleeDamage,
+        int rangedDamage,
+        float meleeCooldown,
+        float rangedCooldown
+    )
+    {
+        moveSpeed = Mathf.Max(speed, 0.1f);
+        attackDamage = Mathf.Max(meleeDamage, 1);
+        rangeAttackDamage = Mathf.Max(rangedDamage, 1);
+        attackCooldown = Mathf.Max(meleeCooldown, 0.01f);
+        rangeAttackCooldown = Mathf.Max(rangedCooldown, 0.01f);
     }
 
-    public void ShootProjectile()
+    /// <summary>Scale movement speed and attack intervals by the given multipliers (Phase 2 transition).</summary>
+    public void ApplyPhaseMultipliers(float movementMultiplier, float attackIntervalMultiplier)
     {
-        if (player == null)
+        moveSpeed = Mathf.Max(moveSpeed * movementMultiplier, 0.1f);
+        attackCooldown = Mathf.Max(attackCooldown * attackIntervalMultiplier, 0.01f);
+        rangeAttackCooldown = Mathf.Max(rangeAttackCooldown * attackIntervalMultiplier, 0.01f);
+    }
+
+    public void SetPatrolBounds(float minimumX, float maximumX)
+    {
+        patrolMinX = Mathf.Min(minimumX, maximumX);
+        patrolMaxX = Mathf.Max(minimumX, maximumX);
+        hasPatrolBounds = patrolMinX < patrolMaxX;
+    }
+
+    public void SetArenaAwareness(float horizontalRange, float verticalRange)
+    {
+        rangeAttackRange = Mathf.Max(rangeAttackRange, horizontalRange);
+        verticalAttackTolerance = Mathf.Max(verticalAttackTolerance, verticalRange);
+        hasArenaAwarenessBounds = false;
+        chasePlayerInsideArenaBounds = false;
+    }
+
+    public void SetArenaAwarenessBounds(Bounds groundBounds, float horizontalPadding, float belowGroundTolerance, float aboveGroundTolerance)
+    {
+        SetArenaAwarenessBounds(groundBounds, horizontalPadding, belowGroundTolerance, aboveGroundTolerance, rangeAttackRange, true);
+    }
+
+    public void SetArenaAwarenessBounds(
+        Bounds groundBounds,
+        float horizontalPadding,
+        float belowGroundTolerance,
+        float aboveGroundTolerance,
+        float rangedAttackDistance,
+        bool chaseWhenAware
+    )
+    {
+        rangeAttackRange = Mathf.Max(attackRange + 0.1f, rangedAttackDistance);
+        verticalAttackTolerance = Mathf.Max(verticalAttackTolerance, belowGroundTolerance + aboveGroundTolerance);
+
+        arenaAwarenessMinX = groundBounds.min.x - horizontalPadding;
+        arenaAwarenessMaxX = groundBounds.max.x + horizontalPadding;
+        arenaAwarenessMinY = groundBounds.max.y - belowGroundTolerance;
+        arenaAwarenessMaxY = groundBounds.max.y + aboveGroundTolerance;
+        hasArenaAwarenessBounds = true;
+        chasePlayerInsideArenaBounds = chaseWhenAware;
+    }
+
+    private bool IsPlayerInsideArenaAwareness()
+    {
+        if (!hasArenaAwarenessBounds || player == null)
         {
-            return;
+            return true;
         }
 
-        float facingDirection = player.position.x >= transform.position.x ? 1f : -1f;
-        Vector3 spawnOffset = new Vector3(projectileSpawnOffset.x * facingDirection, projectileSpawnOffset.y, 0f);
-        Vector3 spawnPosition = transform.position + spawnOffset;
-        Vector2 projectileDirection = new Vector2(facingDirection, 0f);
-
-        GameObject projectileObject = new GameObject("Enemy Projectile");
-        projectileObject.transform.position = spawnPosition;
-
-        EnemyProjectile projectile = projectileObject.AddComponent<EnemyProjectile>();
-        projectile.Initialize(
-            projectileDirection,
-            projectileSpeed,
-            rangeAttackDamage,
-            projectileLifetime,
-            projectileSprite,
-            projectileScale,
-            projectileFacesRightByDefault
-        );
+        Vector3 playerPosition = player.position;
+        return playerPosition.x >= arenaAwarenessMinX
+            && playerPosition.x <= arenaAwarenessMaxX
+            && playerPosition.y >= arenaAwarenessMinY
+            && playerPosition.y <= arenaAwarenessMaxY;
     }
+
+    // --- Movement helpers ---
 
     private float GetTargetX()
     {
         float distance = direction > 0 ? rightDistance : -leftDistance;
-        return patrolOrigin.x + distance;
+        float targetX = patrolOrigin.x + distance;
+        return hasPatrolBounds ? Mathf.Clamp(targetX, patrolMinX, patrolMaxX) : targetX;
     }
 
     private void MoveHorizontally(float moveDirection)
@@ -257,6 +469,8 @@ public class EnemyPatrol : MonoBehaviour
         bool movingRight = directionX > 0f;
         spriteRenderer.flipX = facesRightByDefault ? !movingRight : movingRight;
     }
+
+    // --- Gizmos ---
 
     private void OnDrawGizmosSelected()
     {

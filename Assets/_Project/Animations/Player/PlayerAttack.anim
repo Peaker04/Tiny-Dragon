@@ -23,7 +23,7 @@ AnimationClip:
         value: {x: 0.034, y: 0.095, z: 0}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
-        tangentMode: 103
+        tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
@@ -32,7 +32,7 @@ AnimationClip:
         value: {x: 0.1833, y: 0.1122, z: 0}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
-        tangentMode: 103
+        tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
@@ -41,7 +41,7 @@ AnimationClip:
         value: {x: 0.1965, y: 0.0779, z: 0}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
-        tangentMode: 103
+        tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
@@ -50,7 +50,7 @@ AnimationClip:
         value: {x: 0, y: 0, z: 0}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
-        tangentMode: 103
+        tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
@@ -67,7 +67,7 @@ AnimationClip:
         value: {x: 0.7965414, y: 0.880212, z: 1}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
-        tangentMode: 103
+        tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
@@ -76,7 +76,7 @@ AnimationClip:
         value: {x: 0.7682846, y: 0.7502371, z: 1}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
-        tangentMode: 103
+        tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
@@ -85,7 +85,7 @@ AnimationClip:
         value: {x: 0.8492261, y: 0.85681254, z: 1}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
-        tangentMode: 103
+        tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
@@ -94,7 +94,7 @@ AnimationClip:
         value: {x: 1, y: 1, z: 1}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
-        tangentMode: 103
+        tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
@@ -113,7 +113,7 @@ AnimationClip:
     - time: 0.16666667
       value: {fileID: 21300000, guid: 1a13507453f36a447aad2d7a34b0e0a4, type: 3}
     - time: 0.25
-      value: {fileID: 21300000, guid: ca4915584f09a3947a4f2b8fcf63d912, type: 3}
+      value: {fileID: 21300000, guid: a6edada68f92b4d9f71484122fdf3ad5, type: 3}
     attribute: m_Sprite
     path: body/bodySprite
     classID: 212
@@ -157,7 +157,7 @@ AnimationClip:
     - {fileID: 21300000, guid: 6c6893d313791b249a8f75cb65e4490b, type: 3}
     - {fileID: 21300000, guid: 1a13507453f36a447aad2d7a34b0e0a4, type: 3}
     - {fileID: 21300000, guid: 1a13507453f36a447aad2d7a34b0e0a4, type: 3}
-    - {fileID: 21300000, guid: ca4915584f09a3947a4f2b8fcf63d912, type: 3}
+    - {fileID: 21300000, guid: a6edada68f92b4d9f71484122fdf3ad5, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

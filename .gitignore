@@ -106,3 +106,7 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+/docs/
+
+Level03_Boss_DragonGem_Design.md
+MAP_CAMERA_SCENE_UI_FIX_PLAN.md

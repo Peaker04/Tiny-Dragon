@@ -1,10 +1,37 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CircleCollider2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class EnemyProjectile : MonoBehaviour
 {
+    private static Material spriteDefaultMaterial;
+
     private int damage;
     private float lifetime;
     private float age;
+    private Rigidbody2D rb;
+    private CircleCollider2D projectileCollider;
+    private SpriteRenderer spriteRenderer;
+    private System.Action<EnemyProjectile> releaseToPool;
+    private Sprite[] animationSprites;
+    private float animationFrameRate;
+    private float animationTimer;
+    private int animationFrameIndex;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        projectileCollider = GetComponent<CircleCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        projectileCollider.isTrigger = true;
+        projectileCollider.radius = 0.12f;
+    }
 
     public void Initialize(
         Vector2 direction,
@@ -13,39 +40,86 @@ public class EnemyProjectile : MonoBehaviour
         float projectileLifetime,
         Sprite projectileSprite,
         float projectileScale,
-        bool projectileFacesRightByDefault
+        bool projectileFacesRightByDefault,
+        System.Action<EnemyProjectile> releaseHandler = null
+    )
+    {
+        Initialize(
+            direction,
+            speed,
+            projectileDamage,
+            projectileLifetime,
+            projectileSprite,
+            null,
+            0f,
+            projectileScale,
+            projectileFacesRightByDefault,
+            releaseHandler
+        );
+    }
+
+    public void Initialize(
+        Vector2 direction,
+        float speed,
+        int projectileDamage,
+        float projectileLifetime,
+        Sprite projectileSprite,
+        Sprite[] projectileAnimationSprites,
+        float projectileAnimationFrameRate,
+        float projectileScale,
+        bool projectileFacesRightByDefault,
+        System.Action<EnemyProjectile> releaseHandler = null
     )
     {
         damage = projectileDamage;
         lifetime = projectileLifetime;
+        age = 0f;
+        releaseToPool = releaseHandler;
+        animationSprites = HasAnimationSprites(projectileAnimationSprites) ? projectileAnimationSprites : null;
+        animationFrameRate = Mathf.Max(1f, projectileAnimationFrameRate);
+        animationTimer = 0f;
+        animationFrameIndex = 0;
         transform.localScale = Vector3.one * projectileScale;
 
-        Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.gravityScale = 0f;
-        rb.freezeRotation = true;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.linearVelocity = direction.normalized * speed;
 
-        CircleCollider2D collider = gameObject.AddComponent<CircleCollider2D>();
-        collider.isTrigger = true;
-        collider.radius = 0.12f;
-
-        SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
-        bool hasCustomSprite = projectileSprite != null;
-        renderer.sprite = hasCustomSprite ? projectileSprite : CreateDefaultSprite();
-        renderer.color = hasCustomSprite ? Color.white : new Color(1f, 0.8f, 0.05f);
-        renderer.flipX = ShouldFlipSprite(direction.x, projectileFacesRightByDefault);
-        renderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
-        renderer.sortingOrder = 50;
+        bool hasAnimatedSprite = animationSprites != null;
+        bool hasCustomSprite = hasAnimatedSprite || projectileSprite != null;
+        spriteRenderer.sprite = hasAnimatedSprite ? animationSprites[0] : (projectileSprite != null ? projectileSprite : CreateDefaultSprite());
+        spriteRenderer.color = hasCustomSprite ? Color.white : new Color(1f, 0.8f, 0.05f);
+        spriteRenderer.flipX = ShouldFlipSprite(direction.x, projectileFacesRightByDefault);
+        SetUnlitSpriteMaterial(spriteRenderer);
+        spriteRenderer.sortingOrder = 50;
     }
 
     private void Update()
     {
+        UpdateAnimation();
         age += Time.deltaTime;
 
         if (age >= lifetime)
         {
-            Destroy(gameObject);
+            Release();
+        }
+    }
+
+    private void UpdateAnimation()
+    {
+        if (animationSprites == null || animationSprites.Length <= 1)
+        {
+            return;
+        }
+
+        animationTimer += Time.deltaTime;
+        float frameDuration = 1f / animationFrameRate;
+        while (animationTimer >= frameDuration)
+        {
+            animationTimer -= frameDuration;
+            animationFrameIndex = (animationFrameIndex + 1) % animationSprites.Length;
+            if (animationSprites[animationFrameIndex] != null)
+            {
+                spriteRenderer.sprite = animationSprites[animationFrameIndex];
+            }
         }
     }
 
@@ -58,6 +132,20 @@ public class EnemyProjectile : MonoBehaviour
         }
 
         playerHealth.TakeDamage(damage);
+        Release();
+    }
+
+    private void Release()
+    {
+        rb.linearVelocity = Vector2.zero;
+        animationSprites = null;
+
+        if (releaseToPool != null)
+        {
+            releaseToPool(this);
+            return;
+        }
+
         Destroy(gameObject);
     }
 
@@ -93,5 +181,39 @@ public class EnemyProjectile : MonoBehaviour
 
         bool movingRight = directionX > 0f;
         return facesRightByDefault ? !movingRight : movingRight;
+    }
+
+    private static bool HasAnimationSprites(Sprite[] sprites)
+    {
+        if (sprites == null || sprites.Length == 0)
+        {
+            return false;
+        }
+
+        foreach (Sprite sprite in sprites)
+        {
+            if (sprite != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static void SetUnlitSpriteMaterial(SpriteRenderer renderer)
+    {
+        if (spriteDefaultMaterial == null)
+        {
+            Shader spriteShader = Shader.Find("Sprites/Default");
+            if (spriteShader == null)
+            {
+                return;
+            }
+
+            spriteDefaultMaterial = new Material(spriteShader);
+        }
+
+        renderer.sharedMaterial = spriteDefaultMaterial;
     }
 }

@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: b7b133720f94441f83094d8bc7f65ba8
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - schemaSql: {fileID: 4900000, guid: 1a15b14e909b4d2e92c3a2d1c44ac951, type: 3}
+  - seedSql: {fileID: 4900000, guid: fae950bbd74c4e8bbd37f2934d426b37, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
