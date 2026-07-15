@@ -78,6 +78,12 @@ public sealed class CameraFollow : MonoBehaviour
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             target = player != null ? player.transform : null;
+
+            if (target != null)
+            {
+                targetCollider = target.GetComponent<Collider2D>();
+                SnapToTarget();
+            }
         }
         
         if (target != null && targetCollider == null)

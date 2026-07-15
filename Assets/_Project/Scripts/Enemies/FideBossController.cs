@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TinyDragon.UI;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 /// <summary>
 /// Runtime combat controller for Fide Dai Ca 3.  It deliberately uses the NRO
@@ -74,9 +76,29 @@ public sealed class FideBossController : MonoBehaviour
     [SerializeField] private float facingDeadZone = .35f;
     [SerializeField] private float facingChangeLock = .12f;
     [SerializeField] private float repositionDuration = .28f;
+    [SerializeField] private bool useWholeMapAttackRange = true;
+    [SerializeField] private bool requirePlayerProximityToActivate = true;
+    [SerializeField, Min(0f)] private float activationRange = 10f;
+    [SerializeField] private string introDialogueText = "Ngươi cũng gan lắm mới dám bước tới đây.|Nhưng từ khoảnh khắc này...|thành phố Vegeta sẽ là nơi ngươi gục xuống.";
+    [SerializeField] private string playerResponseText = "Ta không đến đây để lùi bước.|Nếu ngươi muốn một trận chiến,|ta sẽ kết thúc nó ngay tại đây.";
+    [SerializeField, Min(1f)] private float introDialogueCharsPerSecond = 34f;
+    [SerializeField, Min(0f)] private float introDialogueHoldAfterTyping = .9f;
+    [SerializeField] private Vector3 introDialogueOffset = new Vector3(0f, 4.75f, 0f);
+    [SerializeField] private Vector3 playerDialogueOffset = new Vector3(0f, 2.65f, 0f);
+    [SerializeField, Range(.02f, .25f)] private float dialogueViewportMargin = .03f;
     [SerializeField] private bool disableLegacyFideAi = true;
     [SerializeField] private bool disableFrameBridge = true;
     [SerializeField] private bool disableLegacyAnimator = true;
+
+    [Header("Attack Position Randomizer")]
+    [SerializeField] private bool randomizeAttackStartPosition = true;
+    [SerializeField] private bool alternateAttackSides = true;
+    [SerializeField, Range(0f, 1f)] private float rightSideAttackChance = .5f;
+    [SerializeField] private float randomAttackEdgePadding = .65f;
+    [SerializeField] private float randomCloseAttackMinDistance = .85f;
+    [SerializeField] private float randomRangedAttackMinDistance = 2.6f;
+    [SerializeField] private float randomAttackMaxDistance = 8f;
+    [SerializeField] private float randomAttackHeightJitter = .18f;
 
     [Header("Boss Difficulty")]
     [SerializeField] private bool enforceBossHealth = true;
@@ -101,6 +123,7 @@ public sealed class FideBossController : MonoBehaviour
     [SerializeField] private Vector2 kamehamehaChargeOffsetPixels = new Vector2(13f, 10f);
     [SerializeField] private Vector2 kamehamehaBeamOffset = new Vector2(.4f, .31f);
     [SerializeField] private float kamehamehaBeamScreenPadding = 2.5f;
+    [SerializeField, Min(.03f)] private float kamehamehaDamageInterval = .18f;
 
     [Header("Combat")]
     [SerializeField] private float playerHitInvulnerability = 0.22f;
@@ -111,7 +134,6 @@ public sealed class FideBossController : MonoBehaviour
     [SerializeField] private float maxVerticalSpeedAfterHit = 4f;
 
     [Header("Debug")]
-    [SerializeField] private bool showDebugHud = true;
     [SerializeField] private bool keyboardSkillTesting = true;
     [SerializeField] private bool aiEnabled = true;
 
@@ -129,13 +151,31 @@ public sealed class FideBossController : MonoBehaviour
     private EnemyHealth health;
     private PlayerHealth playerHealth;
     private Coroutine activeRoutine;
+    private Coroutine introDialogueRoutine;
+    private GameObject introDialogueBubble;
+    private CanvasGroup introDialogueGroup;
+    private Text introDialogueTextComponent;
+    private GameObject playerDialogueBubble;
+    private CanvasGroup playerDialogueGroup;
+    private Text playerDialogueTextComponent;
+    private PlayerInputReader lockedPlayerInput;
+    private bool restoreMovementInput;
+    private bool restoreJumpInput;
+    private bool restoreAttackInput;
+    private bool restorePowerShotInput;
+    private bool restorePunchInput;
+    private bool restoreKickInput;
+    private bool playerInputLocked;
     private FideSkill currentSkill;
     private string currentSkillLabel = "Hunting";
     private bool facingRight = true;
+    private bool combatActivated;
+    private bool introDialogueStarted;
     private bool counterWindowActive;
     private bool isCasting;
     private float counterWindowEnd;
     private float nextPlayerDamageTime;
+    private float nextKamehamehaDamageTime;
     private float nextAiDecisionTime;
     private float closeTime;
     private float farTime;
@@ -144,6 +184,7 @@ public sealed class FideBossController : MonoBehaviour
     private float nextHurtReactionTime;
     private float nextFacingChangeTime;
     private float repositionUntil;
+    private int nextAttackSide = 1;
     private int currentFrameIndex;
     private Light2D[] solarBombLights = Array.Empty<Light2D>();
     private float[] solarBombLightIntensities = Array.Empty<float>();
@@ -181,6 +222,7 @@ public sealed class FideBossController : MonoBehaviour
         animationLibrary = Resources.Load<FideBossAnimationLibrary>("FideBossSkillAnimationLibrary");
         BuildSkillData();
         health.Damaged += OnBossDamaged;
+        health.Died += OnBossDied;
         ShowFrame(0);
     }
 
@@ -195,7 +237,13 @@ public sealed class FideBossController : MonoBehaviour
     private void OnDestroy()
     {
         RestoreSolarBombLighting();
-        if (health != null) health.Damaged -= OnBossDamaged;
+        UnlockPlayerForDialogue();
+        DestroyDialogueBubbles();
+        if (health != null)
+        {
+            health.Damaged -= OnBossDamaged;
+            health.Died -= OnBossDied;
+        }
     }
 
     private void Update()
@@ -205,9 +253,16 @@ public sealed class FideBossController : MonoBehaviour
         if (player == null || isCasting || Time.time < actionLockUntil) return;
 
         float distance = Vector2.Distance(transform.position, player.position);
+        FacePlayer();
+
+        if (IsWaitingForPlayerActivation(distance))
+        {
+            ShowIdle();
+            return;
+        }
+
         closeTime = distance < 2.2f ? closeTime + Time.deltaTime : 0f;
         farTime = distance > 8f ? farTime + Time.deltaTime : 0f;
-        FacePlayer();
 
         if (aiEnabled && Time.time < repositionUntil)
         {
@@ -235,6 +290,536 @@ public sealed class FideBossController : MonoBehaviour
         if (playerHealth != null) player = playerHealth.transform;
     }
 
+    private bool IsWaitingForPlayerActivation(float distance)
+    {
+        if (!requirePlayerProximityToActivate || combatActivated)
+        {
+            return false;
+        }
+
+        if (distance > activationRange)
+        {
+            currentSkillLabel = "Waiting";
+            return true;
+        }
+
+        if (!introDialogueStarted)
+        {
+            introDialogueRoutine = StartCoroutine(PlayIntroDialogue());
+        }
+
+        return true;
+    }
+
+    private IEnumerator PlayIntroDialogue()
+    {
+        introDialogueStarted = true;
+        currentSkillLabel = "Talking";
+        LockPlayerForDialogue();
+        ShowIntroDialogue();
+        yield return PlayDialoguePages(introDialogueTextComponent, introDialogueText, "Fide sẽ kết thúc trận này!");
+        HideIntroDialogue();
+
+        ShowPlayerDialogue();
+        yield return PlayDialoguePages(playerDialogueTextComponent, playerResponseText, "Ta sẽ đánh bại ngươi!");
+        HidePlayerDialogue();
+
+        UnlockPlayerForDialogue();
+        combatActivated = true;
+        currentSkillLabel = "Hunting";
+        introDialogueRoutine = null;
+    }
+
+    private void LockPlayerForDialogue()
+    {
+        if (player == null || playerInputLocked)
+        {
+            return;
+        }
+
+        lockedPlayerInput = player.GetComponent<PlayerInputReader>();
+        if (lockedPlayerInput == null)
+        {
+            return;
+        }
+
+        restoreMovementInput = lockedPlayerInput.IsFeatureEnabled("Movement");
+        restoreJumpInput = lockedPlayerInput.IsFeatureEnabled("Jump");
+        restoreAttackInput = lockedPlayerInput.IsFeatureEnabled("Attack");
+        restorePowerShotInput = lockedPlayerInput.IsFeatureEnabled("PowerShot");
+        restorePunchInput = lockedPlayerInput.IsFeatureEnabled("Punch");
+        restoreKickInput = lockedPlayerInput.IsFeatureEnabled("Kick");
+        lockedPlayerInput.SetInputEnabled(false, false, false, false, false, false);
+
+        PlayerMovement movement = player.GetComponent<PlayerMovement>();
+        if (movement != null)
+        {
+            movement.Stop();
+        }
+
+        playerInputLocked = true;
+    }
+
+    private void UnlockPlayerForDialogue()
+    {
+        if (!playerInputLocked)
+        {
+            return;
+        }
+
+        if (lockedPlayerInput != null)
+        {
+            lockedPlayerInput.SetInputEnabled(
+                restoreMovementInput,
+                restoreJumpInput,
+                restoreAttackInput,
+                restorePowerShotInput,
+                restorePunchInput,
+                restoreKickInput
+            );
+        }
+
+        lockedPlayerInput = null;
+        playerInputLocked = false;
+    }
+
+    private void ShowIntroDialogue()
+    {
+        EnsureIntroDialogueBubble();
+        if (introDialogueBubble == null) return;
+
+        if (introDialogueTextComponent != null)
+        {
+            introDialogueTextComponent.text = string.Empty;
+        }
+
+        introDialogueBubble.SetActive(true);
+        if (introDialogueGroup != null)
+        {
+            introDialogueGroup.alpha = 1f;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        UpdateDialogueBubblePositions();
+    }
+
+    private void ShowPlayerDialogue()
+    {
+        EnsurePlayerDialogueBubble();
+        if (playerDialogueBubble == null) return;
+
+        if (playerDialogueTextComponent != null)
+        {
+            playerDialogueTextComponent.text = string.Empty;
+        }
+
+        playerDialogueBubble.SetActive(true);
+        if (playerDialogueGroup != null)
+        {
+            playerDialogueGroup.alpha = 1f;
+        }
+    }
+
+    private IEnumerator PlayDialoguePages(Text targetText, string dialogue, string fallback)
+    {
+        string[] pages = SplitDialoguePages(dialogue, fallback);
+        for (int i = 0; i < pages.Length; i++)
+        {
+            yield return TypeDialogue(targetText, pages[i], fallback);
+            yield return new WaitForSeconds(introDialogueHoldAfterTyping);
+        }
+    }
+
+    private IEnumerator TypeDialogue(Text targetText, string dialogue, string fallback)
+    {
+        if (targetText == null)
+        {
+            yield break;
+        }
+
+        string fullText = string.IsNullOrWhiteSpace(dialogue) ? fallback : dialogue;
+        float secondsPerCharacter = 1f / Mathf.Max(1f, introDialogueCharsPerSecond);
+
+        targetText.text = string.Empty;
+        for (int i = 0; i < fullText.Length; i++)
+        {
+            targetText.text = fullText.Substring(0, i + 1);
+            yield return new WaitForSeconds(secondsPerCharacter);
+        }
+    }
+
+    private static string[] SplitDialoguePages(string dialogue, string fallback)
+    {
+        string source = string.IsNullOrWhiteSpace(dialogue) ? fallback : dialogue;
+        string[] rawPages = source.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+        List<string> pages = new List<string>();
+        foreach (string rawPage in rawPages)
+        {
+            string page = rawPage.Trim();
+            if (!string.IsNullOrWhiteSpace(page))
+            {
+                pages.Add(page);
+            }
+        }
+
+        if (pages.Count == 0)
+        {
+            pages.Add(fallback);
+        }
+
+        return pages.ToArray();
+    }
+
+    private void HideIntroDialogue()
+    {
+        if (introDialogueBubble != null)
+        {
+            introDialogueBubble.SetActive(false);
+        }
+    }
+
+    private void HidePlayerDialogue()
+    {
+        if (playerDialogueBubble != null)
+        {
+            playerDialogueBubble.SetActive(false);
+        }
+    }
+
+    private void DestroyDialogueBubbles()
+    {
+        if (introDialogueBubble != null)
+        {
+            Destroy(introDialogueBubble);
+            introDialogueBubble = null;
+        }
+
+        if (playerDialogueBubble != null)
+        {
+            Destroy(playerDialogueBubble);
+            playerDialogueBubble = null;
+        }
+    }
+
+    private void UpdateDialogueBubblePositions()
+    {
+        PositionDialogueBubble(introDialogueBubble, transform, introDialogueOffset);
+        PositionDialogueBubble(playerDialogueBubble, player, playerDialogueOffset);
+    }
+
+    private void PositionDialogueBubble(GameObject bubble, Transform anchor, Vector3 offset)
+    {
+        if (bubble == null || anchor == null || !bubble.activeSelf)
+        {
+            return;
+        }
+
+        Vector3 targetPosition = anchor.position + offset;
+        bubble.transform.position = ClampDialoguePositionToCamera(targetPosition, bubble);
+        AimDialogueTailAtAnchor(bubble, anchor.position);
+    }
+
+    private static void AimDialogueTailAtAnchor(GameObject bubble, Vector3 anchorPosition)
+    {
+        RectTransform bubbleRect = bubble.GetComponent<RectTransform>();
+        Transform tailTransform = bubble.transform.Find("Tail");
+        RectTransform tailRect = tailTransform != null ? tailTransform.GetComponent<RectTransform>() : null;
+        if (bubbleRect == null || tailRect == null)
+        {
+            return;
+        }
+
+        float localAnchorX = bubble.transform.InverseTransformPoint(anchorPosition).x;
+        float tailLimit = Mathf.Max(0f, bubbleRect.rect.width * .5f - 54f);
+        Vector2 anchoredPosition = tailRect.anchoredPosition;
+        anchoredPosition.x = Mathf.Clamp(localAnchorX, -tailLimit, tailLimit);
+        tailRect.anchoredPosition = anchoredPosition;
+    }
+
+    private Vector3 ClampDialoguePositionToCamera(Vector3 targetPosition, GameObject bubble = null)
+    {
+        Camera camera = Camera.main;
+        if (camera == null)
+        {
+            return targetPosition;
+        }
+
+        if (camera.orthographic)
+        {
+            Vector2 halfSize = GetDialogueHalfSizeWorld(bubble);
+            float cameraHalfHeight = camera.orthographicSize;
+            float cameraHalfWidth = cameraHalfHeight * camera.aspect;
+            float marginX = cameraHalfWidth * 2f * dialogueViewportMargin;
+            float marginY = cameraHalfHeight * 2f * dialogueViewportMargin;
+            float minX = camera.transform.position.x - cameraHalfWidth + halfSize.x + marginX;
+            float maxX = camera.transform.position.x + cameraHalfWidth - halfSize.x - marginX;
+            float minY = camera.transform.position.y - cameraHalfHeight + halfSize.y + marginY;
+            float maxY = camera.transform.position.y + cameraHalfHeight - halfSize.y - marginY;
+
+            targetPosition.x = minX <= maxX ? Mathf.Clamp(targetPosition.x, minX, maxX) : camera.transform.position.x;
+            targetPosition.y = minY <= maxY ? Mathf.Clamp(targetPosition.y, minY, maxY) : camera.transform.position.y;
+            return targetPosition;
+        }
+
+        Vector3 viewportPoint = camera.WorldToViewportPoint(targetPosition);
+        float zDistance = Mathf.Max(.01f, targetPosition.z - camera.transform.position.z);
+        viewportPoint.x = Mathf.Clamp(viewportPoint.x, dialogueViewportMargin, 1f - dialogueViewportMargin);
+        viewportPoint.y = Mathf.Clamp(viewportPoint.y, dialogueViewportMargin, 1f - dialogueViewportMargin);
+        viewportPoint.z = zDistance;
+
+        Vector3 clampedPosition = camera.ViewportToWorldPoint(viewportPoint);
+        clampedPosition.z = targetPosition.z;
+        return clampedPosition;
+    }
+
+    private static Vector2 GetDialogueHalfSizeWorld(GameObject bubble)
+    {
+        if (bubble == null)
+        {
+            return Vector2.zero;
+        }
+
+        RectTransform rect = bubble.GetComponent<RectTransform>();
+        if (rect == null)
+        {
+            return Vector2.zero;
+        }
+
+        Vector3 scale = rect.lossyScale;
+        return new Vector2(Mathf.Abs(rect.rect.width * scale.x) * .5f, Mathf.Abs(rect.rect.height * scale.y) * .5f);
+    }
+
+    private void EnsureIntroDialogueBubble()
+    {
+        if (introDialogueBubble != null)
+        {
+            if (introDialogueTextComponent == null)
+            {
+                introDialogueTextComponent = introDialogueBubble.GetComponentInChildren<Text>(true);
+            }
+
+            return;
+        }
+
+        GameObject bubble = new GameObject("FideIntroDialogue");
+        bubble.transform.position = ClampDialoguePositionToCamera(transform.position + introDialogueOffset);
+        bubble.transform.localScale = Vector3.one * .01f;
+
+        Canvas canvas = bubble.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        canvas.sortingOrder = 6000;
+
+        RectTransform bubbleRect = bubble.GetComponent<RectTransform>();
+        bubbleRect.sizeDelta = new Vector2(460f, 162f);
+
+        introDialogueGroup = bubble.AddComponent<CanvasGroup>();
+        introDialogueGroup.blocksRaycasts = false;
+        introDialogueGroup.interactable = false;
+
+        Color bossPanel = new Color(.08f, .075f, .09f, .94f);
+        Color bossAccent = new Color(1f, .68f, .24f, .95f);
+        CreateDialoguePanel(bubble.transform, new Vector2(460f, 138f), bossPanel, bossAccent);
+        CreateDialogueTail(bubble.transform, -76f, bossPanel);
+        CreateSpeakerTag(bubble.transform, "FIDE", bossAccent, new Color(.14f, .06f, .04f, .96f), new Vector2(-148f, 67f));
+        introDialogueTextComponent = CreateDialogueText(bubble.transform, new Vector2(396f, 94f), new Vector2(0f, -2f), new Color(.98f, .94f, .84f, 1f));
+
+        introDialogueBubble = bubble;
+        bubble.transform.position = ClampDialoguePositionToCamera(transform.position + introDialogueOffset, bubble);
+        introDialogueBubble.SetActive(false);
+    }
+
+    private void EnsurePlayerDialogueBubble()
+    {
+        if (player == null)
+        {
+            return;
+        }
+
+        if (playerDialogueBubble != null)
+        {
+            if (playerDialogueTextComponent == null)
+            {
+                playerDialogueTextComponent = playerDialogueBubble.GetComponentInChildren<Text>(true);
+            }
+
+            return;
+        }
+
+        GameObject bubble = new GameObject("PlayerResponseDialogue");
+        bubble.transform.position = ClampDialoguePositionToCamera(player.position + playerDialogueOffset);
+        bubble.transform.localScale = Vector3.one * .01f;
+
+        Canvas canvas = bubble.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        canvas.sortingOrder = 6000;
+
+        RectTransform bubbleRect = bubble.GetComponent<RectTransform>();
+        bubbleRect.sizeDelta = new Vector2(430f, 154f);
+
+        playerDialogueGroup = bubble.AddComponent<CanvasGroup>();
+        playerDialogueGroup.blocksRaycasts = false;
+        playerDialogueGroup.interactable = false;
+
+        Color playerPanel = new Color(.055f, .085f, .1f, .94f);
+        Color playerAccent = new Color(.48f, .84f, 1f, .95f);
+        CreateDialoguePanel(bubble.transform, new Vector2(430f, 130f), playerPanel, playerAccent);
+        CreateDialogueTail(bubble.transform, -72f, playerPanel);
+        CreateSpeakerTag(bubble.transform, "PLAYER", playerAccent, new Color(.025f, .105f, .14f, .96f), new Vector2(-128f, 63f));
+        playerDialogueTextComponent = CreateDialogueText(bubble.transform, new Vector2(368f, 88f), new Vector2(0f, -3f), new Color(.9f, .97f, 1f, 1f));
+
+        playerDialogueBubble = bubble;
+        bubble.transform.position = ClampDialoguePositionToCamera(player.position + playerDialogueOffset, bubble);
+        playerDialogueBubble.SetActive(false);
+    }
+
+    private static void CreateDialoguePanel(Transform parent)
+    {
+        CreateDialoguePanel(parent, new Vector2(560f, 164f), new Color(.08f, .075f, .09f, .94f), new Color(1f, .68f, .24f, .95f));
+    }
+
+    private static void CreateDialoguePanel(Transform parent, Vector2 size, Color panelColor, Color outlineColor)
+    {
+        GameObject shadow = new GameObject("Shadow");
+        shadow.transform.SetParent(parent, false);
+        RectTransform shadowRect = shadow.AddComponent<RectTransform>();
+        shadowRect.anchorMin = new Vector2(.5f, .5f);
+        shadowRect.anchorMax = new Vector2(.5f, .5f);
+        shadowRect.anchoredPosition = new Vector2(8f, -8f);
+        shadowRect.sizeDelta = size + new Vector2(10f, 10f);
+        Image shadowImage = shadow.AddComponent<Image>();
+        shadowImage.color = new Color(0f, 0f, 0f, .34f);
+
+        GameObject panel = new GameObject("Panel");
+        panel.transform.SetParent(parent, false);
+        RectTransform rect = panel.AddComponent<RectTransform>();
+        rect.anchorMin = new Vector2(.5f, .5f);
+        rect.anchorMax = new Vector2(.5f, .5f);
+        rect.anchoredPosition = Vector2.zero;
+        rect.sizeDelta = size;
+
+        Image image = panel.AddComponent<Image>();
+        image.color = panelColor;
+
+        Outline outline = panel.AddComponent<Outline>();
+        outline.effectColor = outlineColor;
+        outline.effectDistance = new Vector2(3f, -3f);
+
+        GameObject highlight = new GameObject("AccentLine");
+        highlight.transform.SetParent(parent, false);
+        RectTransform highlightRect = highlight.AddComponent<RectTransform>();
+        highlightRect.anchorMin = new Vector2(.5f, .5f);
+        highlightRect.anchorMax = new Vector2(.5f, .5f);
+        highlightRect.anchoredPosition = new Vector2(0f, size.y * .5f - 18f);
+        highlightRect.sizeDelta = new Vector2(size.x - 40f, 4f);
+        Image highlightImage = highlight.AddComponent<Image>();
+        highlightImage.color = outlineColor;
+    }
+
+    private static void CreateSpeakerTag(Transform parent, string speakerName, Color accentColor, Color backgroundColor, Vector2 position)
+    {
+        GameObject tag = new GameObject("SpeakerTag");
+        tag.transform.SetParent(parent, false);
+        RectTransform rect = tag.AddComponent<RectTransform>();
+        rect.anchorMin = new Vector2(.5f, .5f);
+        rect.anchorMax = new Vector2(.5f, .5f);
+        rect.anchoredPosition = position;
+        rect.sizeDelta = new Vector2(132f, 38f);
+
+        Image image = tag.AddComponent<Image>();
+        image.color = backgroundColor;
+        Outline outline = tag.AddComponent<Outline>();
+        outline.effectColor = accentColor;
+        outline.effectDistance = new Vector2(2f, -2f);
+
+        GameObject label = new GameObject("Label");
+        label.transform.SetParent(tag.transform, false);
+        RectTransform labelRect = label.AddComponent<RectTransform>();
+        labelRect.anchorMin = Vector2.zero;
+        labelRect.anchorMax = Vector2.one;
+        labelRect.offsetMin = Vector2.zero;
+        labelRect.offsetMax = Vector2.zero;
+
+        Text text = label.AddComponent<Text>();
+        text.alignment = TextAnchor.MiddleCenter;
+        text.font = LoadRuntimeFont();
+        text.fontSize = 20;
+        text.fontStyle = FontStyle.Bold;
+        text.color = accentColor;
+        text.text = speakerName;
+    }
+
+    private static void CreateDialogueTail(Transform parent)
+    {
+        CreateDialogueTail(parent, -90f, new Color(.05f, .06f, .07f, .92f));
+    }
+
+    private static void CreateDialogueTail(Transform parent, float yPosition, Color tailColor)
+    {
+        GameObject tail = new GameObject("Tail");
+        tail.transform.SetParent(parent, false);
+        RectTransform rect = tail.AddComponent<RectTransform>();
+        rect.anchorMin = new Vector2(.5f, .5f);
+        rect.anchorMax = new Vector2(.5f, .5f);
+        rect.anchoredPosition = new Vector2(0f, yPosition);
+        rect.sizeDelta = new Vector2(38f, 38f);
+        rect.localRotation = Quaternion.Euler(0f, 0f, 45f);
+
+        Image image = tail.AddComponent<Image>();
+        image.color = tailColor;
+    }
+
+    private static Text CreateDialogueText(Transform parent)
+    {
+        return CreateDialogueText(parent, new Vector2(488f, 116f), Vector2.zero, new Color(.98f, .94f, .84f, 1f));
+    }
+
+    private static Text CreateDialogueText(Transform parent, Vector2 size)
+    {
+        return CreateDialogueText(parent, size, Vector2.zero, new Color(.98f, .94f, .84f, 1f));
+    }
+
+    private static Text CreateDialogueText(Transform parent, Vector2 size, Vector2 position, Color textColor)
+    {
+        GameObject textObject = new GameObject("Text");
+        textObject.transform.SetParent(parent, false);
+        RectTransform rect = textObject.AddComponent<RectTransform>();
+        rect.anchorMin = new Vector2(.5f, .5f);
+        rect.anchorMax = new Vector2(.5f, .5f);
+        rect.anchoredPosition = position;
+        rect.sizeDelta = size;
+
+        Text text = textObject.AddComponent<Text>();
+        text.alignment = TextAnchor.MiddleCenter;
+        text.font = LoadRuntimeFont();
+        text.fontSize = 25;
+        text.fontStyle = FontStyle.Normal;
+        text.color = textColor;
+        text.horizontalOverflow = HorizontalWrapMode.Wrap;
+        text.verticalOverflow = VerticalWrapMode.Truncate;
+        text.resizeTextForBestFit = true;
+        text.resizeTextMinSize = 17;
+        text.resizeTextMaxSize = 25;
+
+        Shadow shadow = textObject.AddComponent<Shadow>();
+        shadow.effectColor = new Color(0f, 0f, 0f, .62f);
+        shadow.effectDistance = new Vector2(2f, -2f);
+        return text;
+    }
+
+    private static Font LoadRuntimeFont()
+    {
+        Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        if (font != null)
+        {
+            return font;
+        }
+
+        font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        return font != null ? font : Font.CreateDynamicFontFromOSFont("Arial", 28);
+    }
+
     private SkillDefinition ChooseSkill(float distance)
     {
         // Anti-cheese rules have priority, but every option remains telegraphed.
@@ -244,10 +829,16 @@ public sealed class FideBossController : MonoBehaviour
         if (closeTime > 1.6f && TryGetAvailable(FideSkill.CounterStance, out SkillDefinition counter)) return counter;
 
         List<SkillDefinition> choices = skills.Values
-            .Where(skill => distance >= skill.MinRange && distance <= skill.MaxRange && IsAvailable(skill))
+            .Where(skill => IsWithinAttackRange(skill, distance) && IsAvailable(skill))
             .OrderBy(_ => UnityEngine.Random.value)
             .ToList();
         return choices.Count == 0 ? null : choices[0];
+    }
+
+    private bool IsWithinAttackRange(SkillDefinition skill, float distance)
+    {
+        if (distance < skill.MinRange) return false;
+        return useWholeMapAttackRange || distance <= skill.MaxRange;
     }
 
     private bool TryGetAvailable(FideSkill id, out SkillDefinition skill)
@@ -268,11 +859,86 @@ public sealed class FideBossController : MonoBehaviour
         activeRoutine = StartCoroutine(PlaySkill(skill));
     }
 
+    private void RandomizeAttackStartPosition(SkillDefinition skill)
+    {
+        if (!randomizeAttackStartPosition || player == null) return;
+
+        float minX = Mathf.Min(arenaMinX, arenaMaxX) + randomAttackEdgePadding;
+        float maxX = Mathf.Max(arenaMinX, arenaMaxX) - randomAttackEdgePadding;
+        if (minX > maxX)
+        {
+            minX = Mathf.Min(arenaMinX, arenaMaxX);
+            maxX = Mathf.Max(arenaMinX, arenaMaxX);
+        }
+
+        float minDistance = skill.MaxRange <= 3.5f
+            ? Mathf.Max(skill.MinRange, randomCloseAttackMinDistance)
+            : Mathf.Max(skill.MinRange, randomRangedAttackMinDistance);
+        float maxDistance = Mathf.Min(skill.MaxRange, randomAttackMaxDistance);
+        if (skill.MaxRange <= 3.5f)
+        {
+            maxDistance = Mathf.Min(maxDistance, Mathf.Max(minDistance, skill.MaxRange * .72f));
+        }
+
+        if (maxDistance < minDistance)
+        {
+            maxDistance = minDistance;
+        }
+
+        int preferredSide = ChoosePreferredAttackSide();
+        if (!TryGetRandomAttackX(preferredSide, minDistance, maxDistance, minX, maxX, out float x, out int chosenSide)
+            && !TryGetRandomAttackX(-preferredSide, minDistance, maxDistance, minX, maxX, out x, out chosenSide))
+        {
+            chosenSide = preferredSide;
+            x = Mathf.Clamp(player.position.x + chosenSide * minDistance, minX, maxX);
+        }
+
+        nextAttackSide = -chosenSide;
+        float y = groundY + hoverHeight + UnityEngine.Random.Range(-randomAttackHeightJitter, randomAttackHeightJitter);
+        Vector3 nextPosition = new Vector3(x, y, transform.position.z);
+
+        SpawnAfterimage();
+        transform.position = nextPosition;
+        if (bossBody != null) bossBody.position = nextPosition;
+        FacePlayerImmediate();
+        ShowFrame(TeleportFrame);
+    }
+
+    private int ChoosePreferredAttackSide()
+    {
+        if (alternateAttackSides)
+        {
+            return nextAttackSide >= 0 ? 1 : -1;
+        }
+
+        return UnityEngine.Random.value <= rightSideAttackChance ? 1 : -1;
+    }
+
+    private bool TryGetRandomAttackX(int side, float minDistance, float maxDistance, float minX, float maxX, out float x, out int chosenSide)
+    {
+        chosenSide = side >= 0 ? 1 : -1;
+        float playerX = player.position.x;
+        float sideMinX = chosenSide > 0 ? playerX + minDistance : playerX - maxDistance;
+        float sideMaxX = chosenSide > 0 ? playerX + maxDistance : playerX - minDistance;
+        float validMinX = Mathf.Max(minX, sideMinX);
+        float validMaxX = Mathf.Min(maxX, sideMaxX);
+
+        if (validMinX > validMaxX)
+        {
+            x = playerX;
+            return false;
+        }
+
+        x = UnityEngine.Random.Range(validMinX, validMaxX);
+        return true;
+    }
+
     private IEnumerator PlaySkill(SkillDefinition skill)
     {
         isCasting = true;
         currentSkill = skill.Id;
         currentSkillLabel = skill.Label;
+        RandomizeAttackStartPosition(skill);
         cooldownEnds[skill.Id] = Time.time + skill.Cooldown;
         recentSkills.Enqueue(skill.Id);
         while (recentSkills.Count > 3) recentSkills.Dequeue();
@@ -435,7 +1101,19 @@ public sealed class FideBossController : MonoBehaviour
         FideBossEffectStrip strip = beam.AddComponent<FideBossEffectStrip>();
         strip.Initialize(frames, renderer, duration / frames.Length);
         SpawnKamehamehaBeamTail(origin, direction, length, duration);
-        DamagePlayerInBeam(origin, direction, length, width, damage);
+        StartCoroutine(DamagePlayerInKamehamehaBeam(origin, direction, length, width, damage, duration));
+    }
+
+    private IEnumerator DamagePlayerInKamehamehaBeam(Vector2 origin, Vector2 direction, float length, float width, int damage, float duration)
+    {
+        float endTime = Time.time + Mathf.Max(SkillTick, duration);
+        nextKamehamehaDamageTime = Mathf.Min(nextKamehamehaDamageTime, Time.time);
+
+        while (Time.time < endTime)
+        {
+            DamagePlayerInKamehamehaBeam(origin, direction, length, width, damage);
+            yield return null;
+        }
     }
 
     private float GetKamehamehaScreenLength(Vector2 origin)
@@ -855,10 +1533,24 @@ public sealed class FideBossController : MonoBehaviour
     private void DamagePlayerInBeam(Vector2 origin, Vector2 direction, float length, float width, int damage)
     {
         if (playerHealth == null || Time.time < nextPlayerDamageTime) return;
+        if (IsPlayerInBeam(origin, direction, length, width)) DealDamage(damage, direction * 10f);
+    }
+
+    private void DamagePlayerInKamehamehaBeam(Vector2 origin, Vector2 direction, float length, float width, int damage)
+    {
+        if (playerHealth == null || Time.time < nextKamehamehaDamageTime) return;
+        if (!IsPlayerInBeam(origin, direction, length, width)) return;
+        nextKamehamehaDamageTime = Time.time + kamehamehaDamageInterval;
+        DealDamage(damage, direction * 10f);
+    }
+
+    private bool IsPlayerInBeam(Vector2 origin, Vector2 direction, float length, float width)
+    {
+        if (playerHealth == null) return false;
         Vector2 delta = (Vector2)playerHealth.transform.position - origin;
         float along = Vector2.Dot(delta, direction);
         float sideways = Mathf.Abs(Vector2.Perpendicular(direction).x * delta.x + Vector2.Perpendicular(direction).y * delta.y);
-        if (along >= 0f && along <= length && sideways <= width) DealDamage(damage, direction * 10f);
+        return along >= 0f && along <= length && sideways <= width;
     }
 
     private void DealDamage(int damage, Vector2 knockback)
@@ -892,6 +1584,11 @@ public sealed class FideBossController : MonoBehaviour
             nextHurtReactionTime = Time.time + .18f;
             StartCoroutine(PlayHurtReaction());
         }
+    }
+
+    private void OnBossDied(EnemyHealth _)
+    {
+        BossKOOverlay.Show();
     }
 
     private IEnumerator PlayHurtReaction()
@@ -1133,16 +1830,6 @@ public sealed class FideBossController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F1)) aiEnabled = !aiEnabled;
     }
 
-    private void OnGUI()
-    {
-        if (!showDebugHud || !Application.isPlaying || health == null) return;
-        GUI.Box(new Rect(16, 16, 760, 142), "Fide Dai Ca 3 - Combat Runtime");
-        GUI.Label(new Rect(28, 42, 390, 20), $"HP {health.CurrentHealth}/{health.MaxHealth}    FULL SKILLSET    AI {(aiEnabled ? "ON" : "OFF")}");
-        GUI.Label(new Rect(28, 64, 330, 20), $"Casting: {currentSkillLabel}    Frame: {currentFrameIndex:00}");
-        GUI.Label(new Rect(28, 86, 730, 20), "1 Punch | 2 Dragon | 3 Flurry | 4 Masenko | 5 Galick | 6 Beam | 7 Teleport | 8 Cage | 9 Meteor | 0 Breaker");
-        GUI.Label(new Rect(28, 108, 730, 20), "Shift+1 Counter | +2 Dive | +3 Sky Rush | +4 Vanish | +5 Barrage | +6 Cross | +7 Nova | +8 Storm | +9 Solar | +0 Kamehameha");
-        GUI.Label(new Rect(28, 130, 300, 20), "F1: Toggle boss AI");
-    }
 }
 
 public sealed class FideBossProjectile : MonoBehaviour

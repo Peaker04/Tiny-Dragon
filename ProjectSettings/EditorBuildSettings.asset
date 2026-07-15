@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/ThungLungTre.unity
     guid: d990136e279d91646acdd2434212944d
   - enabled: 1
+    path: Assets/_Project/Scenes/ThanhPhoVegeta.unity
+    guid: 1ba445d882ead0046bb1f9a8bf756607
+  - enabled: 1
     path: Assets/_Project/Scenes/VoDaiXenBoHung.unity
     guid: fcfc88827b1fed04db4b9b2b71ed9dca
   - enabled: 1

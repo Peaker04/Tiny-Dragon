@@ -38,6 +38,30 @@ INSERT OR IGNORE INTO Stage (
     1,
     50,
     20
+  ),
+  (
+    'stage_level_03',
+    'zone_earth_start',
+    'BOSS',
+    'Level 03',
+    'Level 03 combat route.',
+    'Level_03',
+    2,
+    1,
+    75,
+    30
+  ),
+  (
+    'stage_vegeta_city',
+    'zone_earth_start',
+    'FINAL_BOSS',
+    'Thanh Pho Vegeta',
+    'Vegeta city boss battle.',
+    'ThanhPhoVegeta',
+    3,
+    1,
+    150,
+    60
   );
 
 INSERT OR IGNORE INTO Enemy (

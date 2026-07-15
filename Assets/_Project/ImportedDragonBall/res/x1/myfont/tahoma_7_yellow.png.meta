@@ -1,0 +1,4914 @@
+fileFormatVersion: 2
+guid: e742ac91318ddf0419a883d4739382e0
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1437025794070858543
+    second: tahoma_7_yellow_0
+  - first:
+      213: -5528621868766181358
+    second: tahoma_7_yellow_1
+  - first:
+      213: -3028564943845255002
+    second: tahoma_7_yellow_2
+  - first:
+      213: 2368995740125643316
+    second: tahoma_7_yellow_3
+  - first:
+      213: 8237133767744442448
+    second: tahoma_7_yellow_4
+  - first:
+      213: 7998882089327593078
+    second: tahoma_7_yellow_5
+  - first:
+      213: 4802055084277802244
+    second: tahoma_7_yellow_6
+  - first:
+      213: -4505625220014475840
+    second: tahoma_7_yellow_7
+  - first:
+      213: -159789709549671687
+    second: tahoma_7_yellow_8
+  - first:
+      213: 4651408231893806428
+    second: tahoma_7_yellow_9
+  - first:
+      213: -7520235255518600579
+    second: tahoma_7_yellow_10
+  - first:
+      213: 4421067250068572774
+    second: tahoma_7_yellow_11
+  - first:
+      213: 776505765203641768
+    second: tahoma_7_yellow_12
+  - first:
+      213: -9010847382426668544
+    second: tahoma_7_yellow_13
+  - first:
+      213: 3598600400693401722
+    second: tahoma_7_yellow_14
+  - first:
+      213: 8933362964190516982
+    second: tahoma_7_yellow_15
+  - first:
+      213: -6203523246491478639
+    second: tahoma_7_yellow_16
+  - first:
+      213: 5507084795785472908
+    second: tahoma_7_yellow_17
+  - first:
+      213: 1475692031555295483
+    second: tahoma_7_yellow_18
+  - first:
+      213: 5272457957850347529
+    second: tahoma_7_yellow_19
+  - first:
+      213: -8759326024959949342
+    second: tahoma_7_yellow_20
+  - first:
+      213: 6775747548406476500
+    second: tahoma_7_yellow_21
+  - first:
+      213: 3918151015712659280
+    second: tahoma_7_yellow_22
+  - first:
+      213: -7139142131180628178
+    second: tahoma_7_yellow_23
+  - first:
+      213: -5755626846373752651
+    second: tahoma_7_yellow_24
+  - first:
+      213: 3173886603232490813
+    second: tahoma_7_yellow_25
+  - first:
+      213: -821124982180047489
+    second: tahoma_7_yellow_26
+  - first:
+      213: 8774500544084822420
+    second: tahoma_7_yellow_27
+  - first:
+      213: -4547556433328033613
+    second: tahoma_7_yellow_28
+  - first:
+      213: 2983409074673135416
+    second: tahoma_7_yellow_29
+  - first:
+      213: 7178896798047822248
+    second: tahoma_7_yellow_30
+  - first:
+      213: -4469241019014798752
+    second: tahoma_7_yellow_31
+  - first:
+      213: -8399960944867550935
+    second: tahoma_7_yellow_32
+  - first:
+      213: 1662967537508541284
+    second: tahoma_7_yellow_33
+  - first:
+      213: 760920650418824066
+    second: tahoma_7_yellow_34
+  - first:
+      213: -1406171441520038786
+    second: tahoma_7_yellow_35
+  - first:
+      213: 7088168909129666086
+    second: tahoma_7_yellow_36
+  - first:
+      213: -2129422560447887142
+    second: tahoma_7_yellow_37
+  - first:
+      213: 3086776436773553945
+    second: tahoma_7_yellow_38
+  - first:
+      213: 890838896553751191
+    second: tahoma_7_yellow_39
+  - first:
+      213: -1223223924514446119
+    second: tahoma_7_yellow_40
+  - first:
+      213: -30548405187271589
+    second: tahoma_7_yellow_41
+  - first:
+      213: 2735151590216292383
+    second: tahoma_7_yellow_42
+  - first:
+      213: 2525260212565661339
+    second: tahoma_7_yellow_43
+  - first:
+      213: -2342026989922533154
+    second: tahoma_7_yellow_44
+  - first:
+      213: 2482100763443004378
+    second: tahoma_7_yellow_45
+  - first:
+      213: 990810248138164483
+    second: tahoma_7_yellow_46
+  - first:
+      213: -6255485341998339850
+    second: tahoma_7_yellow_47
+  - first:
+      213: -935304013167612917
+    second: tahoma_7_yellow_48
+  - first:
+      213: 1070097974963898357
+    second: tahoma_7_yellow_49
+  - first:
+      213: 4040429502818083844
+    second: tahoma_7_yellow_50
+  - first:
+      213: 2077511660276370904
+    second: tahoma_7_yellow_51
+  - first:
+      213: 6242285907713131509
+    second: tahoma_7_yellow_52
+  - first:
+      213: 118903440318987464
+    second: tahoma_7_yellow_53
+  - first:
+      213: -6194271021060781867
+    second: tahoma_7_yellow_54
+  - first:
+      213: -7426443265959274783
+    second: tahoma_7_yellow_55
+  - first:
+      213: 3166860020344539117
+    second: tahoma_7_yellow_56
+  - first:
+      213: 1256133381361529292
+    second: tahoma_7_yellow_57
+  - first:
+      213: -2996276034846489165
+    second: tahoma_7_yellow_58
+  - first:
+      213: -7746166975947492159
+    second: tahoma_7_yellow_59
+  - first:
+      213: -6577303202313391416
+    second: tahoma_7_yellow_60
+  - first:
+      213: 2199850433087416210
+    second: tahoma_7_yellow_61
+  - first:
+      213: 416806102330514329
+    second: tahoma_7_yellow_62
+  - first:
+      213: 6932665739991075246
+    second: tahoma_7_yellow_63
+  - first:
+      213: 9179199191521745239
+    second: tahoma_7_yellow_64
+  - first:
+      213: -2392916944114650797
+    second: tahoma_7_yellow_65
+  - first:
+      213: 696548531439117704
+    second: tahoma_7_yellow_66
+  - first:
+      213: 4219288598332156810
+    second: tahoma_7_yellow_67
+  - first:
+      213: -2723280575811649345
+    second: tahoma_7_yellow_68
+  - first:
+      213: -3627383684728224347
+    second: tahoma_7_yellow_69
+  - first:
+      213: -179558328764310697
+    second: tahoma_7_yellow_70
+  - first:
+      213: 169781149577691
+    second: tahoma_7_yellow_71
+  - first:
+      213: -3590137526038640744
+    second: tahoma_7_yellow_72
+  - first:
+      213: 8256206772931907822
+    second: tahoma_7_yellow_73
+  - first:
+      213: -6049175113427772002
+    second: tahoma_7_yellow_74
+  - first:
+      213: -1293146752820185810
+    second: tahoma_7_yellow_75
+  - first:
+      213: -7853702900717512379
+    second: tahoma_7_yellow_76
+  - first:
+      213: 6418138911047483413
+    second: tahoma_7_yellow_77
+  - first:
+      213: 7600397713339686803
+    second: tahoma_7_yellow_78
+  - first:
+      213: -7868496338046970803
+    second: tahoma_7_yellow_79
+  - first:
+      213: 5771525218947764051
+    second: tahoma_7_yellow_80
+  - first:
+      213: -1661257665551140629
+    second: tahoma_7_yellow_81
+  - first:
+      213: -5467663387529255271
+    second: tahoma_7_yellow_82
+  - first:
+      213: 2759230542422866830
+    second: tahoma_7_yellow_83
+  - first:
+      213: -7507941225469834412
+    second: tahoma_7_yellow_84
+  - first:
+      213: 6168682505865900669
+    second: tahoma_7_yellow_85
+  - first:
+      213: -7033055742361701064
+    second: tahoma_7_yellow_86
+  - first:
+      213: 5364808941452724407
+    second: tahoma_7_yellow_87
+  - first:
+      213: 6570072164076931722
+    second: tahoma_7_yellow_88
+  - first:
+      213: 368092209601354353
+    second: tahoma_7_yellow_89
+  - first:
+      213: -6879502324643004951
+    second: tahoma_7_yellow_90
+  - first:
+      213: -8086872538311953639
+    second: tahoma_7_yellow_91
+  - first:
+      213: 7169764924653113723
+    second: tahoma_7_yellow_92
+  - first:
+      213: -2478338745483937910
+    second: tahoma_7_yellow_93
+  - first:
+      213: 4250097575496670506
+    second: tahoma_7_yellow_94
+  - first:
+      213: -7326535249659074327
+    second: tahoma_7_yellow_95
+  - first:
+      213: 2102701731715964832
+    second: tahoma_7_yellow_96
+  - first:
+      213: 7038679467381573367
+    second: tahoma_7_yellow_97
+  - first:
+      213: 5911348125028185035
+    second: tahoma_7_yellow_98
+  - first:
+      213: 6816622813665218828
+    second: tahoma_7_yellow_99
+  - first:
+      213: 8953051084933505873
+    second: tahoma_7_yellow_100
+  - first:
+      213: -4154800578758038901
+    second: tahoma_7_yellow_101
+  - first:
+      213: 3265250813442551356
+    second: tahoma_7_yellow_102
+  - first:
+      213: 741737358113084088
+    second: tahoma_7_yellow_103
+  - first:
+      213: -5659663986947693525
+    second: tahoma_7_yellow_104
+  - first:
+      213: 8419697364829443564
+    second: tahoma_7_yellow_105
+  - first:
+      213: 8334242104216399122
+    second: tahoma_7_yellow_106
+  - first:
+      213: -3845623845340249171
+    second: tahoma_7_yellow_107
+  - first:
+      213: 8687024195207045052
+    second: tahoma_7_yellow_108
+  - first:
+      213: 5195381977259333079
+    second: tahoma_7_yellow_109
+  - first:
+      213: 3732077311304438703
+    second: tahoma_7_yellow_110
+  - first:
+      213: 8614944397078724892
+    second: tahoma_7_yellow_111
+  - first:
+      213: 4742092234826943665
+    second: tahoma_7_yellow_112
+  - first:
+      213: -2123593297184528977
+    second: tahoma_7_yellow_113
+  - first:
+      213: -2568905347155198972
+    second: tahoma_7_yellow_114
+  - first:
+      213: -4163986442711754230
+    second: tahoma_7_yellow_115
+  - first:
+      213: 8586866139948903363
+    second: tahoma_7_yellow_116
+  - first:
+      213: 623855894627873991
+    second: tahoma_7_yellow_117
+  - first:
+      213: 2863581000363717947
+    second: tahoma_7_yellow_118
+  - first:
+      213: 2990162062852221517
+    second: tahoma_7_yellow_119
+  - first:
+      213: -2081945205346839864
+    second: tahoma_7_yellow_120
+  - first:
+      213: -8587418573988328240
+    second: tahoma_7_yellow_121
+  - first:
+      213: -5720334969228656953
+    second: tahoma_7_yellow_122
+  - first:
+      213: -7381185889559056219
+    second: tahoma_7_yellow_123
+  - first:
+      213: 3110237835387862002
+    second: tahoma_7_yellow_124
+  - first:
+      213: 3342141378401948076
+    second: tahoma_7_yellow_125
+  - first:
+      213: 2403481646167447195
+    second: tahoma_7_yellow_126
+  - first:
+      213: 5743596683516516880
+    second: tahoma_7_yellow_127
+  - first:
+      213: 2378696500702777779
+    second: tahoma_7_yellow_128
+  - first:
+      213: -1771906161937027085
+    second: tahoma_7_yellow_129
+  - first:
+      213: 5616206112334652431
+    second: tahoma_7_yellow_130
+  - first:
+      213: -6414223702312680000
+    second: tahoma_7_yellow_131
+  - first:
+      213: -5657966904382940612
+    second: tahoma_7_yellow_132
+  - first:
+      213: -8464105189885793545
+    second: tahoma_7_yellow_133
+  - first:
+      213: 5728099069981624817
+    second: tahoma_7_yellow_134
+  - first:
+      213: 4664827491658248784
+    second: tahoma_7_yellow_135
+  - first:
+      213: -2936782704060640831
+    second: tahoma_7_yellow_136
+  - first:
+      213: 5321133600208776521
+    second: tahoma_7_yellow_137
+  - first:
+      213: -2837147559698133292
+    second: tahoma_7_yellow_138
+  - first:
+      213: 7743916935433598170
+    second: tahoma_7_yellow_139
+  - first:
+      213: 665660562884484839
+    second: tahoma_7_yellow_140
+  - first:
+      213: -3859152132696703122
+    second: tahoma_7_yellow_141
+  - first:
+      213: 5925884196816017244
+    second: tahoma_7_yellow_142
+  - first:
+      213: 8184432521290103544
+    second: tahoma_7_yellow_143
+  - first:
+      213: -5447415458264182516
+    second: tahoma_7_yellow_144
+  - first:
+      213: -1113046733331609959
+    second: tahoma_7_yellow_145
+  - first:
+      213: 767606976268475751
+    second: tahoma_7_yellow_146
+  - first:
+      213: 5682224636127514534
+    second: tahoma_7_yellow_147
+  - first:
+      213: -7673321938011170833
+    second: tahoma_7_yellow_148
+  - first:
+      213: -2923785316947808511
+    second: tahoma_7_yellow_149
+  - first:
+      213: 4364254068649619818
+    second: tahoma_7_yellow_150
+  - first:
+      213: 2632140499391578619
+    second: tahoma_7_yellow_151
+  - first:
+      213: -6882812746933638990
+    second: tahoma_7_yellow_152
+  - first:
+      213: 5582949088014206034
+    second: tahoma_7_yellow_153
+  - first:
+      213: -2929301556479301918
+    second: tahoma_7_yellow_154
+  - first:
+      213: -7718889033157247568
+    second: tahoma_7_yellow_155
+  - first:
+      213: 445189524462926195
+    second: tahoma_7_yellow_156
+  - first:
+      213: 6735319335001328816
+    second: tahoma_7_yellow_157
+  - first:
+      213: 5661222054164652114
+    second: tahoma_7_yellow_158
+  - first:
+      213: -460350140145480408
+    second: tahoma_7_yellow_159
+  - first:
+      213: 7633674427005851432
+    second: tahoma_7_yellow_160
+  - first:
+      213: 2770854352823310293
+    second: tahoma_7_yellow_161
+  - first:
+      213: -804077332437546682
+    second: tahoma_7_yellow_162
+  - first:
+      213: 2243483487159028718
+    second: tahoma_7_yellow_163
+  - first:
+      213: 9106957992979981022
+    second: tahoma_7_yellow_164
+  - first:
+      213: -4814632641193344578
+    second: tahoma_7_yellow_165
+  - first:
+      213: 4510733630724686196
+    second: tahoma_7_yellow_166
+  - first:
+      213: -6987988777537033823
+    second: tahoma_7_yellow_167
+  - first:
+      213: 2421697060298179635
+    second: tahoma_7_yellow_168
+  - first:
+      213: -438020006151969388
+    second: tahoma_7_yellow_169
+  - first:
+      213: 1252021538180183403
+    second: tahoma_7_yellow_170
+  - first:
+      213: -841168157723581554
+    second: tahoma_7_yellow_171
+  - first:
+      213: -5200798022125594553
+    second: tahoma_7_yellow_172
+  - first:
+      213: 1942227193298186598
+    second: tahoma_7_yellow_173
+  - first:
+      213: 3481603907983728911
+    second: tahoma_7_yellow_174
+  - first:
+      213: -1173716531033895248
+    second: tahoma_7_yellow_175
+  - first:
+      213: 5342600672837430338
+    second: tahoma_7_yellow_176
+  - first:
+      213: -8393360304822097978
+    second: tahoma_7_yellow_177
+  - first:
+      213: 7151645011852176178
+    second: tahoma_7_yellow_178
+  - first:
+      213: 8979594024667322596
+    second: tahoma_7_yellow_179
+  - first:
+      213: -217503735855710087
+    second: tahoma_7_yellow_180
+  - first:
+      213: 5921967896083007017
+    second: tahoma_7_yellow_181
+  - first:
+      213: -510322154696300154
+    second: tahoma_7_yellow_182
+  - first:
+      213: -6766941920970072626
+    second: tahoma_7_yellow_183
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: tahoma_7_yellow_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1222
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2bcaa4985751f310800000000000000
+      internalID: 1437025794070858543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_1
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1223
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2184cb6c3b36643b0800000000000000
+      internalID: -5528621868766181358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1200
+        width: 5
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a817e6ca3068f5d0800000000000000
+      internalID: -3028564943845255002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_3
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1210
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4324a9cf21d50e020800000000000000
+      internalID: 2368995740125643316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_4
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1201
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05058c1058d205270800000000000000
+      internalID: 8237133767744442448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1189
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6760b9e51ecb10f60800000000000000
+      internalID: 7998882089327593078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_6
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1190
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 405ac3228a354a240800000000000000
+      internalID: 4802055084277802244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_7
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1178
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c5fef5fbbdc871c0800000000000000
+      internalID: -4505625220014475840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_8
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1179
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fa67831b1058cdf0800000000000000
+      internalID: -159789709549671687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1167
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5dab57842f1d8040800000000000000
+      internalID: 4651408231893806428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_10
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1168
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d72e17701e1c2a790800000000000000
+      internalID: -7520235255518600579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1156
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66a43787d39ca5d30800000000000000
+      internalID: 4421067250068572774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_12
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1157
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a5810d11e3b6ca00800000000000000
+      internalID: 776505765203641768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_13
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1145
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00233351c0a03f280800000000000000
+      internalID: -9010847382426668544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_14
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1144
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7898eb8ffbc0f130800000000000000
+      internalID: 3598600400693401722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1134
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f6d432f84ea9fb70800000000000000
+      internalID: 8933362964190516982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_16
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1135
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1955ff89978a8e9a0800000000000000
+      internalID: -6203523246491478639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_17
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1123
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8b6fb8a1781d6c40800000000000000
+      internalID: 5507084795785472908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_18
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1111
+        width: 7
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf85aba8516ba7410800000000000000
+      internalID: 1475692031555295483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_19
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1113
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 908f9d6f3988b2940800000000000000
+      internalID: 5272457957850347529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1094
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e58d62a36f907680800000000000000
+      internalID: -8759326024959949342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_21
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1100
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4deed7eee7a480e50800000000000000
+      internalID: 6775747548406476500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_22
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1089
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05793ebe691106630800000000000000
+      internalID: 3918151015712659280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_23
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1073
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2714f57e0cacec90800000000000000
+      internalID: -7139142131180628178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_24
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1067
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b0d03ab0e7ef10b0800000000000000
+      internalID: -5755626846373752651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1046
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d353b07bc09eb0c20800000000000000
+      internalID: 3173886603232490813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_26
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1047
+        width: 7
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7595f0ed27ca94f0800000000000000
+      internalID: -821124982180047489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_27
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1035
+        width: 18
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 499c5ab61c945c970800000000000000
+      internalID: 8774500544084822420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1013
+        width: 6
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b0b0739485d3e0c0800000000000000
+      internalID: -4547556433328033613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_29
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1025
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83fa1932fb2376920800000000000000
+      internalID: 2983409074673135416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_30
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1014
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a164d63a9090a360800000000000000
+      internalID: 7178896798047822248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_31
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 936
+        width: 6
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 062a406e8f01af1c0800000000000000
+      internalID: -4469241019014798752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_32
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1003
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 929d30a86085d6b80800000000000000
+      internalID: -8399960944867550935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_33
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 992
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 463e3322a2c041710800000000000000
+      internalID: 1662967537508541284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_34
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 981
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 283297ecc455f8a00800000000000000
+      internalID: 760920650418824066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_35
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 970
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7c26ee26864c7ce0800000000000000
+      internalID: -1406171441520038786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_36
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 959
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62e44a0711c3e5260800000000000000
+      internalID: 7088168909129666086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_37
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 948
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad80dc3a675c272e0800000000000000
+      internalID: -2129422560447887142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_38
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 937
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9170fe690de66da20800000000000000
+      internalID: 3086776436773553945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_39
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 924
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 792ff2da145ec5c00800000000000000
+      internalID: 890838896553751191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_40
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 926
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d4ae82525c360fe0800000000000000
+      internalID: -1223223924514446119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_41
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 915
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b54ab582368739ff0800000000000000
+      internalID: -30548405187271589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_42
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 914
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f18dfad31e535f520800000000000000
+      internalID: 2735151590216292383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_43
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 904
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b96576fa8c68b0320800000000000000
+      internalID: 2525260212565661339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_44
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 901
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed04a4b7cd27f7fd0800000000000000
+      internalID: -2342026989922533154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_45
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 885
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad30fbd5e71327220800000000000000
+      internalID: 2482100763443004378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_46
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 893
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3098710dba010cd00800000000000000
+      internalID: 990810248138164483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_47
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 882
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f8a684793d0039a0800000000000000
+      internalID: -6255485341998339850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_48
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 871
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0ca52a94f12503f0800000000000000
+      internalID: -935304013167612917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_49
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 870
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f786984070c9de00800000000000000
+      internalID: 1070097974963898357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_50
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 863
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 404ea77c93d721830800000000000000
+      internalID: 4040429502818083844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_51
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 860
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dd418f09ddc4dc10800000000000000
+      internalID: 2077511660276370904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_52
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 826
+        width: 17
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f30ba3c5fd01a650800000000000000
+      internalID: 6242285907713131509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_53
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 849
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ccf8ca8c0e66a100800000000000000
+      internalID: 118903440318987464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_54
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 827
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d80d233357890aa0800000000000000
+      internalID: -6194271021060781867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_55
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 815
+        width: 5
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e6d7e35239ffe890800000000000000
+      internalID: -7426443265959274783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_56
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 816
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de7c506e862f2fb20800000000000000
+      internalID: 3166860020344539117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_57
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 804
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc17092b7aeae6110800000000000000
+      internalID: 1256133381361529292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_58
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 805
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b585fd32d61b66d0800000000000000
+      internalID: -2996276034846489165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_59
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 793
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c4b9c32d26108490800000000000000
+      internalID: -7746166975947492159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_60
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 794
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c23216e599b8b4a0800000000000000
+      internalID: -6577303202313391416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_61
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 782
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2972a274050778e10800000000000000
+      internalID: 2199850433087416210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_62
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 783
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99b10a511fac8c500800000000000000
+      internalID: 416806102330514329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_63
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 772
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea940ba72c6c53060800000000000000
+      internalID: 6932665739991075246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_64
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 771
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 759d43df701136f70800000000000000
+      internalID: 9179199191521745239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_65
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 761
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3517801b7b6aaced0800000000000000
+      internalID: -2392916944114650797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_66
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 758
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 885af39e233aaa900800000000000000
+      internalID: 696548531439117704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_67
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 749
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8ba17c10aced8a30800000000000000
+      internalID: 4219288598332156810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_68
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 750
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb0860faeb6f43ad0800000000000000
+      internalID: -2723280575811649345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_69
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 738
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a50ab7e1c1f8adc0800000000000000
+      internalID: -3627383684728224347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_70
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 739
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75b5a8db6a4128df0800000000000000
+      internalID: -179558328764310697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_71
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 727
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd13c114a6a900000800000000000000
+      internalID: 169781149577691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_72
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 728
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 897caa101f44d2ec0800000000000000
+      internalID: -3590137526038640744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_73
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 717
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee0d7c41150f39270800000000000000
+      internalID: 8256206772931907822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_74
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 716
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9d1104c8430d0ca0800000000000000
+      internalID: -6049175113427772002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_75
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 705
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e25f3b331e1dd0ee0800000000000000
+      internalID: -1293146752820185810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_76
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 706
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 549174f82da020390800000000000000
+      internalID: -7853702900717512379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_77
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 692
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5100918b55fc11950800000000000000
+      internalID: 6418138911047483413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_78
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 695
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39f9d4f93790a7960800000000000000
+      internalID: 7600397713339686803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_79
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 684
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d449f36054c7dc290800000000000000
+      internalID: -7868496338046970803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_80
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 683
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35f07979b93981050800000000000000
+      internalID: 5771525218947764051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_81
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 672
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be8fd6474f602f8e0800000000000000
+      internalID: -1661257665551140629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_82
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 673
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 996e8e23e15fe14b0800000000000000
+      internalID: -5467663387529255271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_83
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 661
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8bf58e2f81ca4620800000000000000
+      internalID: 2759230542422866830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_84
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 662
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45b0c55fb3f6ec790800000000000000
+      internalID: -7507941225469834412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_85
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 650
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d72bd465e009b9550800000000000000
+      internalID: 6168682505865900669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_86
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 651
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8357207a011956e90800000000000000
+      internalID: -7033055742361701064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_87
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 639
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b8012bee41a37a40800000000000000
+      internalID: 5364808941452724407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_88
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 640
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8acc70d2d59d2b50800000000000000
+      internalID: 6570072164076931722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_89
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 628
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17a90e51ae9bb1500800000000000000
+      internalID: 368092209601354353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_90
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 617
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9edfd2cb5191780a0800000000000000
+      internalID: -6879502324643004951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_91
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 595
+        width: 5
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 913fd02c548a5cf80800000000000000
+      internalID: -8086872538311953639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_92
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 584
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b711101463f108360800000000000000
+      internalID: 7169764924653113723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_93
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 573
+        width: 5
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a87b752ba0c2b9dd0800000000000000
+      internalID: -2478338745483937910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_94
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 562
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2d5a381a316bfa30800000000000000
+      internalID: 4250097575496670506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_95
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 551
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e861b1120be25a90800000000000000
+      internalID: -7326535249659074327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_96
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 552
+        width: 8
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0af578b951c4e2d10800000000000000
+      internalID: 2102701731715964832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_97
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 540
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f64d1ddea96ea160800000000000000
+      internalID: 7038679467381573367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_98
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 541
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc3f9ffccc3590250800000000000000
+      internalID: 5911348125028185035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_99
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 529
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c01d6504552899e50800000000000000
+      internalID: 6816622813665218828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_100
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 530
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1532365c680af3c70800000000000000
+      internalID: 8953051084933505873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_101
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 516
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8a2a8ef2ee2756c0800000000000000
+      internalID: -4154800578758038901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_102
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 519
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3e6cc59050805d20800000000000000
+      internalID: 3265250813442551356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_103
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 507
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b297f2823e2b4a00800000000000000
+      internalID: 741737358113084088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_104
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 508
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2469ed0795d471b0800000000000000
+      internalID: -5659663986947693525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_105
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 496
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce593f2d426c8d470800000000000000
+      internalID: 8419697364829443564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_106
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 497
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21d2ced790d29a370800000000000000
+      internalID: 8334242104216399122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_107
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 486
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da309b6dc7991aac0800000000000000
+      internalID: -3845623845340249171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_108
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 485
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbf1a8eca728e8870800000000000000
+      internalID: 8687024195207045052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_109
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 474
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d5520bc164b91840800000000000000
+      internalID: 5195381977259333079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_110
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 475
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa3989e8a800bc330800000000000000
+      internalID: 3732077311304438703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_111
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 463
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c118e93094e6e8770800000000000000
+      internalID: 8614944397078724892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_112
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 464
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bc8ffc43cb4fc140800000000000000
+      internalID: 4742092234826943665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_113
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 453
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa56ae1c52b7782e0800000000000000
+      internalID: -2123593297184528977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_114
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 441
+        width: 5
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40c7639823a695cd0800000000000000
+      internalID: -2568905347155198972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_115
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 442
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0a9f90646c8636c0800000000000000
+      internalID: -4163986442711754230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_116
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 431
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cbeb75524daa2770800000000000000
+      internalID: 8586866139948903363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_117
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 428
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c4f35e71a168a800800000000000000
+      internalID: 623855894627873991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_118
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 348
+        width: 5
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b35bc387fbb7db720800000000000000
+      internalID: 2863581000363717947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_119
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 420
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4ae729bd803f7920800000000000000
+      internalID: 2990162062852221517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_120
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 409
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c25979cdd17b13e0800000000000000
+      internalID: -2081945205346839864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_121
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 398
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0dc85d71e4c53d880800000000000000
+      internalID: -8587418573988328240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_122
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 387
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ce71e237a94d90b0800000000000000
+      internalID: -5720334969228656953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_123
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 374
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a0f4b76a82c09990800000000000000
+      internalID: -7381185889559056219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_124
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 365
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2fbf54125d8c92b20800000000000000
+      internalID: 3110237835387862002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_125
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 354
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca158c050eba16e20800000000000000
+      internalID: 3342141378401948076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_126
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 5
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b965bffa2d1ea5120800000000000000
+      internalID: 2403481646167447195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_127
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 343
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01a1d16b0ca55bf40800000000000000
+      internalID: 5743596683516516880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_128
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 332
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b19ad05dd3d20120800000000000000
+      internalID: 2378696500702777779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_129
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 321
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ffea62dbbce867e0800000000000000
+      internalID: -1771906161937027085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_130
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 309
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f04a51704b5c0fd40800000000000000
+      internalID: 5616206112334652431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_131
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 308
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c503c9d6891cf6a0800000000000000
+      internalID: -6414223702312680000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_132
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 299
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3a9651e31dda71b0800000000000000
+      internalID: -5657966904382940612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_133
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 298
+        width: 5
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fa215fac25798a80800000000000000
+      internalID: -8464105189885793545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_134
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 287
+        width: 5
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f9008061cb4e7f40800000000000000
+      internalID: 5728099069981624817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_135
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 286
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05234ca63ebccb040800000000000000
+      internalID: 4664827491658248784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_136
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 276
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c154fdb0b37e37d0800000000000000
+      internalID: -2936782704060640831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_137
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 277
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94de6da11d678d940800000000000000
+      internalID: 5321133600208776521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_138
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 265
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4de83d8835d60a8d0800000000000000
+      internalID: -2837147559698133292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_139
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 266
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad4b6aa7c6be77b60800000000000000
+      internalID: 7743916935433598170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_140
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 254
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ee57bf41c6ec3900800000000000000
+      internalID: 665660562884484839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_141
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 255
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6ffb6cf499817ac0800000000000000
+      internalID: -3859152132696703122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_142
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 243
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c57d153c748fc3250800000000000000
+      internalID: 5925884196816017244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_143
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 244
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fab6afd302f49170800000000000000
+      internalID: 8184432521290103544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_144
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 233
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c01113a9084e664b0800000000000000
+      internalID: -5447415458264182516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_145
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 230
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9964c59a4e9ad80f0800000000000000
+      internalID: -1113046733331609959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_146
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 221
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76d189b5a7617aa00800000000000000
+      internalID: 767606976268475751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_147
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 222
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6af8a5a63315bde40800000000000000
+      internalID: 5682224636127514534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_148
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 210
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe7d1a53a52e28590800000000000000
+      internalID: -7673321938011170833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_149
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 211
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10fa2dfbeb0ac67d0800000000000000
+      internalID: -2923785316947808511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_150
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 200
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a61f96fd3f1f09c30800000000000000
+      internalID: 4364254068649619818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_151
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 199
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf18729a6dd378420800000000000000
+      internalID: 2632140499391578619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_152
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 188
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b86d7bf5465b70a0800000000000000
+      internalID: -6882812746933638990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_153
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 189
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2548d26ad9e9a7d40800000000000000
+      internalID: 5582949088014206034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_154
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 178
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e66d0621c70957d0800000000000000
+      internalID: -2929301556479301918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_155
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 177
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bdf00e125ff0e490800000000000000
+      internalID: -7718889033157247568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_156
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 167
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37976578381ad2600800000000000000
+      internalID: 445189524462926195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_157
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 164
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bc039bff39a87d50800000000000000
+      internalID: 6735319335001328816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_158
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 156
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 250671db673b09e40800000000000000
+      internalID: 5661222054164652114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_159
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 155
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82dc3509cf18c99f0800000000000000
+      internalID: -460350140145480408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_160
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 145
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 827daa8427240f960800000000000000
+      internalID: 7633674427005851432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_161
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 144
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d7d0607a5d047620800000000000000
+      internalID: 2770854352823310293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_162
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 134
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 649cd142de757d4f0800000000000000
+      internalID: -804077332437546682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_163
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 133
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eeb81975854722f10800000000000000
+      internalID: 2243483487159028718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_164
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 121
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed2e9fb3b0a626e70800000000000000
+      internalID: 9106957992979981022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_165
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 122
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb18ba13f1dfe2db0800000000000000
+      internalID: -4814632641193344578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_166
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 111
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 471c0c79658599e30800000000000000
+      internalID: 4510733630724686196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_167
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 112
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a92d741b3da50f90800000000000000
+      internalID: -6987988777537033823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_168
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 98
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3344ea845a89b9120800000000000000
+      internalID: 2421697060298179635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_169
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 101
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4952cc80027dbe9f0800000000000000
+      internalID: -438020006151969388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_170
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 87
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b653e5a94f2106110800000000000000
+      internalID: 1252021538180183403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_171
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 90
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e83248a64029354f0800000000000000
+      internalID: -841168157723581554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_172
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 79
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74856aef0cd03d7b0800000000000000
+      internalID: -5200798022125594553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_173
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 45
+        width: 5
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66174a9875d24fa10800000000000000
+      internalID: 1942227193298186598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_174
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 68
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f016bf7de44215030800000000000000
+      internalID: 3481603907983728911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_175
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 57
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0be88bc980f16bfe0800000000000000
+      internalID: -1173716531033895248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_176
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 46
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24cec31710bb42a40800000000000000
+      internalID: 5342600672837430338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_177
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 34
+        width: 5
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c7e63fc54bc48b80800000000000000
+      internalID: -8393360304822097978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_178
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 23
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23ba42b4f3fbf3360800000000000000
+      internalID: 7151645011852176178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_179
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 33
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e81483803ded9c70800000000000000
+      internalID: 8979594024667322596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_180
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 24
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 970000f21854bfcf0800000000000000
+      internalID: -217503735855710087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_181
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 12
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9268b41fc6e0f2250800000000000000
+      internalID: 5921967896083007017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_182
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 13
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 689a05044b8fae8f0800000000000000
+      internalID: -510322154696300154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tahoma_7_yellow_183
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecd11e8fc2ef612a0800000000000000
+      internalID: -6766941920970072626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      tahoma_7_yellow_0: 1437025794070858543
+      tahoma_7_yellow_1: -5528621868766181358
+      tahoma_7_yellow_10: -7520235255518600579
+      tahoma_7_yellow_100: 8953051084933505873
+      tahoma_7_yellow_101: -4154800578758038901
+      tahoma_7_yellow_102: 3265250813442551356
+      tahoma_7_yellow_103: 741737358113084088
+      tahoma_7_yellow_104: -5659663986947693525
+      tahoma_7_yellow_105: 8419697364829443564
+      tahoma_7_yellow_106: 8334242104216399122
+      tahoma_7_yellow_107: -3845623845340249171
+      tahoma_7_yellow_108: 8687024195207045052
+      tahoma_7_yellow_109: 5195381977259333079
+      tahoma_7_yellow_11: 4421067250068572774
+      tahoma_7_yellow_110: 3732077311304438703
+      tahoma_7_yellow_111: 8614944397078724892
+      tahoma_7_yellow_112: 4742092234826943665
+      tahoma_7_yellow_113: -2123593297184528977
+      tahoma_7_yellow_114: -2568905347155198972
+      tahoma_7_yellow_115: -4163986442711754230
+      tahoma_7_yellow_116: 8586866139948903363
+      tahoma_7_yellow_117: 623855894627873991
+      tahoma_7_yellow_118: 2863581000363717947
+      tahoma_7_yellow_119: 2990162062852221517
+      tahoma_7_yellow_12: 776505765203641768
+      tahoma_7_yellow_120: -2081945205346839864
+      tahoma_7_yellow_121: -8587418573988328240
+      tahoma_7_yellow_122: -5720334969228656953
+      tahoma_7_yellow_123: -7381185889559056219
+      tahoma_7_yellow_124: 3110237835387862002
+      tahoma_7_yellow_125: 3342141378401948076
+      tahoma_7_yellow_126: 2403481646167447195
+      tahoma_7_yellow_127: 5743596683516516880
+      tahoma_7_yellow_128: 2378696500702777779
+      tahoma_7_yellow_129: -1771906161937027085
+      tahoma_7_yellow_13: -9010847382426668544
+      tahoma_7_yellow_130: 5616206112334652431
+      tahoma_7_yellow_131: -6414223702312680000
+      tahoma_7_yellow_132: -5657966904382940612
+      tahoma_7_yellow_133: -8464105189885793545
+      tahoma_7_yellow_134: 5728099069981624817
+      tahoma_7_yellow_135: 4664827491658248784
+      tahoma_7_yellow_136: -2936782704060640831
+      tahoma_7_yellow_137: 5321133600208776521
+      tahoma_7_yellow_138: -2837147559698133292
+      tahoma_7_yellow_139: 7743916935433598170
+      tahoma_7_yellow_14: 3598600400693401722
+      tahoma_7_yellow_140: 665660562884484839
+      tahoma_7_yellow_141: -3859152132696703122
+      tahoma_7_yellow_142: 5925884196816017244
+      tahoma_7_yellow_143: 8184432521290103544
+      tahoma_7_yellow_144: -5447415458264182516
+      tahoma_7_yellow_145: -1113046733331609959
+      tahoma_7_yellow_146: 767606976268475751
+      tahoma_7_yellow_147: 5682224636127514534
+      tahoma_7_yellow_148: -7673321938011170833
+      tahoma_7_yellow_149: -2923785316947808511
+      tahoma_7_yellow_15: 8933362964190516982
+      tahoma_7_yellow_150: 4364254068649619818
+      tahoma_7_yellow_151: 2632140499391578619
+      tahoma_7_yellow_152: -6882812746933638990
+      tahoma_7_yellow_153: 5582949088014206034
+      tahoma_7_yellow_154: -2929301556479301918
+      tahoma_7_yellow_155: -7718889033157247568
+      tahoma_7_yellow_156: 445189524462926195
+      tahoma_7_yellow_157: 6735319335001328816
+      tahoma_7_yellow_158: 5661222054164652114
+      tahoma_7_yellow_159: -460350140145480408
+      tahoma_7_yellow_16: -6203523246491478639
+      tahoma_7_yellow_160: 7633674427005851432
+      tahoma_7_yellow_161: 2770854352823310293
+      tahoma_7_yellow_162: -804077332437546682
+      tahoma_7_yellow_163: 2243483487159028718
+      tahoma_7_yellow_164: 9106957992979981022
+      tahoma_7_yellow_165: -4814632641193344578
+      tahoma_7_yellow_166: 4510733630724686196
+      tahoma_7_yellow_167: -6987988777537033823
+      tahoma_7_yellow_168: 2421697060298179635
+      tahoma_7_yellow_169: -438020006151969388
+      tahoma_7_yellow_17: 5507084795785472908
+      tahoma_7_yellow_170: 1252021538180183403
+      tahoma_7_yellow_171: -841168157723581554
+      tahoma_7_yellow_172: -5200798022125594553
+      tahoma_7_yellow_173: 1942227193298186598
+      tahoma_7_yellow_174: 3481603907983728911
+      tahoma_7_yellow_175: -1173716531033895248
+      tahoma_7_yellow_176: 5342600672837430338
+      tahoma_7_yellow_177: -8393360304822097978
+      tahoma_7_yellow_178: 7151645011852176178
+      tahoma_7_yellow_179: 8979594024667322596
+      tahoma_7_yellow_18: 1475692031555295483
+      tahoma_7_yellow_180: -217503735855710087
+      tahoma_7_yellow_181: 5921967896083007017
+      tahoma_7_yellow_182: -510322154696300154
+      tahoma_7_yellow_183: -6766941920970072626
+      tahoma_7_yellow_19: 5272457957850347529
+      tahoma_7_yellow_2: -3028564943845255002
+      tahoma_7_yellow_20: -8759326024959949342
+      tahoma_7_yellow_21: 6775747548406476500
+      tahoma_7_yellow_22: 3918151015712659280
+      tahoma_7_yellow_23: -7139142131180628178
+      tahoma_7_yellow_24: -5755626846373752651
+      tahoma_7_yellow_25: 3173886603232490813
+      tahoma_7_yellow_26: -821124982180047489
+      tahoma_7_yellow_27: 8774500544084822420
+      tahoma_7_yellow_28: -4547556433328033613
+      tahoma_7_yellow_29: 2983409074673135416
+      tahoma_7_yellow_3: 2368995740125643316
+      tahoma_7_yellow_30: 7178896798047822248
+      tahoma_7_yellow_31: -4469241019014798752
+      tahoma_7_yellow_32: -8399960944867550935
+      tahoma_7_yellow_33: 1662967537508541284
+      tahoma_7_yellow_34: 760920650418824066
+      tahoma_7_yellow_35: -1406171441520038786
+      tahoma_7_yellow_36: 7088168909129666086
+      tahoma_7_yellow_37: -2129422560447887142
+      tahoma_7_yellow_38: 3086776436773553945
+      tahoma_7_yellow_39: 890838896553751191
+      tahoma_7_yellow_4: 8237133767744442448
+      tahoma_7_yellow_40: -1223223924514446119
+      tahoma_7_yellow_41: -30548405187271589
+      tahoma_7_yellow_42: 2735151590216292383
+      tahoma_7_yellow_43: 2525260212565661339
+      tahoma_7_yellow_44: -2342026989922533154
+      tahoma_7_yellow_45: 2482100763443004378
+      tahoma_7_yellow_46: 990810248138164483
+      tahoma_7_yellow_47: -6255485341998339850
+      tahoma_7_yellow_48: -935304013167612917
+      tahoma_7_yellow_49: 1070097974963898357
+      tahoma_7_yellow_5: 7998882089327593078
+      tahoma_7_yellow_50: 4040429502818083844
+      tahoma_7_yellow_51: 2077511660276370904
+      tahoma_7_yellow_52: 6242285907713131509
+      tahoma_7_yellow_53: 118903440318987464
+      tahoma_7_yellow_54: -6194271021060781867
+      tahoma_7_yellow_55: -7426443265959274783
+      tahoma_7_yellow_56: 3166860020344539117
+      tahoma_7_yellow_57: 1256133381361529292
+      tahoma_7_yellow_58: -2996276034846489165
+      tahoma_7_yellow_59: -7746166975947492159
+      tahoma_7_yellow_6: 4802055084277802244
+      tahoma_7_yellow_60: -6577303202313391416
+      tahoma_7_yellow_61: 2199850433087416210
+      tahoma_7_yellow_62: 416806102330514329
+      tahoma_7_yellow_63: 6932665739991075246
+      tahoma_7_yellow_64: 9179199191521745239
+      tahoma_7_yellow_65: -2392916944114650797
+      tahoma_7_yellow_66: 696548531439117704
+      tahoma_7_yellow_67: 4219288598332156810
+      tahoma_7_yellow_68: -2723280575811649345
+      tahoma_7_yellow_69: -3627383684728224347
+      tahoma_7_yellow_7: -4505625220014475840
+      tahoma_7_yellow_70: -179558328764310697
+      tahoma_7_yellow_71: 169781149577691
+      tahoma_7_yellow_72: -3590137526038640744
+      tahoma_7_yellow_73: 8256206772931907822
+      tahoma_7_yellow_74: -6049175113427772002
+      tahoma_7_yellow_75: -1293146752820185810
+      tahoma_7_yellow_76: -7853702900717512379
+      tahoma_7_yellow_77: 6418138911047483413
+      tahoma_7_yellow_78: 7600397713339686803
+      tahoma_7_yellow_79: -7868496338046970803
+      tahoma_7_yellow_8: -159789709549671687
+      tahoma_7_yellow_80: 5771525218947764051
+      tahoma_7_yellow_81: -1661257665551140629
+      tahoma_7_yellow_82: -5467663387529255271
+      tahoma_7_yellow_83: 2759230542422866830
+      tahoma_7_yellow_84: -7507941225469834412
+      tahoma_7_yellow_85: 6168682505865900669
+      tahoma_7_yellow_86: -7033055742361701064
+      tahoma_7_yellow_87: 5364808941452724407
+      tahoma_7_yellow_88: 6570072164076931722
+      tahoma_7_yellow_89: 368092209601354353
+      tahoma_7_yellow_9: 4651408231893806428
+      tahoma_7_yellow_90: -6879502324643004951
+      tahoma_7_yellow_91: -8086872538311953639
+      tahoma_7_yellow_92: 7169764924653113723
+      tahoma_7_yellow_93: -2478338745483937910
+      tahoma_7_yellow_94: 4250097575496670506
+      tahoma_7_yellow_95: -7326535249659074327
+      tahoma_7_yellow_96: 2102701731715964832
+      tahoma_7_yellow_97: 7038679467381573367
+      tahoma_7_yellow_98: 5911348125028185035
+      tahoma_7_yellow_99: 6816622813665218828
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
