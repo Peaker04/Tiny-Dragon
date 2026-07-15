@@ -287,17 +287,26 @@ public class PlayerInputReader : MonoBehaviour
         if (!kickInputEnabled) kickBufferTimer = 0f;
     }
 
+    // [Bug#3] Đọc input di chuyển ngang, ưu tiên analog (controller / WASD) trước
+    // - Input.GetAxisRaw("Horizontal") đã bao gồm: A/D, LeftArrow/RightArrow, và controller stick
+    // - Bug cũ: arrow keys ghi đè hoàn toàn axis value = ±1 cứng, làm mất analog input từ controller
+    // - Fix: dùng Mathf.Abs(horizontal) >= 0.01f để kiểm tra nếu axis đã có input thì dùng axis luôn
+    //     -> arrow keys và controller đều qua axis, không cần xử lý riêng arrow keys
+    //     -> nếu axis = 0 (không có input nào), mới dùng arrow keys làm fallback
+    // Luồng: Update() -> ReadHorizontalInput() -> Input.GetAxisRaw("Horizontal")
+    //     -> nếu axis != 0: trả về giá trị analog mượt mà (từ -1 đến 1)
+    //     -> nếu axis == 0: kiểm tra arrow keys, trả về ±1 nếu có
+    //     -> nếu không có input gì: trả về 0
     private float ReadHorizontalInput()
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
-        bool movingLeft = Input.GetKey(KeyCode.LeftArrow);
-        bool movingRight = Input.GetKey(KeyCode.RightArrow);
-
-        if (movingLeft == movingRight)
+        if (Mathf.Abs(horizontal) >= 0.01f)
         {
             return horizontal;
         }
 
-        return movingLeft ? -1f : 1f;
+        if (Input.GetKey(KeyCode.LeftArrow)) return -1f;
+        if (Input.GetKey(KeyCode.RightArrow)) return 1f;
+        return 0f;
     }
 }

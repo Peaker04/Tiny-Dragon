@@ -15,6 +15,15 @@ public class PlayerHealth : MonoBehaviour
 
     // Guide-scene immortality is handled exclusively by PlayerDeathSceneHandler.
 
+    // [Bug#2] i-frames (invincibility frames): khoảng thời gian player "miễn thương" sau khi bị đánh
+    // - invincibilityDuration: thời gian i-frames tính bằng giây (mặc định 0.5s)
+    // - immuneUntil: thời điểm (Time.time) mà i-frames kết thúc
+    // Luồng: TakeDamage() -> kiểm tra Time.time < immuneUntil? -> nếu đang i-frames thì bỏ qua damage
+    //     -> nếu không, nhận damage, set immuneUntil = Time.time + invincibilityDuration
+    //     -> trong khoảng thời gian này mọi đòn tiếp theo đều bị bỏ qua
+    [SerializeField] private float invincibilityDuration = 0.5f;
+    private float immuneUntil;
+
     private int currentHealth;
     private int flatDamageReduction;
     private int damageReductionPercent;
@@ -35,6 +44,7 @@ public class PlayerHealth : MonoBehaviour
         EnsureDeathSceneHandler();
         currentHealth = maxHealth;
         isDead = false;
+        immuneUntil = 0f;
         EnsureDamagePopupPool();
     }
 
@@ -59,6 +69,20 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
+        // [Bug#2] Kiểm tra i-frames: nếu đang trong thời gian miễn thương (immuneUntil) thì bỏ qua damage
+        // - immuneUntil được set sau mỗi lần nhận damage thành công = Time.time + invincibilityDuration
+        // - Mục đích: tránh bị stunlock / chết quá nhanh khi trúng nhiều đòn liên tiếp
+        // - Đây là cơ chế "grace period" tiêu chuẩn trong game action
+        if (Time.time < immuneUntil)
+        {
+            Debug.Log($"Player ignored damage (i-frame active). Remaining: {immuneUntil - Time.time:F2}s");
+            return;
+        }
+
+        // [Bug#2] Kích hoạt i-frames ngay: set thời điểm kết thúc miễn thương
+        // - Bắt đầu từ ngay frame này, mọi đòn đánh đều bị bỏ qua cho đến khi Time.time >= immuneUntil
+        immuneUntil = Time.time + invincibilityDuration;
+
         int effectiveDamage = CalculateIncomingDamage(damage);
         currentHealth -= effectiveDamage;
         if (currentHealth <= 0)
@@ -68,6 +92,7 @@ public class PlayerHealth : MonoBehaviour
 
         TinyDragonSaveManager.Instance.SaveCurrentHealth(currentHealth, maxHealth);
         ShowDamagePopup(effectiveDamage);
+
         HealthChanged?.Invoke(this);
         Debug.Log($"Player took {effectiveDamage} damage. HP: {currentHealth}/{maxHealth}");
 
