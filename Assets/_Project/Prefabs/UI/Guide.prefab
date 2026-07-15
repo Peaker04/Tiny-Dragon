@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -36}
-  m_SizeDelta: {x: 820, y: 86}
+  m_AnchoredPosition: {x: 485, y: -15.635986}
+  m_SizeDelta: {x: 664.9014, y: 116.7271}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &5157441110209232104
 CanvasRenderer:
@@ -219,7 +219,11 @@ MonoBehaviour:
     enableJump: 0
     enableAttack: 0
     enablePowerShot: 0
+    enablePunch: 0
+    enableKick: 0
     enableInventory: 0
+    enablePause: 0
+    enableSettings: 0
     customEnables: []
     onStepStart:
       m_PersistentCalls:
@@ -232,7 +236,11 @@ MonoBehaviour:
     enableJump: 1
     enableAttack: 0
     enablePowerShot: 0
+    enablePunch: 0
+    enableKick: 0
     enableInventory: 0
+    enablePause: 0
+    enableSettings: 0
     customEnables: []
     onStepStart:
       m_PersistentCalls:
@@ -245,7 +253,11 @@ MonoBehaviour:
     enableJump: 1
     enableAttack: 1
     enablePowerShot: 0
+    enablePunch: 0
+    enableKick: 0
     enableInventory: 0
+    enablePause: 0
+    enableSettings: 0
     customEnables: []
     onStepStart:
       m_PersistentCalls:
@@ -258,7 +270,11 @@ MonoBehaviour:
     enableJump: 1
     enableAttack: 1
     enablePowerShot: 1
+    enablePunch: 0
+    enableKick: 0
     enableInventory: 0
+    enablePause: 0
+    enableSettings: 0
     customEnables: []
     onStepStart:
       m_PersistentCalls:
@@ -266,41 +282,85 @@ MonoBehaviour:
     _previousEnableAll: 0
   - instructionText: "Nh\u1EA5n ph\xEDm B \u0111\u1EC3 m\u1EDF kho \u0111\u1ED3"
     requiredKeys: 62000000
-    enableAll: 1
+    enableAll: 0
     enableMovement: 1
     enableJump: 1
     enableAttack: 1
     enablePowerShot: 1
+    enablePunch: 0
+    enableKick: 0
     enableInventory: 1
+    enablePause: 0
+    enableSettings: 0
     customEnables: []
     onStepStart:
       m_PersistentCalls:
         m_Calls: []
-    _previousEnableAll: 1
+    _previousEnableAll: 0
   - instructionText: "Nh\u1EA5n ph\xEDm I \u0111\u1EC3 m\u1EDF c\xE0i \u0111\u1EB7t"
     requiredKeys: 69000000
-    enableAll: 1
+    enableAll: 0
     enableMovement: 1
     enableJump: 1
     enableAttack: 1
     enablePowerShot: 1
+    enablePunch: 0
+    enableKick: 0
     enableInventory: 1
-    customEnables:
-    - Settings
+    enablePause: 1
+    enableSettings: 0
+    customEnables: []
     onStepStart:
       m_PersistentCalls:
         m_Calls: []
-    _previousEnableAll: 1
+    _previousEnableAll: 0
   - instructionText: "Nh\u1EA5n ph\xEDm P \u0111\u1EC3 d\u1EEBng game"
     requiredKeys: 70000000
+    enableAll: 0
+    enableMovement: 1
+    enableJump: 1
+    enableAttack: 1
+    enablePowerShot: 1
+    enablePunch: 0
+    enableKick: 0
+    enableInventory: 1
+    enablePause: 1
+    enableSettings: 1
+    customEnables: []
+    onStepStart:
+      m_PersistentCalls:
+        m_Calls: []
+    _previousEnableAll: 0
+  - instructionText: "Nh\u1EA5n ph\xEDm L \u0111\u1EC3 \u0111\u1EA5m"
+    requiredKeys: 6c000000
+    enableAll: 0
+    enableMovement: 1
+    enableJump: 1
+    enableAttack: 1
+    enablePowerShot: 1
+    enablePunch: 1
+    enableKick: 0
+    enableInventory: 1
+    enablePause: 1
+    enableSettings: 1
+    customEnables: []
+    onStepStart:
+      m_PersistentCalls:
+        m_Calls: []
+    _previousEnableAll: 0
+  - instructionText: "Nh\u1EA5n ph\xEDm M \u0111\u1EC3 \u0111\xE1"
+    requiredKeys: 6d000000
     enableAll: 1
     enableMovement: 1
     enableJump: 1
     enableAttack: 1
     enablePowerShot: 1
+    enablePunch: 1
+    enableKick: 1
     enableInventory: 1
-    customEnables:
-    - Pause
+    enablePause: 1
+    enableSettings: 1
+    customEnables: []
     onStepStart:
       m_PersistentCalls:
         m_Calls: []
@@ -341,8 +401,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -36}
-  m_SizeDelta: {x: 780, y: 76}
+  m_AnchoredPosition: {x: 484.9997, y: -15.635986}
+  m_SizeDelta: {x: 664.9, y: 116.73}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &3389782696303902860
 CanvasRenderer:
@@ -381,7 +441,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4288052477
+    rgba: 4288012532
   m_fontColor: {r: 0.95686275, g: 0.8784314, b: 0.58431375, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -399,7 +459,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
+  m_fontSize: 32
   m_fontSizeBase: 28
   m_fontWeight: 700
   m_enableAutoSizing: 1
@@ -438,7 +498,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 28, y: 8, z: 28, w: 8}
+  m_margin: {x: 0.19934082, y: 0.68408203, z: 0.19934082, w: 0.684021}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
