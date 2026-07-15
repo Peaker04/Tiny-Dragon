@@ -27,6 +27,7 @@ namespace TinyDragon.UI
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
             EnsureEventSystem();
+            BindPanel();
             BindButtons();
 
             if (gameOverPanel != null)
@@ -37,7 +38,22 @@ namespace TinyDragon.UI
 
         private void OnEnable()
         {
+            BindPanel();
             BindButtons();
+        }
+
+        private void BindPanel()
+        {
+            if (gameOverPanel != null)
+            {
+                return;
+            }
+
+            Transform panel = transform.Find("Panel");
+            if (panel != null)
+            {
+                gameOverPanel = panel.gameObject;
+            }
         }
 
         private void BindButtons()
@@ -73,6 +89,7 @@ namespace TinyDragon.UI
         public void GameOverActive()
         {
             EnsureEventSystem();
+            BindPanel();
             BindButtons();
 
             if (gameOverPanel != null)

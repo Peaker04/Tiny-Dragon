@@ -35,7 +35,7 @@ namespace TinyDragon.Data
             }
         }
 
-        public bool IsReady => isReady;
+        public bool IsReady => isReady && database != null && database.IsOpen;
 
         public string DatabasePath => Path.Combine(Application.persistentDataPath, databaseFileName);
 
@@ -106,20 +106,25 @@ namespace TinyDragon.Data
         {
             database?.Dispose();
             database = null;
+            isReady = false;
         }
 
         public void Initialize()
         {
-            if (isReady)
+            if (isReady && database != null && database.IsOpen)
             {
                 return;
             }
 
+            isReady = false;
             LoadSqlAssetsIfNeeded();
 
+            database?.Dispose();
             database = new SqliteDatabase(DatabasePath);
             if (!database.Open())
             {
+                database.Dispose();
+                database = null;
                 return;
             }
 
@@ -135,12 +140,7 @@ namespace TinyDragon.Data
 
         public void SaveCurrentPlayer()
         {
-            if (!isReady)
-            {
-                Initialize();
-            }
-
-            if (!isReady)
+            if (!EnsureReady())
             {
                 return;
             }
@@ -375,7 +375,12 @@ namespace TinyDragon.Data
 
         private void SavePlayer(PlayerSaveSnapshot snapshot)
         {
-            string stageId = GetStageIdForScene(snapshot.SceneName);
+            if (!EnsureReady())
+            {
+                return;
+            }
+
+            string stageId = GetStageIdForScene(snapshot.SceneName) ?? "stage_guide";
 
             using (IDbCommand command = database.CreateCommand(
                 "UPDATE Player SET currentStageId = @stageId, currentSceneName = @sceneName, " +
@@ -833,16 +838,21 @@ namespace TinyDragon.Data
 
         private bool EnsureReady()
         {
-            if (!isReady)
+            if (!isReady || database == null || !database.IsOpen)
             {
                 Initialize();
             }
 
-            return isReady;
+            return isReady && database != null && database.IsOpen;
         }
 
         private string GetStageIdForScene(string sceneName)
         {
+            if (string.IsNullOrWhiteSpace(sceneName) || database == null || !database.IsOpen)
+            {
+                return null;
+            }
+
             using (IDbCommand command = database.CreateCommand(
                 "SELECT id FROM Stage WHERE sceneName = @sceneName LIMIT 1;"
             ))
