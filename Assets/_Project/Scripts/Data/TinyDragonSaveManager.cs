@@ -106,6 +106,7 @@ namespace TinyDragon.Data
         {
             database?.Dispose();
             database = null;
+            isReady = false;
         }
 
         public void Initialize()
@@ -375,7 +376,12 @@ namespace TinyDragon.Data
 
         private void SavePlayer(PlayerSaveSnapshot snapshot)
         {
-            string stageId = GetStageIdForScene(snapshot.SceneName);
+            if (!EnsureReady())
+            {
+                return;
+            }
+
+            string stageId = GetOrCreateStageIdForScene(snapshot.SceneName);
 
             using (IDbCommand command = database.CreateCommand(
                 "UPDATE Player SET currentStageId = @stageId, currentSceneName = @sceneName, " +
@@ -410,7 +416,7 @@ namespace TinyDragon.Data
                 sceneName = "Level_01_guide";
             }
 
-            string stageId = GetStageIdForScene(sceneName) ?? "stage_guide";
+            string stageId = GetOrCreateStageIdForScene(sceneName) ?? "stage_guide";
             using (IDbCommand command = database.CreateCommand(
                 "INSERT OR IGNORE INTO Player (id, displayName, currentStageId, currentSceneName) " +
                 "VALUES (@playerId, @displayName, @stageId, @sceneName);"
@@ -833,16 +839,86 @@ namespace TinyDragon.Data
 
         private bool EnsureReady()
         {
+            if (isReady && database != null && database.IsOpen)
+            {
+                return true;
+            }
+
+            if (isReady && (database == null || !database.IsOpen))
+            {
+                isReady = false;
+            }
+
             if (!isReady)
             {
                 Initialize();
             }
 
-            return isReady;
+            return isReady && database != null && database.IsOpen;
+        }
+
+        private string GetOrCreateStageIdForScene(string sceneName)
+        {
+            if (database == null || !database.IsOpen || string.IsNullOrWhiteSpace(sceneName))
+            {
+                return null;
+            }
+
+            string existingStageId = GetStageIdForScene(sceneName);
+            if (!string.IsNullOrWhiteSpace(existingStageId))
+            {
+                return existingStageId;
+            }
+
+            string generatedStageId = $"stage_{SanitizeId(sceneName)}";
+            using (IDbCommand command = database.CreateCommand(
+                "INSERT OR IGNORE INTO Stage " +
+                "(id, zoneId, stageType, name, description, sceneName, orderIndex, minLevelRequired, rewardExp, rewardGold) " +
+                "VALUES (@id, @zoneId, @stageType, @name, @description, @sceneName, @orderIndex, @minLevelRequired, @rewardExp, @rewardGold);"
+            ))
+            {
+                SqliteDatabase.AddParameter(command, "@id", generatedStageId);
+                SqliteDatabase.AddParameter(command, "@zoneId", "zone_earth_start");
+                SqliteDatabase.AddParameter(command, "@stageType", "NORMAL");
+                SqliteDatabase.AddParameter(command, "@name", sceneName);
+                SqliteDatabase.AddParameter(command, "@description", $"Runtime stage entry for {sceneName}.");
+                SqliteDatabase.AddParameter(command, "@sceneName", sceneName);
+                SqliteDatabase.AddParameter(command, "@orderIndex", 99);
+                SqliteDatabase.AddParameter(command, "@minLevelRequired", 1);
+                SqliteDatabase.AddParameter(command, "@rewardExp", 0);
+                SqliteDatabase.AddParameter(command, "@rewardGold", 0);
+                command.ExecuteNonQuery();
+            }
+
+            return GetStageIdForScene(sceneName) ?? generatedStageId;
+        }
+
+        private static string SanitizeId(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return "unknown";
+            }
+
+            char[] chars = value.ToLowerInvariant().ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (!char.IsLetterOrDigit(chars[i]))
+                {
+                    chars[i] = '_';
+                }
+            }
+
+            return new string(chars);
         }
 
         private string GetStageIdForScene(string sceneName)
         {
+            if (database == null || !database.IsOpen || string.IsNullOrWhiteSpace(sceneName))
+            {
+                return null;
+            }
+
             using (IDbCommand command = database.CreateCommand(
                 "SELECT id FROM Stage WHERE sceneName = @sceneName LIMIT 1;"
             ))

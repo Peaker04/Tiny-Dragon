@@ -50,6 +50,8 @@ public class BossAI : MonoBehaviour
 
     [Header("Animator")]
     [SerializeField] private string movingParameterName = "MoveDash";
+    [SerializeField] private string idleStateName = "Boss_idle";
+    [SerializeField] private string movingStateName = "Boss_move_dash";
     [SerializeField] private string hitTriggerName = "Hit";
 
     private Rigidbody2D rb;
@@ -239,10 +241,49 @@ public class BossAI : MonoBehaviour
         energyDamage = Mathf.Max(rangedDamage, 1);
     }
 
+    public void ApplyPhaseMultipliers(float movementMultiplier, float attackIntervalMultiplier)
+    {
+        moveSpeed = Mathf.Max(moveSpeed * movementMultiplier, 0.1f);
+        meleeCooldown = Mathf.Max(meleeCooldown * attackIntervalMultiplier, 0.01f);
+        energyCooldown = Mathf.Max(energyCooldown * attackIntervalMultiplier, 0.01f);
+        comboCooldown = Mathf.Max(comboCooldown * attackIntervalMultiplier, 0.01f);
+    }
+
+    public void ConfigureAnimationProfile(
+        string movingParameter,
+        string idleState,
+        string movingState,
+        string meleeTrigger,
+        string meleeState,
+        string energyTrigger,
+        string energyState,
+        string comboTrigger,
+        string comboState,
+        string hitTrigger)
+    {
+        movingParameterName = movingParameter ?? string.Empty;
+        idleStateName = string.IsNullOrWhiteSpace(idleState) ? idleStateName : idleState;
+        movingStateName = string.IsNullOrWhiteSpace(movingState) ? movingStateName : movingState;
+        meleeTriggerName = string.IsNullOrWhiteSpace(meleeTrigger) ? meleeTriggerName : meleeTrigger;
+        meleeStateName = string.IsNullOrWhiteSpace(meleeState) ? meleeStateName : meleeState;
+        energyTriggerName = string.IsNullOrWhiteSpace(energyTrigger) ? energyTriggerName : energyTrigger;
+        energyStateName = string.IsNullOrWhiteSpace(energyState) ? energyStateName : energyState;
+        comboTriggerName = string.IsNullOrWhiteSpace(comboTrigger) ? comboTriggerName : comboTrigger;
+        comboStateName = string.IsNullOrWhiteSpace(comboState) ? comboStateName : comboState;
+        hitTriggerName = string.IsNullOrWhiteSpace(hitTrigger) ? hitTriggerName : hitTrigger;
+    }
+
     public void SetArenaAwareness(float horizontalRange, float verticalRange)
     {
         detectRange = Mathf.Max(detectRange, horizontalRange);
         energyRange = Mathf.Max(energyRange, horizontalRange);
+        verticalTolerance = Mathf.Max(verticalTolerance, verticalRange);
+        hasArenaAwarenessBounds = false;
+    }
+
+    public void SetDetectionAwareness(float horizontalRange, float verticalRange)
+    {
+        detectRange = Mathf.Max(detectRange, horizontalRange);
         verticalTolerance = Mathf.Max(verticalTolerance, verticalRange);
         hasArenaAwarenessBounds = false;
     }
@@ -417,23 +458,26 @@ public class BossAI : MonoBehaviour
             return;
         }
 
-        foreach (AnimatorControllerParameter parameter in animator.parameters)
+        if (!string.IsNullOrWhiteSpace(movingParameterName))
         {
-            if (parameter.name != movingParameterName)
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
             {
-                continue;
-            }
+                if (parameter.name != movingParameterName)
+                {
+                    continue;
+                }
 
-            if (parameter.type == AnimatorControllerParameterType.Bool)
-            {
-                animator.SetBool(movingParameterName, isMoving);
-            }
-            else if (isMoving && parameter.type == AnimatorControllerParameterType.Trigger)
-            {
-                animator.SetTrigger(movingParameterName);
-            }
+                if (parameter.type == AnimatorControllerParameterType.Bool)
+                {
+                    animator.SetBool(movingParameterName, isMoving);
+                }
+                else if (isMoving && parameter.type == AnimatorControllerParameterType.Trigger)
+                {
+                    animator.SetTrigger(movingParameterName);
+                }
 
-            return;
+                return;
+            }
         }
 
         if (isMoving == isMovingAnimation)
@@ -442,7 +486,7 @@ public class BossAI : MonoBehaviour
         }
 
         isMovingAnimation = isMoving;
-        animator.CrossFade(isMoving ? "Boss_move_dash" : "Boss_idle", 0f);
+        animator.CrossFade(isMoving ? movingStateName : idleStateName, 0f);
     }
 
     private void PlayAnimation(string triggerName, string fallbackStateName)

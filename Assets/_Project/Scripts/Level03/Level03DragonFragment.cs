@@ -7,26 +7,21 @@ public class Level03DragonFragment : MonoBehaviour
     private Level03Manager manager;
     private SpriteRenderer spriteRenderer;
     private Collider2D triggerCollider;
-    private Vector3[] pathPoints;
     private Coroutine moveRoutine;
-    private int pathIndex;
 
     public int FragmentIndex { get; private set; }
     public bool IsCollected { get; private set; }
-    public bool IsAtFinalPoint => pathPoints != null && pathIndex >= pathPoints.Length - 1;
     public SpriteRenderer Renderer => spriteRenderer;
 
     public void Initialize(
         Level03Manager encounterManager,
         int index,
         Sprite sprite,
-        Vector3[] path,
+        Vector3 startPosition,
         Material spriteMaterial)
     {
         manager = encounterManager;
         FragmentIndex = index;
-        pathPoints = path;
-        pathIndex = 0;
         IsCollected = false;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -55,26 +50,22 @@ public class Level03DragonFragment : MonoBehaviour
         triggerCollider = circle;
         triggerCollider.enabled = true;
 
-        if (pathPoints != null && pathPoints.Length > 0)
-        {
-            transform.position = pathPoints[0];
-        }
+        transform.position = startPosition;
     }
 
-    public void AdvanceToNextPoint()
+    public void MoveTo(Vector3 destination, float duration)
     {
-        if (IsCollected || pathPoints == null || pathIndex >= pathPoints.Length - 1)
+        if (IsCollected)
         {
             return;
         }
 
-        pathIndex++;
         if (moveRoutine != null)
         {
             StopCoroutine(moveRoutine);
         }
 
-        moveRoutine = StartCoroutine(MoveTo(pathPoints[pathIndex], 0.28f));
+        moveRoutine = StartCoroutine(MoveToDestination(destination, Mathf.Max(duration, 0.01f)));
     }
 
     public void PrepareForMerge()
@@ -90,6 +81,12 @@ public class Level03DragonFragment : MonoBehaviour
 
     public void Hide()
     {
+        if (moveRoutine != null)
+        {
+            StopCoroutine(moveRoutine);
+            moveRoutine = null;
+        }
+
         if (spriteRenderer != null)
         {
             spriteRenderer.enabled = false;
@@ -108,7 +105,7 @@ public class Level03DragonFragment : MonoBehaviour
 
     private void TryCollect(Collider2D other)
     {
-        if (IsCollected || !IsAtFinalPoint || manager == null || !manager.CanCollectFragments)
+        if (IsCollected || manager == null || !manager.CanCollectFragments)
         {
             return;
         }
@@ -128,7 +125,7 @@ public class Level03DragonFragment : MonoBehaviour
         manager.CollectFragment(this);
     }
 
-    private IEnumerator MoveTo(Vector3 destination, float duration)
+    private IEnumerator MoveToDestination(Vector3 destination, float duration)
     {
         Vector3 start = transform.position;
         float elapsed = 0f;

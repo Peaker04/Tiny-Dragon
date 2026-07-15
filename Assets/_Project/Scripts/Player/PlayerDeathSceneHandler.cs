@@ -71,7 +71,7 @@ public class PlayerDeathSceneHandler : MonoBehaviour
 
         if (showGameOverOutsideGuide)
         {
-            GameOver resolvedGameOver = gameOverUI != null ? gameOverUI : ObjectLookup.InactiveAny<GameOver>();
+            GameOver resolvedGameOver = gameOverUI != null ? gameOverUI : GameOver.ResolveOrCreate();
             if (resolvedGameOver != null)
             {
                 resolvedGameOver.GameOverActive();
