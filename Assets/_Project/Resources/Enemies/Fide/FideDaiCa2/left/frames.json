@@ -1,0 +1,12 @@
+{
+  "canvas": {
+    "width": 220,
+    "height": 216
+  },
+  "pivot": {
+    "x": 112,
+    "y": 172
+  },
+  "sourceAnchor": "cx/cy at pivot; cdir=0; anchor=TOP|RIGHT",
+  "scale": 4
+}

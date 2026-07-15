@@ -373,7 +373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSceneTransition
   enableSceneTransitions: 1
-  level01SceneName: Level_01_guide
+  level01SceneName: Level_01_Origin
   level02SceneName: Level_02
   transitionExitPadding: 0.35
   transitionEntryPadding: 1
@@ -396,10 +396,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd33263cd244f06a9f91642a6dda7a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDeathSceneHandler
-  guideSceneName: Level_01_guide
-  immortalInGuideScene: 1
-  showGameOverOutsideGuide: 1
-  gameOverUI: {fileID: 0}
 --- !u!95 &956085406
 Animator:
   serializedVersion: 7

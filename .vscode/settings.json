@@ -67,6 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Tiny-Dragonv2.slnx",
+    "dotnet.defaultSolution": "Tiny-Dragon.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": false
 }

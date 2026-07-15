@@ -6,7 +6,7 @@ using TinyDragon.Data;
 
 public static class DumpDatabase
 {
-    [MenuItem("Tiny Dragon/Dump Skills Database")]
+    [MenuItem("Tiny-Dragon/Dump Skills Database")]
     public static void DumpSkills()
     {
         string dbPath = Path.Combine(Application.persistentDataPath, "tiny_dragon.db");
