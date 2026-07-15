@@ -108,6 +108,76 @@ INSERT OR IGNORE INTO Skill (
   damageMultiplier, effectType, effectValue, effectDurationSec, projectilePrefabKey
 ) VALUES
   (
+    'stat_hp_root',
+    'HP gốc',
+    'Tăng HP tối đa cơ bản.',
+    'UI/Skills/stat_hp_root',
+    'PASSIVE',
+    0,
+    0,
+    0,
+    'BUFF',
+    20,
+    0,
+    NULL
+  ),
+  (
+    'stat_ki_root',
+    'KI gốc',
+    'Tăng KI tối đa cơ bản.',
+    'UI/Skills/stat_ki_root',
+    'PASSIVE',
+    0,
+    0,
+    0,
+    'BUFF',
+    20,
+    0,
+    NULL
+  ),
+  (
+    'stat_atk_root',
+    'Sức đánh gốc',
+    'Tăng sức đánh cơ bản.',
+    'UI/Skills/stat_atk_root',
+    'PASSIVE',
+    0,
+    0,
+    0,
+    'BUFF',
+    1,
+    0,
+    NULL
+  ),
+  (
+    'stat_def_root',
+    'Giáp gốc',
+    'Tăng giáp phòng thủ cơ bản.',
+    'UI/Skills/stat_def_root',
+    'PASSIVE',
+    0,
+    0,
+    0,
+    'BUFF',
+    1,
+    0,
+    NULL
+  ),
+  (
+    'stat_crit_root',
+    'Crit gốc',
+    'Tăng tỷ lệ chí mạng cơ bản.',
+    'UI/Skills/stat_crit_root',
+    'PASSIVE',
+    0,
+    0,
+    0,
+    'BUFF',
+    1,
+    0,
+    NULL
+  ),
+  (
     'skill_basic_blast',
     'Basic Blast',
     'Default projectile attack.',
@@ -200,6 +270,34 @@ INSERT OR IGNORE INTO Item (
     0,
     1,
     5
+  ),
+  (
+    'item_warrior_orange_glove',
+    'Găng chiến binh cam',
+    'Găng tay tập luyện giúp tăng sức đánh.',
+    NULL,
+    NULL,
+    'WEAPON',
+    'WEAPON',
+    'EPIC',
+    1,
+    0,
+    1,
+    90
+  ),
+  (
+    'item_senzu_bean_lv5',
+    'Đậu thần cấp 5',
+    'Vật phẩm debug số lượng: HP, KI +8000.',
+    NULL,
+    NULL,
+    'CONSUMABLE',
+    NULL,
+    'RARE',
+    1,
+    1,
+    99,
+    25
   );
 
 INSERT OR IGNORE INTO DropRate (
@@ -244,10 +342,104 @@ SET kiCost = 50, cooldownSec = 1.2, damageMultiplier = 3.0, effectValue = 36
 WHERE id = 'skill_power_shot';
 
 UPDATE Item
-SET baseBonusDef = CASE WHEN baseBonusDef < 2 THEN 2 ELSE baseBonusDef END,
-    maxUpgrade = CASE WHEN maxUpgrade < 2 THEN 2 ELSE maxUpgrade END
+SET name = 'Áo chiến binh xanh',
+    description = 'Áo giáp xanh lấy cảm hứng từ chiến binh Saiyan.',
+    rarity = 'EPIC',
+    baseBonusHP = 500,
+    baseBonusKi = 300,
+    baseBonusDef = 8,
+    maxUpgrade = 5,
+    spritePath = 'UI/Items/warrior_armor_blue'
 WHERE id = 'item_cloth_shirt';
 
 UPDATE Item
-SET baseBonusHP = CASE WHEN baseBonusHP < 30 THEN 30 ELSE baseBonusHP END
+SET name = 'Quần chiến binh xanh',
+    description = 'Quần võ phục xanh bền chắc.',
+    rarity = 'EPIC',
+    baseBonusHP = 350,
+    baseBonusAtk = 4,
+    baseBonusSpd = 0,
+    maxUpgrade = 5,
+    spritePath = 'UI/Items/warrior_pants_blue'
 WHERE id = 'item_black_cloth_pants';
+
+UPDATE Item
+SET name = 'Găng chiến binh cam',
+    description = 'Găng tay tập luyện giúp tăng sức đánh.',
+    rarity = 'EPIC',
+    baseBonusAtk = 8,
+    baseBonusCritPercent = 2,
+    maxUpgrade = 5,
+    spritePath = 'UI/Items/warrior_glove_orange'
+WHERE id = 'item_warrior_orange_glove';
+
+UPDATE Item
+SET description = 'Hoi mot luong HP va KI khi su dung.',
+    baseBonusHP = 200,
+    baseBonusKi = 100,
+    baseBonusAtk = 0,
+    baseBonusDef = 0,
+    baseBonusCritPercent = 0,
+    baseBonusDamageReductionPercent = 0,
+    baseBonusCritDamagePercent = 0,
+    baseBonusSpd = 0
+WHERE id = 'item_senzu_bean_lv5';
+
+UPDATE Item
+SET name = 'Đậu thần cấp 5',
+    description = 'Vật phẩm debug số lượng: HP, KI +8000.',
+    rarity = 'RARE',
+    stackable = 1,
+    maxStack = 99,
+    baseBonusHP = 8000,
+    baseBonusKi = 8000,
+    spritePath = 'UI/Items/senzu_bean_lv5'
+WHERE id = 'item_senzu_bean_lv5';
+
+UPDATE Item
+SET name = 'Áo vải dày',
+    description = 'Áo vải dày giúp tăng giáp cơ bản.',
+    rarity = 'NORMAL',
+    baseBonusHP = 0,
+    baseBonusKi = 0,
+    baseBonusAtk = 0,
+    baseBonusDef = 8,
+    baseBonusCritPercent = 0,
+    baseBonusDamageReductionPercent = 0,
+    baseBonusCritDamagePercent = 0,
+    baseBonusSpd = 0,
+    maxUpgrade = 0,
+    spritePath = 'UI/Items/warrior_armor_blue'
+WHERE id = 'item_cloth_shirt';
+
+UPDATE Item
+SET name = 'Quần vải đen',
+    description = 'Quần vải đen giúp tăng HP cơ bản.',
+    rarity = 'NORMAL',
+    baseBonusHP = 30,
+    baseBonusKi = 0,
+    baseBonusAtk = 0,
+    baseBonusDef = 0,
+    baseBonusCritPercent = 0,
+    baseBonusDamageReductionPercent = 0,
+    baseBonusCritDamagePercent = 0,
+    baseBonusSpd = 0,
+    maxUpgrade = 0,
+    spritePath = 'UI/Items/warrior_pants_blue'
+WHERE id = 'item_black_cloth_pants';
+
+UPDATE Item
+SET name = 'Găng vải đen',
+    description = 'Găng vải đen giúp tăng tấn công cơ bản.',
+    rarity = 'NORMAL',
+    baseBonusHP = 0,
+    baseBonusKi = 0,
+    baseBonusAtk = 4,
+    baseBonusDef = 0,
+    baseBonusCritPercent = 0,
+    baseBonusDamageReductionPercent = 0,
+    baseBonusCritDamagePercent = 0,
+    baseBonusSpd = 0,
+    maxUpgrade = 0,
+    spritePath = 'UI/Items/warrior_glove_orange'
+WHERE id = 'item_warrior_orange_glove';

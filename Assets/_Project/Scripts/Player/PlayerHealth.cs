@@ -1,5 +1,6 @@
 using System;
 using TinyDragon.Data;
+using TinyDragon.Audio;
 using TinyDragon.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -26,6 +27,7 @@ public class PlayerHealth : MonoBehaviour
 
     public static event Action<PlayerHealth> PlayerAvailable;
 
+    public event Action<int, bool> Damaged;
     public event Action<PlayerHealth> HealthChanged;
     public event Action<PlayerHealth> Died;
 
@@ -37,6 +39,7 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         isDead = false;
         EnsureDamagePopupPool();
+        EnsurePlayerAudioComponents();
     }
 
     private void OnEnable()
@@ -68,6 +71,7 @@ public class PlayerHealth : MonoBehaviour
 
         TinyDragonSaveManager.Instance.SaveCurrentHealth(currentHealth, maxHealth);
         ShowDamagePopup(effectiveDamage);
+        Damaged?.Invoke(effectiveDamage, currentHealth <= 0);
         HealthChanged?.Invoke(this);
         Debug.Log($"Player took {effectiveDamage} damage. HP: {currentHealth}/{maxHealth}");
 
@@ -150,6 +154,24 @@ public class PlayerHealth : MonoBehaviour
                 RuntimeSceneRoot.GetChild("DamagePopupPool"),
                 damagePopupPoolPrewarmCount
             );
+        }
+    }
+
+    private void EnsurePlayerAudioComponents()
+    {
+        if (GetComponent<PlayerActionAudio>() == null)
+        {
+            gameObject.AddComponent<PlayerActionAudio>();
+        }
+
+        if (GetComponent<CharacterFeedbackAudio>() == null)
+        {
+            gameObject.AddComponent<CharacterFeedbackAudio>();
+        }
+
+        if (GetComponent<PlayerAuraAudio>() == null)
+        {
+            gameObject.AddComponent<PlayerAuraAudio>();
         }
     }
 }

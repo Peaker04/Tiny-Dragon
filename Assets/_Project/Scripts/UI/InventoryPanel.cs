@@ -1,4 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections;
+using TinyDragon.Audio;
 using TinyDragon.Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,13 +19,26 @@ namespace TinyDragon.UI
 
     public sealed class InventoryPanel : MonoBehaviour
     {
+        private const int CarriedSlotCount = 10;
+        private const int StoredMinimumSlotCount = 10;
+        private const int StatUpgradeSlotCount = 5;
+        private static readonly Color32 CarriedRowColor = new Color32(232, 224, 210, 255);
+        private static readonly Color32 StoredRowColor = new Color32(246, 242, 233, 118);
+        private static readonly Color32 CarriedIconCellColor = new Color32(166, 123, 67, 255);
+        private static readonly Color32 StoredIconCellColor = new Color32(183, 145, 92, 178);
+        private static readonly Color32 SelectedRowColor = new Color32(255, 248, 42, 255);
+
         private static InventoryPanel instance;
         public static bool IsVisible => instance != null && instance.panel != null && instance.panel.activeSelf;
 
-        /// <summary>Ẩn inventory nếu đang mở. Dùng khi mở Pause / Settings.</summary>
         public static void HideIfVisible()
         {
             if (IsVisible) instance.SetVisible(false);
+        }
+
+        public static void RefreshIfVisible()
+        {
+            if (IsVisible) instance.Refresh();
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -59,10 +74,25 @@ namespace TinyDragon.UI
 
         private InventoryViewData currentInventoryData;
         private float nextRuntimeStatsRefreshTime;
-        private int activeTabIndex = 1; // Default to Tab 1: Hành Trang (Inventory)
+        private int activeTabIndex = 1;
         private int initialSlotsCount;
         private int selectedItemIndex = -1;
         private int selectedSkillIndex = -1;
+        private InventoryItemViewData pendingTransferItem;
+        private bool pendingTransferToCarried;
+        private GameObject itemTransferDialog;
+        private Text itemTransferMessageText;
+        private Button itemTransferConfirmButton;
+        private Button itemTransferCancelButton;
+        private InventorySkillViewData pendingSkill;
+        private InventoryStatUpgradeViewData pendingStatUpgrade;
+        private GameObject skillLearnDialog;
+        private Text skillLearnMessageText;
+        private Button skillLearnConfirmButton;
+        private Button skillLearnCancelButton;
+        private GameObject alertDialog;
+        private Text alertMessageText;
+        private Button alertOkButton;
 
         private void Awake()
         {
@@ -103,7 +133,6 @@ namespace TinyDragon.UI
                 closeButton.onClick.AddListener(() => SetVisible(false));
             }
 
-            // Setup Tab Click Listeners
             for (int i = 0; i < tabButtons.Count; i++)
             {
                 int index = i;
@@ -152,14 +181,16 @@ namespace TinyDragon.UI
             }
 
             PlayerInputReader inputReader = FindAnyObjectByType<PlayerInputReader>();
+            bool inventoryPressed = inputReader != null
+                ? inputReader.ConsumeInventoryPressed()
+                : Input.GetKeyDown(KeyCode.B);
             
-            // Check if inventory should be forcibly closed
             if (panel != null && panel.activeSelf && !ShouldInventoryBeOpenable())
             {
                 SetVisible(false);
             }
 
-            if (inputReader != null && inputReader.ConsumeInventoryPressed())
+            if (inventoryPressed)
             {
                 if (!ShouldInventoryBeOpenable())
                 {
@@ -200,12 +231,62 @@ namespace TinyDragon.UI
 
             if (activePanel != null)
             {
-                ScrollRect scrollRect = activePanel.GetComponent<ScrollRect>();
+                ScrollRect scrollRect = GetScrollRect(activePanel);
                 if (scrollRect != null)
                 {
-                    scrollRect.verticalNormalizedPosition = Mathf.Max(0f, scrollRect.verticalNormalizedPosition - 1f);
+                    StopAllCoroutines();
+                    StartCoroutine(SmoothScrollTo(scrollRect, Mathf.Max(0f, scrollRect.verticalNormalizedPosition - 0.35f)));
                 }
             }
+        }
+
+        private ScrollRect GetScrollRect(GameObject panelObject)
+        {
+            if (panelObject == null)
+            {
+                return null;
+            }
+
+            ScrollRect scrollRect = panelObject.GetComponent<ScrollRect>();
+            return scrollRect != null ? scrollRect : panelObject.GetComponentInChildren<ScrollRect>(true);
+        }
+
+        private void ConfigureSmoothScroll(GameObject panelObject)
+        {
+            ScrollRect scrollRect = GetScrollRect(panelObject);
+            if (scrollRect == null)
+            {
+                return;
+            }
+
+            scrollRect.inertia = true;
+            scrollRect.decelerationRate = 0.08f;
+            scrollRect.scrollSensitivity = 24f;
+            scrollRect.movementType = ScrollRect.MovementType.Elastic;
+            scrollRect.elasticity = 0.08f;
+        }
+
+        private IEnumerator SmoothScrollTo(ScrollRect scrollRect, float target)
+        {
+            if (scrollRect == null)
+            {
+                yield break;
+            }
+
+            float start = scrollRect.verticalNormalizedPosition;
+            float elapsed = 0f;
+            const float duration = 0.18f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                t = 1f - Mathf.Pow(1f - t, 3f);
+                scrollRect.verticalNormalizedPosition = Mathf.Lerp(start, target, t);
+                yield return null;
+            }
+
+            scrollRect.verticalNormalizedPosition = target;
         }
 
         private void UpdateTabVisuals()
@@ -229,6 +310,10 @@ namespace TinyDragon.UI
             if (itemListPanel != null) itemListPanel.SetActive(activeTabIndex == 1);
             if (skillPanel != null) skillPanel.SetActive(activeTabIndex == 2);
             if (featurePanel != null) featurePanel.SetActive(activeTabIndex == 3);
+            ConfigureSmoothScroll(questPanel);
+            ConfigureSmoothScroll(itemListPanel);
+            ConfigureSmoothScroll(skillPanel);
+            ConfigureSmoothScroll(featurePanel);
 
             if (questStatsText != null) questStatsText.gameObject.SetActive(activeTabIndex == 0);
             if (itemStatsText != null) itemStatsText.gameObject.SetActive(activeTabIndex == 1);
@@ -238,9 +323,15 @@ namespace TinyDragon.UI
 
         private void SetVisible(bool visible)
         {
+            bool wasVisible = panel != null && panel.activeSelf;
             if (panel != null)
             {
                 panel.SetActive(visible);
+            }
+
+            if (visible && !wasVisible && Application.isPlaying)
+            {
+                UiSoundPlayer.PlayInventoryOpen();
             }
 
             if (visible)
@@ -262,14 +353,13 @@ namespace TinyDragon.UI
                 return false;
             }
 
-            return FindAnyObjectByType<PlayerHealth>() != null;
+            return FindAnyObjectByType<PlayerHealth>(FindObjectsInactive.Include) != null;
         }
 
         private void Refresh()
         {
             if (TinyDragonSaveManager.Instance == null) return;
 
-            // Gather slots for the active panel dynamically at runtime
             GameObject activePanel = null;
             if (activeTabIndex == 1) activePanel = itemListPanel;
             else if (activeTabIndex == 2) activePanel = skillPanel;
@@ -281,14 +371,12 @@ namespace TinyDragon.UI
 
                 itemSlots.Clear();
                 
-                // Get all children of the container
                 List<Transform> children = new List<Transform>();
                 foreach (Transform child in container)
                 {
                     children.Add(child);
                 }
                 
-                // Sort children by Y coordinate descending (top to bottom visually on screen)
                 children.Sort((a, b) => b.localPosition.y.CompareTo(a.localPosition.y));
 
                 foreach (Transform child in children)
@@ -300,7 +388,6 @@ namespace TinyDragon.UI
                     {
                         InventoryItemSlot slot = new InventoryItemSlot();
                         
-                        // Find icon image
                         slot.iconImage = FindComponent<Image>(child, "IconCell/Icon");
                         if (slot.iconImage == null)
                         {
@@ -314,7 +401,6 @@ namespace TinyDragon.UI
                             }
                         }
                         
-                        // Find text components (fallback to index order if not found by name)
                         if (texts.Length > 0) slot.nameText = texts[0];
                         if (texts.Length > 1) slot.statText = texts[1];
                         
@@ -362,86 +448,13 @@ namespace TinyDragon.UI
 
             if (activeTabIndex == 1)
             {
-                int itemsCount = data.Items.Count;
-                int currentSlotsCount = itemSlots.Count;
-
-                // 1. If we have more slots than needed and we are above initial limit, destroy extra rows
-                if (currentSlotsCount > initialSlotsCount && currentSlotsCount > itemsCount)
-                {
-                    int targetCount = Mathf.Max(initialSlotsCount, itemsCount);
-                    for (int i = currentSlotsCount - 1; i >= targetCount; i--)
-                    {
-                        var slot = itemSlots[i];
-                        GameObject rowObject = null;
-                        if (slot.nameText != null)
-                        {
-                            rowObject = slot.nameText.transform.parent.gameObject;
-                        }
-                        else if (slot.iconImage != null)
-                        {
-                            rowObject = slot.iconImage.transform.parent.parent.gameObject;
-                        }
-
-                        if (rowObject != null)
-                        {
-                            Destroy(rowObject);
-                        }
-                        itemSlots.RemoveAt(i);
-                    }
-                }
-
-                // 2. If items exceed current slots, dynamically instantiate more rows
-                currentSlotsCount = itemSlots.Count;
-                if (itemsCount > currentSlotsCount && currentSlotsCount > 0 && itemListPanel != null)
-                {
-                    GameObject template = null;
-                    if (itemSlots[0].nameText != null)
-                    {
-                        template = itemSlots[0].nameText.transform.parent.gameObject;
-                    }
-                    else if (itemSlots[0].iconImage != null)
-                    {
-                        template = itemSlots[0].iconImage.transform.parent.parent.gameObject;
-                    }
-
-                    if (template != null)
-                    {
-                        for (int i = currentSlotsCount; i < itemsCount; i++)
-                        {
-                            GameObject newRow = Instantiate(template, template.transform.parent);
-                            newRow.name = $"ItemRow {i}";
-
-                            InventoryItemSlot newSlot = new InventoryItemSlot
-                            {
-                                iconImage = FindComponent<Image>(newRow.transform, "IconCell/Icon"),
-                                nameText = FindComponent<Text>(newRow.transform, "ItemName"),
-                                statText = FindComponent<Text>(newRow.transform, "ItemStat"),
-                                button = newRow.GetComponent<Button>()
-                            };
-                            itemSlots.Add(newSlot);
-                        }
-                    }
-                }
-
-                // 3. Populate item slots
-                for (int i = 0; i < itemSlots.Count; i++)
-                {
-                    if (i < data.Items.Count)
-                    {
-                        ApplyItem(i, data.Items[i]);
-                    }
-                    else
-                    {
-                        ClearItem(i);
-                    }
-                }
+                RefreshInventoryItems(data);
             }
             else if (activeTabIndex == 2)
             {
-                int skillsCount = 5 + data.CombatSkills.Count;
+                int skillsCount = StatUpgradeSlotCount + data.CombatSkills.Count;
                 int currentSlotsCount = itemSlots.Count;
 
-                // 1. If we have more slots than needed, destroy extra rows
                 if (currentSlotsCount > initialSlotsCount && currentSlotsCount > skillsCount)
                 {
                     int targetCount = Mathf.Max(initialSlotsCount, skillsCount);
@@ -466,7 +479,6 @@ namespace TinyDragon.UI
                     }
                 }
 
-                // 2. Instantiate more rows if skillsCount exceed current slots
                 currentSlotsCount = itemSlots.Count;
                 if (skillsCount > currentSlotsCount && currentSlotsCount > 0 && skillPanel != null)
                 {
@@ -499,31 +511,36 @@ namespace TinyDragon.UI
                     }
                 }
 
-                // 3. Populate skills slots (5 stats + combat skills)
-                Color32 hpColor = new Color32(46, 204, 113, 255); // Green
-                Color32 kiColor = new Color32(52, 152, 219, 255); // Blue
-                Color32 atkColor = new Color32(231, 76, 60, 255); // Red
-                Color32 defColor = new Color32(149, 165, 166, 255); // Grey
-                Color32 critColor = new Color32(241, 196, 15, 255); // Yellow
-
-                int hpCost = data.BaseHP * 10;
-                ApplySkillSlot(0, $"HP gốc: {data.BaseHP}", $"{hpCost:N0} tiềm năng: tăng 20", "res/x4/mainimage/myTexture2dHP", hpColor);
-
-                int kiCost = data.BaseKi * 10;
-                ApplySkillSlot(1, $"KI gốc: {data.BaseKi}", $"{kiCost:N0} tiềm năng: tăng 20", "res/x4/mainimage/myTexture2dMP", kiColor);
-
-                int atkCost = data.BaseAtk * 100;
-                ApplySkillSlot(2, $"Sức đánh gốc: {data.BaseAtk}", $"{atkCost:N0} tiềm năng: tăng 1", "UI/Currency/gem_green", atkColor);
-
-                int defCost = (data.BaseDef + 1) * 500000;
-                ApplySkillSlot(3, $"Giáp gốc: {data.BaseDef}", $"{defCost:N0} tiềm năng: tăng 1", "UI/Currency/coin_stack", defColor);
-
-                int critCost = (data.BaseCritPercent + 1) * 50000000;
-                ApplySkillSlot(4, $"Chí mạng gốc: {data.BaseCritPercent}%", $"{critCost:N0} tiềm năng: tăng 1%", "UI/Currency/gem_green", critColor);
-
-                for (int i = 5; i < itemSlots.Count; i++)
+                Color32[] statColors =
                 {
-                    int skillIdx = i - 5;
+                    new Color32(46, 204, 113, 255),
+                    new Color32(52, 152, 219, 255),
+                    new Color32(231, 76, 60, 255),
+                    new Color32(149, 165, 166, 255),
+                    new Color32(241, 196, 15, 255)
+                };
+
+                for (int i = 0; i < StatUpgradeSlotCount; i++)
+                {
+                    InventoryStatUpgradeViewData upgrade = GetStatUpgrade(i);
+                    if (upgrade == null)
+                    {
+                        ClearItem(i);
+                        continue;
+                    }
+
+                    ApplySkillSlot(
+                        i,
+                        $"{upgrade.Name}: {GetStatUpgradeCurrentValue(upgrade)}",
+                        $"{GetStatUpgradeCost(upgrade):N0} tiềm năng: tăng {upgrade.EffectValue}",
+                        string.IsNullOrEmpty(upgrade.IconKey) ? "UI/Skills/stat_hp_root" : upgrade.IconKey,
+                        statColors[Mathf.Min(i, statColors.Length - 1)]
+                    );
+                }
+
+                for (int i = StatUpgradeSlotCount; i < itemSlots.Count; i++)
+                {
+                    int skillIdx = i - StatUpgradeSlotCount;
                     if (skillIdx < data.CombatSkills.Count)
                     {
                         var skill = data.CombatSkills[skillIdx];
@@ -534,6 +551,7 @@ namespace TinyDragon.UI
                     else
                     {
                         ClearItem(i);
+                        SetItemSlotVisual(i, false, false);
                     }
                 }
             }
@@ -542,19 +560,145 @@ namespace TinyDragon.UI
                 for (int i = 0; i < itemSlots.Count; i++)
                 {
                     ClearItem(i);
+                    SetItemSlotVisual(i, false, false);
                 }
             }
 
-            // Bind click events to buttons
             for (int i = 0; i < itemSlots.Count; i++)
             {
                 int index = i;
-                if (itemSlots[i].button != null && itemSlots[i].button)
+                Button rowButton = EnsureSlotButton(i);
+                if (rowButton != null)
                 {
-                    itemSlots[i].button.onClick.RemoveAllListeners();
-                    itemSlots[i].button.onClick.AddListener(() => OnRowClicked(index));
+                    if (activeTabIndex != 1)
+                    {
+                        rowButton.interactable = true;
+                    }
+                    rowButton.onClick.RemoveAllListeners();
+                    rowButton.onClick.AddListener(() => OnRowClicked(index));
                 }
             }
+        }
+
+        private void RefreshInventoryItems(InventoryViewData data)
+        {
+            List<InventoryItemViewData> carriedItems = GetInventoryItems(data, true);
+            List<InventoryItemViewData> storedItems = GetInventoryItems(data, false);
+            int storedSlotCount = Mathf.Max(StoredMinimumSlotCount, storedItems.Count);
+            int requiredSlotCount = CarriedSlotCount + storedSlotCount;
+
+            EnsureItemSlotCount(requiredSlotCount);
+
+            for (int i = 0; i < itemSlots.Count; i++)
+            {
+                GameObject rowObject = GetSlotRowObject(itemSlots[i]);
+                bool shouldShowRow = i < requiredSlotCount;
+                if (rowObject != null)
+                {
+                    rowObject.SetActive(shouldShowRow);
+                    rowObject.name = i < CarriedSlotCount ? $"CarriedItemRow {i}" : $"StoredItemRow {i - CarriedSlotCount}";
+                }
+
+                if (!shouldShowRow)
+                {
+                    ClearItem(i);
+                    continue;
+                }
+
+                bool isStoredSlot = i >= CarriedSlotCount;
+                InventoryItemViewData item = null;
+                if (!isStoredSlot)
+                {
+                    if (i < carriedItems.Count) item = carriedItems[i];
+                }
+                else
+                {
+                    int storedIndex = i - CarriedSlotCount;
+                    if (storedIndex < storedItems.Count) item = storedItems[storedIndex];
+                }
+
+                if (item != null)
+                {
+                    ApplyItem(i, item, isStoredSlot);
+                }
+                else
+                {
+                    ClearItem(i);
+                    SetItemSlotVisual(i, isStoredSlot, false);
+                }
+
+                Button rowButton = EnsureSlotButton(i);
+                if (rowButton != null)
+                {
+                    rowButton.interactable = true;
+                }
+            }
+        }
+
+        private List<InventoryItemViewData> GetInventoryItems(InventoryViewData data, bool isCarried)
+        {
+            List<InventoryItemViewData> result = new List<InventoryItemViewData>();
+            if (data == null)
+            {
+                return result;
+            }
+
+            foreach (InventoryItemViewData item in data.Items)
+            {
+                if (item.IsCarried == isCarried)
+                {
+                    result.Add(item);
+                }
+            }
+
+            return result;
+        }
+
+        private InventoryItemViewData GetVisibleInventoryItem(int index, out bool isCarried)
+        {
+            isCarried = index < CarriedSlotCount;
+            if (currentInventoryData == null || index < 0)
+            {
+                return null;
+            }
+
+            List<InventoryItemViewData> items = GetInventoryItems(currentInventoryData, isCarried);
+            int itemIndex = isCarried ? index : index - CarriedSlotCount;
+            return itemIndex >= 0 && itemIndex < items.Count ? items[itemIndex] : null;
+        }
+
+        private void EnsureItemSlotCount(int requiredSlotCount)
+        {
+            if (itemSlots.Count == 0 || itemListPanel == null)
+            {
+                return;
+            }
+
+            GameObject template = GetSlotRowObject(itemSlots[0]);
+            if (template == null)
+            {
+                return;
+            }
+
+            Transform parent = template.transform.parent;
+            while (itemSlots.Count < requiredSlotCount)
+            {
+                GameObject newRow = Instantiate(template, parent);
+                newRow.name = $"StoredItemRow {itemSlots.Count - CarriedSlotCount}";
+                newRow.SetActive(true);
+                itemSlots.Add(CreateSlotFromRow(newRow));
+            }
+        }
+
+        private InventoryItemSlot CreateSlotFromRow(GameObject rowObject)
+        {
+            return new InventoryItemSlot
+            {
+                iconImage = FindComponent<Image>(rowObject.transform, "IconCell/Icon"),
+                nameText = FindComponent<Text>(rowObject.transform, "ItemName"),
+                statText = FindComponent<Text>(rowObject.transform, "ItemStat"),
+                button = rowObject.GetComponent<Button>()
+            };
         }
 
         private void ApplyStats(InventoryViewData data)
@@ -575,6 +719,11 @@ namespace TinyDragon.UI
 
             foreach (InventoryItemViewData item in data.Items)
             {
+                if (!ShouldApplyItemStats(item))
+                {
+                    continue;
+                }
+
                 totalHP += item.BonusHP;
                 totalKi += item.BonusKi;
                 totalAtk += item.BonusAtk;
@@ -583,6 +732,13 @@ namespace TinyDragon.UI
                 totalCrit += item.BonusCritPercent;
                 totalCritDamage += item.BonusCritDamagePercent;
                 totalSpeed += item.BonusSpd;
+            }
+            foreach (InventorySkillViewData skill in data.CombatSkills)
+            {
+                if (skill.SkillLevel > 0)
+                {
+                    totalAtk += Mathf.Max(skill.EffectValue, 0) * skill.SkillLevel;
+                }
             }
 
             int currentHP = data.CurrentHP;
@@ -593,14 +749,12 @@ namespace TinyDragon.UI
                 if (playerHealth != null)
                 {
                     currentHP = playerHealth.CurrentHealth;
-                    totalHP = playerHealth.MaxHealth;
                 }
 
                 PlayerAttack playerAttack = FindAnyObjectByType<PlayerAttack>();
                 if (playerAttack != null)
                 {
                     currentKi = Mathf.RoundToInt(playerAttack.CurrentMana);
-                    totalKi = Mathf.RoundToInt(playerAttack.MaxMana);
                 }
             }
 
@@ -634,7 +788,15 @@ namespace TinyDragon.UI
             }
         }
 
-        private void ApplyItem(int index, InventoryItemViewData item)
+        private bool ShouldApplyItemStats(InventoryItemViewData item)
+        {
+            return item != null
+                && item.IsCarried
+                && !string.IsNullOrWhiteSpace(item.SlotType)
+                && item.ItemType != "CONSUMABLE";
+        }
+
+        private void ApplyItem(int index, InventoryItemViewData item, bool isStoredSlot = false)
         {
             if (index >= itemSlots.Count) return;
 
@@ -644,7 +806,7 @@ namespace TinyDragon.UI
                 slot.iconImage.enabled = true;
                 if (!string.IsNullOrEmpty(item.SpritePath))
                 {
-                    Sprite sprite = Resources.Load<Sprite>(item.SpritePath);
+                    Sprite sprite = LoadSpriteResource(item.SpritePath);
                     if (sprite != null)
                     {
                         slot.iconImage.sprite = sprite;
@@ -672,6 +834,15 @@ namespace TinyDragon.UI
             {
                 slot.statText.text = BuildItemStat(item);
             }
+
+            Text quantityText = EnsureQuantityText(slot);
+            if (quantityText != null)
+            {
+                quantityText.text = item.Quantity > 1 ? item.Quantity.ToString() : string.Empty;
+                quantityText.gameObject.SetActive(item.Quantity > 1);
+            }
+
+            SetItemSlotVisual(index, isStoredSlot, true);
         }
 
         private void ClearItem(int index)
@@ -682,6 +853,217 @@ namespace TinyDragon.UI
             if (slot.iconImage != null && slot.iconImage) slot.iconImage.enabled = false;
             if (slot.nameText != null && slot.nameText) slot.nameText.text = string.Empty;
             if (slot.statText != null && slot.statText) slot.statText.text = string.Empty;
+            Text quantityText = GetQuantityText(slot);
+            if (quantityText != null)
+            {
+                quantityText.text = string.Empty;
+                quantityText.gameObject.SetActive(false);
+            }
+        }
+
+        private void SetItemSlotVisual(int index, bool isStoredSlot, bool hasItem)
+        {
+            if (index >= itemSlots.Count)
+            {
+                return;
+            }
+
+            var slot = itemSlots[index];
+            GameObject rowObject = GetSlotRowObject(slot);
+            Image rowImage = rowObject != null ? rowObject.GetComponent<Image>() : null;
+            if (rowImage != null)
+            {
+                rowImage.color = IsSlotSelected(index)
+                    ? SelectedRowColor
+                    : isStoredSlot ? StoredRowColor : CarriedRowColor;
+            }
+
+            Image iconCellImage = GetIconCellImage(slot);
+            if (iconCellImage != null)
+            {
+                iconCellImage.color = isStoredSlot ? StoredIconCellColor : CarriedIconCellColor;
+            }
+
+            float contentAlpha = isStoredSlot && hasItem && !IsSlotSelected(index) ? 0.32f : 1f;
+            SetGraphicAlpha(slot.iconImage, contentAlpha);
+            SetGraphicAlpha(slot.nameText, isStoredSlot && !IsSlotSelected(index) ? 0.48f : 1f);
+            SetGraphicAlpha(slot.statText, isStoredSlot && !IsSlotSelected(index) ? 0.48f : 1f);
+            SetGraphicAlpha(GetQuantityText(slot), isStoredSlot && !IsSlotSelected(index) ? 0.55f : 1f);
+        }
+
+        private bool IsSlotSelected(int index)
+        {
+            if (activeTabIndex == 1)
+            {
+                return selectedItemIndex == index;
+            }
+
+            if (activeTabIndex == 2)
+            {
+                return selectedSkillIndex == index;
+            }
+
+            return false;
+        }
+
+        private void RefreshSelectedRowVisuals()
+        {
+            for (int i = 0; i < itemSlots.Count; i++)
+            {
+                bool hasContent = false;
+                if (activeTabIndex == 1)
+                {
+                    hasContent = GetVisibleInventoryItem(i, out _) != null;
+                    SetItemSlotVisual(i, i >= CarriedSlotCount, hasContent);
+                }
+                else if (activeTabIndex == 2)
+                {
+                    hasContent = i < StatUpgradeSlotCount
+                        ? GetStatUpgrade(i) != null
+                        : currentInventoryData != null && i - StatUpgradeSlotCount < currentInventoryData.CombatSkills.Count;
+                    SetItemSlotVisual(i, false, hasContent);
+                }
+            }
+        }
+
+        private void SetGraphicAlpha(Graphic graphic, float alpha)
+        {
+            if (graphic == null)
+            {
+                return;
+            }
+
+            Color color = graphic.color;
+            color.a = alpha;
+            graphic.color = color;
+        }
+
+        private GameObject GetSlotRowObject(InventoryItemSlot slot)
+        {
+            if (slot.nameText != null)
+            {
+                return slot.nameText.transform.parent.gameObject;
+            }
+
+            if (slot.iconImage != null && slot.iconImage.transform.parent != null)
+            {
+                Transform row = slot.iconImage.transform.parent.parent;
+                if (row != null)
+                {
+                    return row.gameObject;
+                }
+            }
+
+            if (slot.button != null)
+            {
+                return slot.button.gameObject;
+            }
+
+            return null;
+        }
+
+        private Image GetIconCellImage(InventoryItemSlot slot)
+        {
+            if (slot.iconImage != null && slot.iconImage.transform.parent != null)
+            {
+                return slot.iconImage.transform.parent.GetComponent<Image>();
+            }
+
+            if (slot.nameText != null)
+            {
+                Transform iconCell = slot.nameText.transform.parent.Find("IconCell");
+                if (iconCell != null)
+                {
+                    return iconCell.GetComponent<Image>();
+                }
+            }
+
+            return null;
+        }
+
+        private Text GetQuantityText(InventoryItemSlot slot)
+        {
+            Image iconCellImage = GetIconCellImage(slot);
+            if (iconCellImage == null)
+            {
+                return null;
+            }
+
+            Transform quantity = iconCellImage.transform.Find("QuantityText");
+            return quantity != null ? quantity.GetComponent<Text>() : null;
+        }
+
+        private Text EnsureQuantityText(InventoryItemSlot slot)
+        {
+            Image iconCellImage = GetIconCellImage(slot);
+            if (iconCellImage == null)
+            {
+                return null;
+            }
+
+            Text quantityText = GetQuantityText(slot);
+            if (quantityText != null)
+            {
+                return quantityText;
+            }
+
+            GameObject quantityObject = new GameObject("QuantityText", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+            quantityObject.transform.SetParent(iconCellImage.transform, false);
+            RectTransform rect = quantityObject.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(1f, 0f);
+            rect.anchorMax = new Vector2(1f, 0f);
+            rect.pivot = new Vector2(1f, 0f);
+            rect.anchoredPosition = new Vector2(-3f, 2f);
+            rect.sizeDelta = new Vector2(28f, 18f);
+
+            quantityText = quantityObject.GetComponent<Text>();
+            quantityText.font = GetDialogFont();
+            quantityText.fontSize = 12;
+            quantityText.fontStyle = FontStyle.Bold;
+            quantityText.alignment = TextAnchor.LowerRight;
+            quantityText.color = Color.white;
+            quantityText.raycastTarget = false;
+
+            Outline outline = quantityObject.AddComponent<Outline>();
+            outline.effectColor = new Color32(42, 24, 10, 255);
+            outline.effectDistance = new Vector2(1f, -1f);
+            return quantityText;
+        }
+
+        private Button EnsureSlotButton(int index)
+        {
+            if (index < 0 || index >= itemSlots.Count)
+            {
+                return null;
+            }
+
+            InventoryItemSlot slot = itemSlots[index];
+            if (slot.button != null)
+            {
+                return slot.button;
+            }
+
+            GameObject rowObject = GetSlotRowObject(slot);
+            if (rowObject == null)
+            {
+                return null;
+            }
+
+            Button button = rowObject.GetComponent<Button>();
+            if (button == null)
+            {
+                button = rowObject.AddComponent<Button>();
+            }
+
+            Image rowImage = rowObject.GetComponent<Image>();
+            if (rowImage != null && button.targetGraphic == null)
+            {
+                button.targetGraphic = rowImage;
+            }
+
+            slot.button = button;
+            itemSlots[index] = slot;
+            return button;
         }
 
         private void ApplySkillSlot(int index, string name, string statDesc, string spritePath, Color32 fallbackColor)
@@ -694,7 +1076,7 @@ namespace TinyDragon.UI
                 slot.iconImage.enabled = true;
                 if (!string.IsNullOrEmpty(spritePath))
                 {
-                    Sprite sprite = Resources.Load<Sprite>(spritePath);
+                    Sprite sprite = LoadSpriteResource(spritePath);
                     if (sprite != null)
                     {
                         slot.iconImage.sprite = sprite;
@@ -722,6 +1104,55 @@ namespace TinyDragon.UI
             {
                 slot.statText.text = statDesc;
             }
+
+            SetItemSlotVisual(index, false, true);
+            if (slot.button != null)
+            {
+                slot.button.interactable = true;
+            }
+        }
+
+        private Sprite LoadSpriteResource(string resourcePath)
+        {
+            if (string.IsNullOrWhiteSpace(resourcePath))
+            {
+                return null;
+            }
+
+            Sprite sprite = Resources.Load<Sprite>(resourcePath);
+            if (sprite != null)
+            {
+                return sprite;
+            }
+
+            Sprite[] sprites = Resources.LoadAll<Sprite>(resourcePath);
+            if (sprites == null || sprites.Length == 0)
+            {
+                return null;
+            }
+
+            string expectedName = resourcePath;
+            int slashIndex = expectedName.LastIndexOf('/');
+            if (slashIndex >= 0)
+            {
+                expectedName = expectedName.Substring(slashIndex + 1);
+            }
+
+            Sprite largestSprite = sprites[0];
+            foreach (Sprite candidate in sprites)
+            {
+                if (candidate.name == expectedName || candidate.name == expectedName + "_0")
+                {
+                    return candidate;
+                }
+
+                if (candidate.rect.width * candidate.rect.height > largestSprite.rect.width * largestSprite.rect.height)
+                {
+                    largestSprite = candidate;
+                }
+            }
+
+            return largestSprite;
         }
 
         private void OnRowClicked(int index)
@@ -729,99 +1160,562 @@ namespace TinyDragon.UI
             if (activeTabIndex == 1)
             {
                 selectedItemIndex = index;
-                if (index < currentInventoryData.Items.Count)
+                RefreshSelectedRowVisuals();
+                InventoryItemViewData item = GetVisibleInventoryItem(index, out bool isCarried);
+                if (item == null)
                 {
-                    var item = currentInventoryData.Items[index];
-                    if (itemStatsText != null)
-                    {
-                        itemStatsText.text = $"{item.Name}\n" +
-                                             $"{GetItemStatsDescription(item)}\n" +
-                                             $"Số lượng: {item.Quantity}\n" +
-                                             $"Cấp nâng cấp: {item.UpgradeLevel}";
-                    }
+                    return;
                 }
+
+                ShowItemTransferDialog(item, !isCarried);
             }
             else if (activeTabIndex == 2)
             {
-                if (selectedSkillIndex == index)
+                selectedSkillIndex = index;
+                RefreshSelectedRowVisuals();
+                ShowSkillDetails(index);
+
+                if (index >= StatUpgradeSlotCount)
                 {
-                    PerformSkillUpgrade(index);
+                    ShowSkillLearnDialog(index);
                 }
                 else
                 {
-                    selectedSkillIndex = index;
-                    ShowSkillDetails(index);
+                    ShowStatUpgradeDialog(index);
                 }
             }
+        }
+
+        private void ShowItemTransferDialog(InventoryItemViewData item, bool toCarried)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            EnsureItemTransferDialog();
+            pendingTransferItem = item;
+            pendingTransferToCarried = toCarried;
+
+            if (itemTransferMessageText != null)
+            {
+                string action = toCarried ? "Mang vật phẩm này lên người?" : "Cất vật phẩm này xuống túi?";
+                string stateText = toCarried ? "Chỉ số sẽ được cộng ngay." : "Chỉ số đang cộng sẽ bị trừ.";
+                itemTransferMessageText.text =
+                    $"<b>{item.Name}</b>\n" +
+                    $"<color=#117A3A>{GetItemStatsDescription(item)}</color>\n" +
+                    $"<color=#7B6044>SL {item.Quantity}  |  Cấp {item.UpgradeLevel}</color>\n\n" +
+                    $"{stateText}\n{action}";
+            }
+
+            if (itemTransferConfirmButton != null)
+            {
+                itemTransferConfirmButton.onClick.RemoveAllListeners();
+                itemTransferConfirmButton.onClick.AddListener(ConfirmItemTransfer);
+            }
+
+            if (itemTransferCancelButton != null)
+            {
+                itemTransferCancelButton.onClick.RemoveAllListeners();
+                itemTransferCancelButton.onClick.AddListener(HideItemTransferDialog);
+            }
+
+            if (itemTransferDialog != null)
+            {
+                itemTransferDialog.SetActive(true);
+                itemTransferDialog.transform.SetAsLastSibling();
+            }
+        }
+
+        private void ConfirmItemTransfer()
+        {
+            if (pendingTransferItem == null)
+            {
+                HideItemTransferDialog();
+                return;
+            }
+
+            bool success = TinyDragonSaveManager.Instance.SetPlayerItemCarried(
+                pendingTransferItem.PlayerItemId,
+                pendingTransferToCarried
+            );
+
+            if (!success)
+            {
+                if (itemTransferMessageText != null)
+                {
+                    itemTransferMessageText.text = "Không thể thêm item.\nHành trang có thể đã đầy hoặc bạn đang mang một item cùng loại.";
+                }
+                return;
+            }
+
+            HideItemTransferDialog();
+            Refresh();
+        }
+
+        private void HideItemTransferDialog()
+        {
+            if (itemTransferDialog != null)
+            {
+                itemTransferDialog.SetActive(false);
+            }
+
+            pendingTransferItem = null;
+        }
+
+        private void EnsureItemTransferDialog()
+        {
+            if (itemTransferDialog != null)
+            {
+                return;
+            }
+
+            Transform parent = panel != null ? panel.transform : transform;
+            Font font = GetDialogFont();
+
+            itemTransferDialog = CreateDialogOverlay("ItemTransferDialog", parent);
+            GameObject box = CreateDialogBox(itemTransferDialog.transform, font, "Hành trang", new Vector2(414f, 286f), new Color32(255, 247, 229, 255));
+
+            itemTransferMessageText = CreateDialogText("Message", box.transform, font, new Vector2(0f, -4f), new Vector2(354f, 156f), 19, TextAnchor.MiddleCenter);
+            itemTransferConfirmButton = CreateDialogButton("ConfirmButton", box.transform, font, "Đồng ý", new Vector2(-92f, -108f), new Color32(76, 164, 86, 255));
+            itemTransferCancelButton = CreateDialogButton("CancelButton", box.transform, font, "Để sau", new Vector2(92f, -108f), new Color32(190, 92, 63, 255));
+
+            itemTransferDialog.SetActive(false);
+        }
+
+        private Text CreateDialogText(string objectName, Transform parent, Font font, Vector2 anchoredPosition, Vector2 size, int fontSize, TextAnchor anchor)
+        {
+            GameObject textObject = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+            textObject.transform.SetParent(parent, false);
+            RectTransform rect = textObject.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = anchoredPosition;
+            rect.sizeDelta = size;
+
+            Text text = textObject.GetComponent<Text>();
+            text.font = font;
+            text.fontSize = fontSize;
+            text.fontStyle = FontStyle.Bold;
+            text.alignment = anchor;
+            text.color = new Color32(58, 28, 12, 255);
+            text.supportRichText = true;
+            text.resizeTextForBestFit = true;
+            text.resizeTextMinSize = Mathf.Max(14, fontSize - 3);
+            text.resizeTextMaxSize = fontSize;
+            text.horizontalOverflow = HorizontalWrapMode.Wrap;
+            text.verticalOverflow = VerticalWrapMode.Overflow;
+            return text;
+        }
+
+        private Button CreateDialogButton(string objectName, Transform parent, Font font, string label, Vector2 anchoredPosition, Color32 color)
+        {
+            GameObject buttonObject = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+            buttonObject.transform.SetParent(parent, false);
+            RectTransform rect = buttonObject.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = anchoredPosition;
+            rect.sizeDelta = new Vector2(122f, 40f);
+            Image buttonImage = buttonObject.GetComponent<Image>();
+            buttonImage.color = color;
+            Shadow shadow = buttonObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color32(66, 34, 18, 150);
+            shadow.effectDistance = new Vector2(3f, -3f);
+            Outline outline = buttonObject.AddComponent<Outline>();
+            outline.effectColor = new Color32(112, 61, 31, 220);
+            outline.effectDistance = new Vector2(1f, -1f);
+
+            Text labelText = CreateDialogText("Label", buttonObject.transform, font, Vector2.zero, rect.sizeDelta, 18, TextAnchor.MiddleCenter);
+            labelText.text = label;
+            labelText.color = Color.white;
+            labelText.fontStyle = FontStyle.Bold;
+            Button button = buttonObject.GetComponent<Button>();
+            ColorBlock colors = button.colors;
+            colors.normalColor = Color.white;
+            colors.highlightedColor = new Color32(255, 238, 185, 255);
+            colors.pressedColor = new Color32(224, 190, 126, 255);
+            colors.selectedColor = Color.white;
+            button.colors = colors;
+            return button;
+        }
+
+        private Font GetDialogFont()
+        {
+            Font font = Font.CreateDynamicFontFromOSFont(
+                new[] { "Trebuchet MS", "Verdana", "Segoe UI", "Tahoma" },
+                18
+            );
+            return font != null ? font : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        }
+
+        private GameObject CreateDialogOverlay(string objectName, Transform parent)
+        {
+            GameObject overlay = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            overlay.transform.SetParent(parent, false);
+            RectTransform overlayRect = overlay.GetComponent<RectTransform>();
+            overlayRect.anchorMin = Vector2.zero;
+            overlayRect.anchorMax = Vector2.one;
+            overlayRect.offsetMin = Vector2.zero;
+            overlayRect.offsetMax = Vector2.zero;
+            overlay.GetComponent<Image>().color = new Color32(28, 18, 8, 118);
+            return overlay;
+        }
+
+        private GameObject CreateDialogBox(Transform parent, Font font, string title, Vector2 size, Color32 bodyColor)
+        {
+            GameObject box = new GameObject("DialogBox", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            box.transform.SetParent(parent, false);
+            RectTransform boxRect = box.GetComponent<RectTransform>();
+            boxRect.anchorMin = new Vector2(0.5f, 0.5f);
+            boxRect.anchorMax = new Vector2(0.5f, 0.5f);
+            boxRect.pivot = new Vector2(0.5f, 0.5f);
+            boxRect.anchoredPosition = new Vector2(72f, 0f);
+            boxRect.sizeDelta = size;
+
+            Image boxImage = box.GetComponent<Image>();
+            boxImage.color = bodyColor;
+            Outline boxOutline = box.AddComponent<Outline>();
+            boxOutline.effectColor = new Color32(129, 78, 34, 255);
+            boxOutline.effectDistance = new Vector2(3f, -3f);
+            Shadow boxShadow = box.AddComponent<Shadow>();
+            boxShadow.effectColor = new Color32(55, 29, 12, 150);
+            boxShadow.effectDistance = new Vector2(6f, -6f);
+
+            GameObject header = new GameObject("Header", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            header.transform.SetParent(box.transform, false);
+            RectTransform headerRect = header.GetComponent<RectTransform>();
+            headerRect.anchorMin = new Vector2(0.5f, 1f);
+            headerRect.anchorMax = new Vector2(0.5f, 1f);
+            headerRect.pivot = new Vector2(0.5f, 1f);
+            headerRect.anchoredPosition = new Vector2(0f, -8f);
+            headerRect.sizeDelta = new Vector2(size.x - 18f, 44f);
+            Image headerImage = header.GetComponent<Image>();
+            headerImage.color = new Color32(65, 142, 73, 255);
+            Outline headerOutline = header.AddComponent<Outline>();
+            headerOutline.effectColor = new Color32(38, 94, 45, 255);
+            headerOutline.effectDistance = new Vector2(2f, -2f);
+
+            Text titleText = CreateDialogText("Title", header.transform, font, Vector2.zero, headerRect.sizeDelta, 21, TextAnchor.MiddleCenter);
+            titleText.text = title;
+            titleText.color = new Color32(255, 248, 210, 255);
+            titleText.fontStyle = FontStyle.Bold;
+            return box;
+        }
+
+        private void ShowAlertDialog(string message)
+        {
+            EnsureAlertDialog();
+
+            if (alertMessageText != null)
+            {
+                alertMessageText.text = message;
+            }
+
+            if (alertOkButton != null)
+            {
+                alertOkButton.onClick.RemoveAllListeners();
+                alertOkButton.onClick.AddListener(HideAlertDialog);
+            }
+
+            if (alertDialog != null)
+            {
+                alertDialog.SetActive(true);
+                alertDialog.transform.SetAsLastSibling();
+            }
+        }
+
+        private void HideAlertDialog()
+        {
+            if (alertDialog != null)
+            {
+                alertDialog.SetActive(false);
+            }
+        }
+
+        private void EnsureAlertDialog()
+        {
+            if (alertDialog != null)
+            {
+                return;
+            }
+
+            Transform parent = panel != null ? panel.transform : transform;
+            Font font = GetDialogFont();
+
+            alertDialog = CreateDialogOverlay("InventoryAlertDialog", parent);
+            GameObject box = CreateDialogBox(alertDialog.transform, font, "Thông báo", new Vector2(344f, 194f), new Color32(255, 246, 226, 255));
+
+            alertMessageText = CreateDialogText("Message", box.transform, font, new Vector2(0f, -4f), new Vector2(286f, 78f), 19, TextAnchor.MiddleCenter);
+            alertOkButton = CreateDialogButton("OkButton", box.transform, font, "Đóng", new Vector2(0f, -72f), new Color32(190, 92, 63, 255));
+            alertDialog.SetActive(false);
+        }
+
+        private void ShowSkillLearnDialog(int index)
+        {
+            if (currentInventoryData == null)
+            {
+                return;
+            }
+
+            int skillIdx = index - StatUpgradeSlotCount;
+            if (skillIdx < 0 || skillIdx >= currentInventoryData.CombatSkills.Count)
+            {
+                return;
+            }
+
+            EnsureSkillLearnDialog();
+            pendingSkill = currentInventoryData.CombatSkills[skillIdx];
+            pendingStatUpgrade = null;
+            UpdateSkillLearnDialogMessage(null);
+
+            if (skillLearnConfirmButton != null)
+            {
+                skillLearnConfirmButton.onClick.RemoveAllListeners();
+                skillLearnConfirmButton.onClick.AddListener(ConfirmSkillLearn);
+                Text label = skillLearnConfirmButton.GetComponentInChildren<Text>(true);
+                if (label != null) label.text = pendingSkill.SkillLevel <= 0 ? "Học" : "Nâng";
+            }
+
+            if (skillLearnCancelButton != null)
+            {
+                skillLearnCancelButton.onClick.RemoveAllListeners();
+                skillLearnCancelButton.onClick.AddListener(HideSkillLearnDialog);
+            }
+
+            if (skillLearnDialog != null)
+            {
+                skillLearnDialog.SetActive(true);
+                skillLearnDialog.transform.SetAsLastSibling();
+            }
+        }
+
+        private void UpdateSkillLearnDialogMessage(string warning)
+        {
+            if (pendingSkill == null || skillLearnMessageText == null)
+            {
+                return;
+            }
+
+            int cost = (pendingSkill.SkillLevel + 1) * 5000;
+            int nextLevel = pendingSkill.SkillLevel + 1;
+            int currentBonus = Mathf.Max(pendingSkill.EffectValue, 0) * pendingSkill.SkillLevel;
+            int nextBonus = Mathf.Max(pendingSkill.EffectValue, 0) * nextLevel;
+            string levelText = pendingSkill.SkillLevel <= 0 ? "Chưa học" : $"Cấp {pendingSkill.SkillLevel}";
+            string warningText = string.IsNullOrEmpty(warning) ? string.Empty : $"\n<color=red>{warning}</color>";
+
+            skillLearnMessageText.text =
+                $"<b>{pendingSkill.Name}</b>  <color=#236BC8>{levelText}</color>\n" +
+                $"Sức đánh: <color=#00B824>+{currentBonus} -> +{nextBonus}</color>\n" +
+                $"Tốn <color=#A9552E>{cost:N0}</color> tiềm năng.\n" +
+                $"Xác nhận học/nâng kỹ năng?" +
+                warningText;
+        }
+
+        private void ShowStatUpgradeDialog(int index)
+        {
+            InventoryStatUpgradeViewData upgrade = GetStatUpgrade(index);
+            if (upgrade == null)
+            {
+                return;
+            }
+
+            EnsureSkillLearnDialog();
+            pendingSkill = null;
+            pendingStatUpgrade = upgrade;
+            UpdateStatUpgradeDialogMessage(null);
+
+            if (skillLearnConfirmButton != null)
+            {
+                skillLearnConfirmButton.onClick.RemoveAllListeners();
+                skillLearnConfirmButton.onClick.AddListener(ConfirmStatUpgrade);
+                Text label = skillLearnConfirmButton.GetComponentInChildren<Text>(true);
+                if (label != null) label.text = "Nâng";
+            }
+
+            if (skillLearnCancelButton != null)
+            {
+                skillLearnCancelButton.onClick.RemoveAllListeners();
+                skillLearnCancelButton.onClick.AddListener(HideSkillLearnDialog);
+            }
+
+            if (skillLearnDialog != null)
+            {
+                skillLearnDialog.SetActive(true);
+                skillLearnDialog.transform.SetAsLastSibling();
+            }
+        }
+
+        private void UpdateStatUpgradeDialogMessage(string warning)
+        {
+            if (pendingStatUpgrade == null || skillLearnMessageText == null)
+            {
+                return;
+            }
+
+            int currentValue = GetStatUpgradeCurrentValue(pendingStatUpgrade);
+            int nextValue = currentValue + pendingStatUpgrade.EffectValue;
+            int cost = GetStatUpgradeCost(pendingStatUpgrade);
+            string warningText = string.IsNullOrEmpty(warning) ? string.Empty : $"\n<color=red>{warning}</color>";
+
+            skillLearnMessageText.text =
+                $"Tăng <b>{pendingStatUpgrade.Name}</b>\n" +
+                $"<color=#236BC8>{currentValue}</color>  ->  <color=#00B824>{nextValue}</color>\n" +
+                $"Tốn <color=#A9552E>{cost:N0}</color> tiềm năng." +
+                warningText;
+        }
+
+        private void ConfirmSkillLearn()
+        {
+            if (pendingSkill == null)
+            {
+                HideSkillLearnDialog();
+                return;
+            }
+
+            bool success = TinyDragonSaveManager.Instance.LearnOrUpgradeSkill(pendingSkill.SkillId);
+            if (!success)
+            {
+                string skillName = pendingSkill.Name;
+                HideSkillLearnDialog();
+                ShowAlertDialog($"Không đủ điểm tiềm năng để học hoặc nâng cấp\n{skillName}.");
+                return;
+            }
+
+            HideSkillLearnDialog();
+            Refresh();
+        }
+
+        private void ConfirmStatUpgrade()
+        {
+            if (pendingStatUpgrade == null)
+            {
+                HideSkillLearnDialog();
+                return;
+            }
+
+            string statName = pendingStatUpgrade.Name;
+            bool success = TinyDragonSaveManager.Instance.UpgradePlayerStat(pendingStatUpgrade.StatType);
+            if (!success)
+            {
+                HideSkillLearnDialog();
+                ShowAlertDialog($"Không đủ điểm tiềm năng để nâng\n{statName}.");
+                return;
+            }
+
+            HideSkillLearnDialog();
+            Refresh();
+        }
+
+        private void HideSkillLearnDialog()
+        {
+            if (skillLearnDialog != null)
+            {
+                skillLearnDialog.SetActive(false);
+            }
+
+            pendingSkill = null;
+            pendingStatUpgrade = null;
+        }
+
+        private void EnsureSkillLearnDialog()
+        {
+            if (skillLearnDialog != null)
+            {
+                return;
+            }
+
+            Transform parent = panel != null ? panel.transform : transform;
+            Font font = GetDialogFont();
+
+            skillLearnDialog = CreateDialogOverlay("SkillLearnDialog", parent);
+            GameObject box = CreateDialogBox(skillLearnDialog.transform, font, "Kỹ năng", new Vector2(408f, 266f), new Color32(255, 248, 232, 255));
+
+            skillLearnMessageText = CreateDialogText("Message", box.transform, font, new Vector2(0f, -2f), new Vector2(344f, 126f), 20, TextAnchor.MiddleCenter);
+            skillLearnConfirmButton = CreateDialogButton("LearnButton", box.transform, font, "Học", new Vector2(-96f, -98f), new Color32(82, 126, 202, 255));
+            skillLearnCancelButton = CreateDialogButton("CancelButton", box.transform, font, "Hủy", new Vector2(96f, -98f), new Color32(190, 92, 63, 255));
+
+            skillLearnDialog.SetActive(false);
+        }
+
+        private InventoryStatUpgradeViewData GetStatUpgrade(int index)
+        {
+            if (currentInventoryData == null || index < 0 || index >= currentInventoryData.StatUpgrades.Count)
+            {
+                return null;
+            }
+
+            return currentInventoryData.StatUpgrades[index];
+        }
+
+        private int GetStatUpgradeCurrentValue(InventoryStatUpgradeViewData upgrade)
+        {
+            if (upgrade == null || currentInventoryData == null)
+            {
+                return 0;
+            }
+
+            if (upgrade.StatType == "HP") return currentInventoryData.BaseHP;
+            if (upgrade.StatType == "KI") return currentInventoryData.BaseKi;
+            if (upgrade.StatType == "ATK") return currentInventoryData.BaseAtk;
+            if (upgrade.StatType == "DEF") return currentInventoryData.BaseDef;
+            if (upgrade.StatType == "CRIT") return currentInventoryData.BaseCritPercent;
+            return 0;
+        }
+
+        private int GetStatUpgradeCost(InventoryStatUpgradeViewData upgrade)
+        {
+            if (upgrade == null || currentInventoryData == null)
+            {
+                return 0;
+            }
+
+            if (upgrade.StatType == "HP") return currentInventoryData.BaseHP * 10;
+            if (upgrade.StatType == "KI") return currentInventoryData.BaseKi * 10;
+            if (upgrade.StatType == "ATK") return currentInventoryData.BaseAtk * 100;
+            if (upgrade.StatType == "DEF") return (currentInventoryData.BaseDef + 1) * 500000;
+            if (upgrade.StatType == "CRIT") return (currentInventoryData.BaseCritPercent + 1) * 50000000;
+            return 0;
         }
 
         private void ShowSkillDetails(int index)
         {
             if (currentInventoryData == null || skillStatsText == null) return;
 
-            if (index == 0)
+            if (index >= 0 && index < StatUpgradeSlotCount)
             {
-                int hp = currentInventoryData.BaseHP;
-                int cost = hp * 10;
-                skillStatsText.text = $"[HP GỐC]\n" +
-                                     $"Tăng lượng HP tối đa cơ bản.\n" +
-                                     $"Cấp hiện tại: {hp}\n" +
-                                     $"Chi phí nâng cấp: {cost:N0} tiềm năng (Tăng +20 HP)\n" +
-                                     $"Bấm lần nữa để xác nhận Nâng Cấp.";
+                InventoryStatUpgradeViewData upgrade = GetStatUpgrade(index);
+                if (upgrade == null)
+                {
+                    return;
+                }
+
+                skillStatsText.text = $"[{upgrade.Name.ToUpper()}]\n" +
+                                     $"{upgrade.Description}\n" +
+                                     $"Chỉ số hiện tại: {GetStatUpgradeCurrentValue(upgrade)}\n" +
+                                     $"Chi phí nâng cấp: {GetStatUpgradeCost(upgrade):N0} tiềm năng (Tăng +{upgrade.EffectValue})\n" +
+                                     $"Bấm vào dòng để mở hộp thoại nâng cấp.";
             }
-            else if (index == 1)
+            else if (index >= StatUpgradeSlotCount)
             {
-                int ki = currentInventoryData.BaseKi;
-                int cost = ki * 10;
-                skillStatsText.text = $"[KI GỐC]\n" +
-                                     $"Tăng lượng KI tối đa cơ bản.\n" +
-                                     $"Cấp hiện tại: {ki}\n" +
-                                     $"Chi phí nâng cấp: {cost:N0} tiềm năng (Tăng +20 KI)\n" +
-                                     $"Bấm lần nữa để xác nhận Nâng Cấp.";
-            }
-            else if (index == 2)
-            {
-                int atk = currentInventoryData.BaseAtk;
-                int cost = atk * 100;
-                skillStatsText.text = $"[SỨC ĐÁNH GỐC]\n" +
-                                     $"Tăng sức đánh cơ bản.\n" +
-                                     $"Cấp hiện tại: {atk}\n" +
-                                     $"Chi phí nâng cấp: {cost:N0} tiềm năng (Tăng +1 sức đánh)\n" +
-                                     $"Bấm lần nữa để xác nhận Nâng Cấp.";
-            }
-            else if (index == 3)
-            {
-                int def = currentInventoryData.BaseDef;
-                int cost = (def + 1) * 500000;
-                skillStatsText.text = $"[GIÁP GỐC]\n" +
-                                     $"Tăng giáp phòng thủ cơ bản.\n" +
-                                     $"Cấp hiện tại: {def}\n" +
-                                     $"Chi phí nâng cấp: {cost:N0} tiềm năng (Tăng +1 giáp)\n" +
-                                     $"Bấm lần nữa để xác nhận Nâng Cấp.";
-            }
-            else if (index == 4)
-            {
-                int crit = currentInventoryData.BaseCritPercent;
-                int cost = (crit + 1) * 50000000;
-                skillStatsText.text = $"[CHÍ MẠNG GỐC]\n" +
-                                     $"Tăng tỷ lệ chí mạng cơ bản.\n" +
-                                     $"Cấp hiện tại: {crit}%\n" +
-                                     $"Chi phí nâng cấp: {cost:N0} tiềm năng (Tăng +1% chí mạng)\n" +
-                                     $"Bấm lần nữa để xác nhận Nâng Cấp.";
-            }
-            else if (index >= 5)
-            {
-                int skillIdx = index - 5;
+                int skillIdx = index - StatUpgradeSlotCount;
                 if (skillIdx < currentInventoryData.CombatSkills.Count)
                 {
                     var skill = currentInventoryData.CombatSkills[skillIdx];
                     int cost = (skill.SkillLevel + 1) * 5000;
-                    skillStatsText.text = $"[{skill.Name.ToUpper()} - CẤP {skill.SkillLevel}]\n" +
+                    int currentBonus = Mathf.Max(skill.EffectValue, 0) * skill.SkillLevel;
+                    int nextBonus = Mathf.Max(skill.EffectValue, 0) * (skill.SkillLevel + 1);
+                    string levelText = skill.SkillLevel <= 0 ? "CHƯA HỌC" : $"CẤP {skill.SkillLevel}";
+                    string confirmText = skill.SkillLevel <= 0 ? "Bấm vào dòng để mở hộp thoại học kỹ năng." : "Bấm vào dòng để mở hộp thoại nâng cấp.";
+                    skillStatsText.text = $"[{skill.Name.ToUpper()} - {levelText}]\n" +
                                          $"Mô tả: {skill.Description}\n" +
                                          $"KI hao tổn: {skill.KiCost} | Hồi chiêu: {skill.CooldownSec}s\n" +
                                          $"Sát thương: {skill.DamageMultiplier * 100}%\n" +
+                                         $"Sức đánh cộng thêm: {currentBonus} -> {nextBonus}\n" +
                                          $"Chi phí nâng cấp: {cost:N0} tiềm năng\n" +
-                                         $"Bấm lần nữa để nâng cấp.";
+                                         confirmText;
                 }
             }
         }
@@ -831,11 +1725,11 @@ namespace TinyDragon.UI
             if (currentInventoryData == null) return;
 
             string statType = null;
-            if (index == 0) statType = "HP";
-            else if (index == 1) statType = "KI";
-            else if (index == 2) statType = "ATK";
-            else if (index == 3) statType = "DEF";
-            else if (index == 4) statType = "CRIT";
+            if (index >= 0 && index < StatUpgradeSlotCount)
+            {
+                InventoryStatUpgradeViewData upgrade = GetStatUpgrade(index);
+                statType = upgrade != null ? upgrade.StatType : null;
+            }
 
             if (statType != null)
             {
@@ -847,36 +1741,28 @@ namespace TinyDragon.UI
                 }
                 else
                 {
-                    if (skillStatsText != null)
-                    {
-                        skillStatsText.text += "\n<color=red>Thất bại: Không đủ tiềm năng!</color>";
-                    }
+                    ShowAlertDialog("Không đủ điểm tiềm năng để nâng cấp chỉ số này.");
                 }
             }
-            else if (index >= 5)
+            else if (index >= StatUpgradeSlotCount)
             {
-                if (skillStatsText != null)
-                {
-                    skillStatsText.text += "\n<color=orange>Tính năng nâng cấp chiêu thức này đang phát triển!</color>";
-                }
+                ShowSkillLearnDialog(index);
             }
         }
 
         private string BuildItemStat(InventoryItemViewData item)
         {
-            if (item.UpgradeLevel > 0)
-            {
-                return $"Giáp+{item.UpgradeLevel}";
-            }
+            List<string> parts = new List<string>();
+            if (item.BonusHP != 0) parts.Add($"HP+{item.BonusHP}");
+            if (item.BonusKi != 0) parts.Add($"KI+{item.BonusKi}");
+            if (item.BonusAtk != 0) parts.Add($"Tấn công+{item.BonusAtk}");
+            if (item.BonusDef != 0) parts.Add($"Giáp+{item.BonusDef}");
+            if (item.BonusCritPercent != 0) parts.Add($"Chí mạng+{item.BonusCritPercent}%");
+            if (item.BonusSpd != 0) parts.Add($"Tốc độ+{item.BonusSpd:0.##}");
 
-            if (item.BonusHP != 0)
+            if (parts.Count > 0)
             {
-                return $"HP+{item.BonusHP}";
-            }
-
-            if (item.BonusAtk != 0)
-            {
-                return $"Sức đánh+{item.BonusAtk}";
+                return string.Join(", ", parts);
             }
 
             return item.Quantity > 1 ? $"x{item.Quantity}" : item.ItemType;
@@ -987,7 +1873,6 @@ namespace TinyDragon.UI
                     if (t != null) downArrowButton = t.GetComponent<Button>();
                 }
 
-                // Auto-locate Tabs
                 if (tabButtons.Count == 0)
                 {
                     tabButtons.Clear();
@@ -1002,7 +1887,6 @@ namespace TinyDragon.UI
                     }
                 }
 
-                // Find all item rows in the item list panel
                 if (itemListPanel != null)
                 {
                     Transform container = itemListPanel.transform.Find("Viewport/Content");

@@ -1,3 +1,4 @@
+using System;
 using TinyDragon.Data;
 using UnityEngine;
 
@@ -13,11 +14,6 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float maxMana = GameplayBalanceDefaults.PlayerBaseKi;
     [SerializeField] private float manaRegenRate = 10f;
     [SerializeField] private GameObject auraEffect;
-    [Header("Sound")]
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip attackSound;
-    [SerializeField] private AudioClip powerShotSound;
-
     private float nextAttackTime;
     private float nextPowerShotTime;
     private float currentMana;
@@ -30,9 +26,17 @@ public class PlayerAttack : MonoBehaviour
 
     private static bool hasSyncedMana;
     private static float syncedMana;
+    private bool isAuraActive;
+
+    public event Action<int> PunchExecuted;
+    public event Action<int> KickExecuted;
+    public event Action AttackExecuted;
+    public event Action PowerShotExecuted;
+    public event Action<bool> AuraStateChanged;
 
     public float CurrentMana => currentMana;
     public float MaxMana => maxMana;
+    public bool IsAuraActive => isAuraActive;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetSyncedManaState()
@@ -62,11 +66,6 @@ public class PlayerAttack : MonoBehaviour
         if (projectileShooter == null)
         {
             projectileShooter = GetComponent<ProjectileShooter>();
-        }
-
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
         }
 
         CacheAuraEffect();
@@ -106,8 +105,8 @@ public class PlayerAttack : MonoBehaviour
         }
 
         animatorDriver?.TriggerPunch(punchComboStep);
-        PlaySound(attackSound);
         DealMeleeDamage();
+        PunchExecuted?.Invoke(punchComboStep);
         nextAttackTime = Time.time + attackCooldown;
         lastPunchTime = Time.time;
         return true;
@@ -128,8 +127,8 @@ public class PlayerAttack : MonoBehaviour
         }
 
         animatorDriver?.TriggerKick(kickComboStep);
-        PlaySound(attackSound);
         DealMeleeDamage();
+        KickExecuted?.Invoke(kickComboStep);
         nextAttackTime = Time.time + attackCooldown;
         lastKickTime = Time.time;
         return true;
@@ -167,7 +166,7 @@ public class PlayerAttack : MonoBehaviour
         }
 
         animatorDriver?.TriggerAttack();
-        PlaySound(attackSound);
+        AttackExecuted?.Invoke();
         nextAttackTime = Time.time + attackCooldown;
     }
 
@@ -207,9 +206,18 @@ public class PlayerAttack : MonoBehaviour
             projectileShooter?.SuppressNextShot(attackCooldown + 0.25f);
         }
 
-        projectileShooter?.ShootPower();
-        PlaySound(powerShotSound);
+        if (projectileShooter == null)
+        {
+            return false;
+        }
+
+        if (projectileShooter != null && !projectileShooter.ShootPower())
+        {
+            return false;
+        }
+
         SetCurrentMana(currentMana - manaCost);
+        PowerShotExecuted?.Invoke();
         nextPowerShotTime = Time.time + powerShotCooldown;
         return true;
     }
@@ -276,17 +284,18 @@ public class PlayerAttack : MonoBehaviour
             CacheAuraEffect();
         }
 
+        if (isAuraActive == active)
+        {
+            return;
+        }
+
+        isAuraActive = active;
+
         if (auraEffect != null && auraEffect.activeSelf != active)
         {
             auraEffect.SetActive(active);
         }
-    }
 
-    private void PlaySound(AudioClip clip)
-    {
-        if (audioSource != null && clip != null)
-        {
-            audioSource.PlayOneShot(clip, TinyDragon.UI.SettingsManager.GlobalSFXVolume);
-        }
+        AuraStateChanged?.Invoke(active);
     }
 }

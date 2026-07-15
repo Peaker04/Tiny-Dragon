@@ -1,3 +1,4 @@
+using System;
 using TinyDragon.Data;
 using UnityEngine;
 
@@ -34,6 +35,7 @@ public class EnemyHealth : MonoBehaviour
     public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
 
     /// <summary>Fired when this enemy's HP reaches zero, just before the GameObject is destroyed.</summary>
+    public event Action<int, bool> Damaged;
     public event System.Action<EnemyHealth> Died;
 
     private void Awake()
@@ -117,6 +119,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = Mathf.Max(currentHealth - actualDamage, 0);
         UpdateHealthBar();
         ShowDamagePopup(actualDamage);
+        Damaged?.Invoke(actualDamage, currentHealth <= 0);
         Debug.Log($"Enemy took {actualDamage} damage. HP: {currentHealth}/{maxHealth}", this);
 
         if (currentHealth <= 0)

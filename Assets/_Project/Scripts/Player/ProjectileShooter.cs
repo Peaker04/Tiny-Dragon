@@ -36,14 +36,14 @@ public class ProjectileShooter : MonoBehaviour
         EnsurePool();
     }
 
-    public void Shoot()
+    public bool Shoot()
     {
         if (ShouldSuppressShot())
         {
-            return;
+            return false;
         }
 
-        ShootProjectile(
+        return ShootProjectile(
             projectileDamage,
             projectileSpeed,
             projectileLifetime,
@@ -57,9 +57,9 @@ public class ProjectileShooter : MonoBehaviour
         );
     }
 
-    public void ShootPower()
+    public bool ShootPower()
     {
-        ShootProjectile(
+        return ShootProjectile(
             powerShotDamage,
             powerShotSpeed,
             powerShotLifetime,
@@ -89,7 +89,7 @@ public class ProjectileShooter : MonoBehaviour
         powerShotDamage = Mathf.Max(damage, 1);
     }
 
-    private void ShootProjectile(
+    private bool ShootProjectile(
         int damage,
         float speed,
         float lifetime,
@@ -116,7 +116,7 @@ public class ProjectileShooter : MonoBehaviour
         if (projectilePool == null)
         {
             Debug.LogWarning("Player projectile prefab is missing. Assign Resources/Combat/PlayerProjectile to ProjectileShooter.", this);
-            return;
+            return false;
         }
 
         PlayerProjectile projectile = projectilePool.Get(spawnPosition, Quaternion.identity);
@@ -132,6 +132,8 @@ public class ProjectileShooter : MonoBehaviour
             sortingOrder,
             projectilePool.Release
         );
+
+        return true;
     }
 
     private bool ShouldSuppressShot()

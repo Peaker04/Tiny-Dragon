@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(PlayerInputReader))]
 [RequireComponent(typeof(PlayerMovement))]
@@ -32,6 +33,8 @@ public class PlayerController : MonoBehaviour
         set { _canAttack = value; UpdateInputReader(); } 
     }
 
+    public event Action ProjectileShot;
+
     private void Awake()
     {
         if (projectileShooter == null)
@@ -59,6 +62,14 @@ public class PlayerController : MonoBehaviour
 
     public void ShootProjectile()
     {
-        projectileShooter?.Shoot();
+        if (projectileShooter == null)
+        {
+            return;
+        }
+
+        if (projectileShooter.Shoot())
+        {
+            ProjectileShot?.Invoke();
+        }
     }
 }

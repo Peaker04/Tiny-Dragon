@@ -111,6 +111,10 @@ GameObject:
   - component: {fileID: 956085414}
   - component: {fileID: 956085415}
   - component: {fileID: 956085416}
+  - component: {fileID: 956085417}
+  - component: {fileID: 956085418}
+  - component: {fileID: 956085419}
+  - component: {fileID: 956085420}
   - component: {fileID: 956085406}
   m_Layer: 0
   m_Name: Player
@@ -221,7 +225,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 988c8045c17d5c949bf6350258fa7e25, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   projectileShooter: {fileID: 956085413}
 --- !u!114 &956085407
@@ -234,7 +238,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0d4c51f0e7543e5a26dbd83ec6e91b2, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 230
   damagePopupPrefab: {fileID: 0}
@@ -251,7 +255,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2158c9225acb4bf99f7ebfd4e21fd5c5, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputReader
   attackKey: 106
   powerShotKey: 107
@@ -273,7 +277,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d91b6fdacde44a9b250c7f33c99897b, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   inputReader: {fileID: 956085410}
   moveSpeed: 5
@@ -293,7 +297,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c2d033a2ce489b9b950f306ad6c819, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimatorDriver
   inputReader: {fileID: 956085410}
   movement: {fileID: 956085411}
@@ -308,7 +312,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 512fd064676f40e0a7ecc16d3c8f5071, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileShooter
   projectilePrefab: {fileID: 0}
   projectilePoolPrewarmCount: 4
@@ -351,9 +355,6 @@ MonoBehaviour:
   maxMana: 100
   manaRegenRate: 10
   auraEffect: {fileID: 1676606902}
-  audioSource: {fileID: 0}
-  attackSound: {fileID: 0}
-  powerShotSound: {fileID: 0}
   comboWindow: 0.5
 --- !u!114 &956085415
 MonoBehaviour:
@@ -395,6 +396,48 @@ MonoBehaviour:
   immortalInGuideScene: 1
   showGameOverOutsideGuide: 1
   gameOverUI: {fileID: 0}
+--- !u!114 &956085417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d2fb0d9ed2f48f3b8d7f4098df55a91, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TinyDragon.Audio.PlayerActionAudio
+  playerMovement: {fileID: 956085411}
+  playerAttack: {fileID: 956085414}
+  playerController: {fileID: 956085404}
+  emitter: {fileID: 956085420}
+  jumpClip: {fileID: 8300000, guid: 9a7b6d65bb8f4f5f8f1c4b22b8c9f3b1, type: 3}
+  punchLowClip: {fileID: 8300000, guid: 4f73f6bc0d1a4cf9b1bd0d93b4ce1a20, type: 3}
+  punchMediumClip: {fileID: 8300000, guid: 6e67df7ed2c34ae2a14e58a93dc8a6a4, type: 3}
+  kickLowClip: {fileID: 8300000, guid: 1e1e9bb1ce4449d4a30d0f79fd8d4f40, type: 3}
+  kickMediumClip: {fileID: 8300000, guid: 5d463c8a2fda45d4a6aa4f3f83fdcdd0, type: 3}
+  projectileClip: {fileID: 8300000, guid: 8b8f1ef6f0c1451c8e0d16b7f90bd9ee, type: 3}
+  powerShotClip: {fileID: 8300000, guid: 2fbd09d87f9c4a31b9caa2f0a4d3e7a5, type: 3}
+--- !u!114 &956085418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f3b1a9b9f0d4b44a2d53efc41d8f5ae, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TinyDragon.Audio.CharacterFeedbackAudio
+  playerHealth: {fileID: 956085407}
+  enemyHealth: {fileID: 0}
+  playerMovement: {fileID: 956085411}
+  emitter: {fileID: 956085420}
+  impactClip: {fileID: 0}
+  deathClip: {fileID: 0}
+  landingClip: {fileID: 0}
 --- !u!95 &956085406
 Animator:
   serializedVersion: 7
@@ -417,6 +460,118 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &956085419
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &956085420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6b86d2b8e8f4a53a09b3c7fca9b1d11, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TinyDragon.Audio.PlayerActionAudioEmitter
+  audioSource: {fileID: 956085419}
+  spatialBlend: 0
+  ignoreListenerPause: 1
 --- !u!1 &1432590104
 GameObject:
   m_ObjectHideFlags: 0

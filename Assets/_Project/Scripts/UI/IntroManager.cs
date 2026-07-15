@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -17,22 +17,22 @@ public class IntroManager : MonoBehaviour
     [Header("UI Components")]
     [SerializeField] private Image displayImage;
     [SerializeField] private TextMeshProUGUI displayText;
-    [SerializeField] private GameObject skipButton; // Optional: Drag Skip Button game object here
+    [SerializeField] private GameObject skipButton;
 
     [Header("Poster Settings")]
-    [SerializeField] private CanvasGroup posterCanvasGroup; // Drag poster Canvas/Panel here
+    [SerializeField] private CanvasGroup posterCanvasGroup;
     [SerializeField] private float posterDisplayDuration = 2f;
     [SerializeField] private float posterFadeDuration = 1.5f;
 
     [Header("Story Transition Settings")]
-    [SerializeField] private CanvasGroup storyCanvasGroup; // Drag story Panel/Canvas here to fade smoothly
+    [SerializeField] private CanvasGroup storyCanvasGroup;
     [SerializeField] private float storyFadeDuration = 0.5f;
 
     [Header("Audio Settings")]
-    [SerializeField] private AudioSource audioSource;       // Drag an AudioSource here
-    [SerializeField] private AudioClip posterAudioClip;     // Clip played during poster display
-    [SerializeField] private AudioClip storyAudioClip;      // Clip played during story display
-    [SerializeField] private float maxAudioVolume = 0.7f;   // Max volume for fade in
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip posterAudioClip;
+    [SerializeField] private AudioClip storyAudioClip;
+    [SerializeField] private float maxAudioVolume = 0.7f;
 
     [Header("Story Data")]
     [SerializeField] private StorySceneData[] introScenes;
@@ -51,7 +51,6 @@ public class IntroManager : MonoBehaviour
 
         bool hasSeenIntro = !forceShowIntro && PlayerPrefs.GetInt("HasSeenIntro", 0) == 1;
 
-        // Find global background music player and pause it during intro
         GameObject bgmPlayer = GameObject.Find("BackgroundMusicPlayer");
         if (bgmPlayer != null)
         {
@@ -62,31 +61,27 @@ public class IntroManager : MonoBehaviour
             }
         }
 
-        // Hide skip button initially during poster display
         if (skipButton != null)
         {
             skipButton.SetActive(false);
         }
 
-        // Initialize UI and Audio states
         if (posterCanvasGroup != null)
         {
             posterCanvasGroup.alpha = 1f;
             posterCanvasGroup.blocksRaycasts = true;
             posterCanvasGroup.gameObject.SetActive(true);
             
-            // Hide story elements temporarily
             SetStoryElementsActive(false);
             if (storyCanvasGroup != null)
             {
                 storyCanvasGroup.alpha = 0f;
             }
             
-            // Play poster music if available
             if (audioSource != null && posterAudioClip != null)
             {
                 audioSource.clip = posterAudioClip;
-                audioSource.volume = maxAudioVolume;
+                audioSource.volume = GetScaledIntroVolume();
                 audioSource.loop = true;
                 audioSource.Play();
             }
@@ -110,11 +105,10 @@ public class IntroManager : MonoBehaviour
                 skipButton.SetActive(true);
             }
 
-            // Play story music immediately if no poster
             if (audioSource != null && storyAudioClip != null)
             {
                 audioSource.clip = storyAudioClip;
-                audioSource.volume = maxAudioVolume;
+                audioSource.volume = GetScaledIntroVolume();
                 audioSource.loop = true;
                 audioSource.Play();
             }
@@ -128,7 +122,7 @@ public class IntroManager : MonoBehaviour
 
     private void Update()
     {
-        if (isTransitioning) return; // Disable skip/next click during fade transitions
+        if (isTransitioning) return;
 
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
         {
@@ -140,10 +134,8 @@ public class IntroManager : MonoBehaviour
     {
         isTransitioning = true;
 
-        // Display the poster
         yield return new WaitForSeconds(posterDisplayDuration);
 
-        // Fade out poster and its audio together
         float elapsedTime = 0f;
         float startVolume = (audioSource != null) ? audioSource.volume : 0f;
 
@@ -176,7 +168,6 @@ public class IntroManager : MonoBehaviour
             yield break;
         }
 
-        // Enable story elements and skip button
         SetStoryElementsActive(true);
         if (skipButton != null)
         {
@@ -188,7 +179,6 @@ public class IntroManager : MonoBehaviour
             UpdateUI();
         }
 
-        // Switch to story music and play
         if (audioSource != null && storyAudioClip != null)
         {
             audioSource.clip = storyAudioClip;
@@ -197,7 +187,6 @@ public class IntroManager : MonoBehaviour
             audioSource.Play();
         }
 
-        // Fade in story UI and story music
         if (storyCanvasGroup != null || audioSource != null)
         {
             elapsedTime = 0f;
@@ -212,13 +201,13 @@ public class IntroManager : MonoBehaviour
                 }
                 if (audioSource != null && storyAudioClip != null)
                 {
-                    audioSource.volume = Mathf.Lerp(0f, maxAudioVolume, t);
+                    audioSource.volume = Mathf.Lerp(0f, GetScaledIntroVolume(), t);
                 }
                 yield return null;
             }
             
             if (storyCanvasGroup != null) storyCanvasGroup.alpha = 1f;
-            if (audioSource != null) audioSource.volume = maxAudioVolume;
+            if (audioSource != null) audioSource.volume = GetScaledIntroVolume();
         }
 
         isTransitioning = false;
@@ -248,7 +237,6 @@ public class IntroManager : MonoBehaviour
     {
         isTransitioning = true;
 
-        // 1. Fade out current story scene
         if (storyCanvasGroup != null)
         {
             float elapsedTime = 0f;
@@ -261,11 +249,9 @@ public class IntroManager : MonoBehaviour
             storyCanvasGroup.alpha = 0f;
         }
 
-        // 2. Change content
         currentIndex = targetIndex;
         UpdateUI();
 
-        // 3. Fade in new story scene
         if (storyCanvasGroup != null)
         {
             float elapsedTime = 0f;
@@ -290,7 +276,6 @@ public class IntroManager : MonoBehaviour
             displayText.text = introScenes[currentIndex].narrativeText;
     }
 
-    // Public method that can be assigned to Skip Button's OnClick event
     public void SkipIntro()
     {
         StopAllCoroutines();
@@ -302,13 +287,11 @@ public class IntroManager : MonoBehaviour
         PlayerPrefs.SetInt("HasSeenIntro", 1);
         PlayerPrefs.Save();
         
-        // Stop intro music completely
         if (audioSource != null)
         {
             audioSource.Stop();
         }
 
-        // Resume global background music before switching scene
         if (globalBgmSource != null)
         {
             globalBgmSource.Play();
@@ -321,7 +304,6 @@ public class IntroManager : MonoBehaviour
     {
         isTransitioning = true;
 
-        // Fade out story UI and intro music together before loading scene
         float elapsedTime = 0f;
         float startVolume = (audioSource != null) ? audioSource.volume : 0f;
 
@@ -350,5 +332,10 @@ public class IntroManager : MonoBehaviour
         {
             SceneManager.LoadScene(nextLevelName);
         }
+    }
+
+    private float GetScaledIntroVolume()
+    {
+        return maxAudioVolume * TinyDragon.UI.SettingsManager.GlobalSFXVolume;
     }
 }

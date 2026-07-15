@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace TinyDragon.UI
@@ -7,16 +7,17 @@ namespace TinyDragon.UI
     {
         [Header("UI Canvases")]
         [SerializeField] private Canvas pauseCanvas;
-        [SerializeField] private Canvas settingsCanvas; // Reference to settings canvas if opening from pause menu
+        [SerializeField] private Canvas settingsCanvas;
 
         [Header("Navigation")]
-        [SerializeField] private string mainMenuSceneName = "MainMenu"; // Name of your Main Menu scene
+        [SerializeField] private string mainMenuSceneName = "MainMenu";
 
         private bool isPaused = false;
 
         public bool IsPaused => isPaused;
 
         private static PauseManager instance;
+        public static PauseManager Instance => instance;
 
         private void Awake()
         {
@@ -27,7 +28,6 @@ namespace TinyDragon.UI
             }
 
             instance = this;
-            DontDestroyOnLoad(transform.root.gameObject);
         }
 
         private void Start()
@@ -39,7 +39,6 @@ namespace TinyDragon.UI
                 if (sm != null) settingsCanvas = sm.GetComponent<Canvas>();
             }
 
-            // Ensure UI is in correct state on game start
             if (pauseCanvas != null) pauseCanvas.enabled = false;
             if (settingsCanvas != null) settingsCanvas.enabled = false;
             Time.timeScale = 1f;
@@ -78,11 +77,12 @@ namespace TinyDragon.UI
         public void PauseGame()
         {
             isPaused = true;
-            Time.timeScale = 0f; // Freeze game physics and animations
+            Time.timeScale = 0f;
+            TinyDragon.Audio.UiSoundPlayer.PlayClick();
             
             if (settingsCanvas != null)
             {
-                settingsCanvas.enabled = false; // Close settings canvas automatically
+                settingsCanvas.enabled = false;
             }
 
             if (pauseCanvas != null)
@@ -94,7 +94,7 @@ namespace TinyDragon.UI
         public void ResumeGame()
         {
             isPaused = false;
-            Time.timeScale = 1f; // Unfreeze game
+            Time.timeScale = 1f;
             
             if (pauseCanvas != null)
             {
@@ -109,7 +109,6 @@ namespace TinyDragon.UI
 
         public void LoadMainMenu()
         {
-            // Reset Time.timeScale to normal before loading a new scene
             Time.timeScale = 1f;
             
             if (!string.IsNullOrWhiteSpace(mainMenuSceneName))

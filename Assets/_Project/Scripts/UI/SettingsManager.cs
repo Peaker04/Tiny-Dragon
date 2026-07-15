@@ -1,26 +1,26 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-
+using TinyDragon.Audio;
 namespace TinyDragon.UI
 {
     [System.Serializable]
     public struct SliderSettingElement
     {
-        public string settingName;          // Name of the setting (e.g. "BGM Volume")
-        public Slider slider;               // Reference to the UI Slider component
-        public string playerPrefsKey;       // Key used to save to PlayerPrefs (e.g. "BGM_Volume")
-        [Range(0f, 1f)] public float defaultValue; // Default volume level
-        public bool isBgm;                  // Set to true if this controls BackgroundMusicPlayer
+        public string settingName;
+        public Slider slider;
+        public string playerPrefsKey;
+        [Range(0f, 1f)] public float defaultValue;
+        public bool isBgm;
     }
 
     public class SettingsManager : MonoBehaviour
     {
         private static SettingsManager instance;
+        public static SettingsManager Instance => instance;
 
         [Header("UI Canvases")]
         [SerializeField] private Canvas settingsCanvas;
-        [SerializeField] private Canvas pauseCanvas; // Reference to Pause Canvas to toggle automatically
+        [SerializeField] private Canvas pauseCanvas;
 
         [Header("Settings Elements (Arrays)")]
         [SerializeField] private SliderSettingElement[] sliderSettings;
@@ -36,7 +36,6 @@ namespace TinyDragon.UI
             }
 
             instance = this;
-            DontDestroyOnLoad(transform.root.gameObject);
         }
 
         private void Start()
@@ -48,7 +47,6 @@ namespace TinyDragon.UI
                 if (pm != null) pauseCanvas = pm.GetComponent<Canvas>();
             }
 
-            // Initialize canvas state
             if (settingsCanvas != null) settingsCanvas.enabled = false;
 
             LoadAndApplySettings();
@@ -93,38 +91,34 @@ namespace TinyDragon.UI
 
         public void OpenSettings()
         {
-            // Ẩn inventory nếu đang mở
             InventoryPanel.HideIfVisible();
-            if (pauseCanvas != null) pauseCanvas.enabled = false; // Close pause canvas automatically
+            TinyDragon.Audio.UiSoundPlayer.PlayClick();
+            if (pauseCanvas != null) pauseCanvas.enabled = false;
             if (settingsCanvas != null) settingsCanvas.enabled = true;
-            LoadAndApplySettings(); // Refresh slider UI values
+            LoadAndApplySettings();
         }
 
         public void CloseSettings()
         {
             if (settingsCanvas != null) settingsCanvas.enabled = false;
             
-            // If the game is currently paused (Time.timeScale is 0), return to pause menu
             if (pauseCanvas != null && Time.timeScale == 0f)
             {
                 pauseCanvas.enabled = true;
             }
             
-            PlayerPrefs.Save(); // Save values to disk
+            PlayerPrefs.Save();
         }
 
         private void SetupEventListeners()
         {
-            // Automatically bind OnValueChanged events dynamically to avoid manual Inspector configuration
             for (int i = 0; i < sliderSettings.Length; i++)
             {
-                int index = i; // Prevent closure capture issues
-                if (sliderSettings[index].slider != null)
+                if (sliderSettings[i].slider != null)
                 {
+                    int index = i;
                     sliderSettings[index].slider.onValueChanged.RemoveAllListeners();
-                    sliderSettings[index].slider.onValueChanged.AddListener((val) => {
-                        OnSliderValueChanged(index, val);
-                    });
+                    sliderSettings[index].slider.onValueChanged.AddListener((val) => OnSliderValueChanged(index, val));
                 }
             }
         }
@@ -146,7 +140,6 @@ namespace TinyDragon.UI
 
         private void LoadAndApplySettings()
         {
-            // Load and apply Sliders
             for (int i = 0; i < sliderSettings.Length; i++)
             {
                 var element = sliderSettings[i];
@@ -182,12 +175,26 @@ namespace TinyDragon.UI
 
         private void ApplySFXVolume(float volume)
         {
-            GlobalSFXVolume = volume;
-            AudioSource[] allSources = Object.FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            GlobalSFXVolume = Mathf.Clamp01(volume);
+            AudioSource[] allSources = Object.FindObjectsByType<AudioSource>(FindObjectsInactive.Include);
             foreach (var source in allSources)
             {
                 if (source.gameObject.name == "BackgroundMusicPlayer") continue;
-                source.volume = volume;
+
+                PlayerAuraAudio auraAudio = source.GetComponent<PlayerAuraAudio>();
+                if (auraAudio != null)
+                {
+                    auraAudio.RefreshVolumeFromSettings();
+                    continue;
+                }
+
+                if (source.GetComponent<PlayerActionAudioEmitter>() != null || source.gameObject.name == "UiSoundPlayer")
+                {
+                    source.volume = 1f;
+                    continue;
+                }
+
+                source.volume = GlobalSFXVolume;
             }
         }
     }

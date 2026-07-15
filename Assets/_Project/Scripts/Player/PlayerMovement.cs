@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -11,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float groundCheckRadius = 0.2f;
 
     private Rigidbody2D rb;
+    private bool wasGrounded;
 
     public bool IsGrounded { get; private set; }
     public float HorizontalInput => inputReader != null ? inputReader.Horizontal : 0f;
@@ -18,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
 
     /// <summary>Fired the moment the player leaves the ground via a jump.</summary>
     public event System.Action JumpPerformed;
+    public event Action Landed;
 
     private void Awake()
     {
@@ -26,12 +29,22 @@ public class PlayerMovement : MonoBehaviour
         {
             inputReader = GetComponent<PlayerInputReader>();
         }
+
+        IsGrounded = groundCheck != null
+            && Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        wasGrounded = IsGrounded;
     }
 
     private void FixedUpdate()
     {
         IsGrounded = groundCheck != null
             && Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        if (!wasGrounded && IsGrounded)
+        {
+            Landed?.Invoke();
+        }
+        wasGrounded = IsGrounded;
 
         float horizontalInput = HorizontalInput;
         rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);

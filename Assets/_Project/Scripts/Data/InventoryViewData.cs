@@ -23,7 +23,18 @@ namespace TinyDragon.Data
         public float BaseSpd { get; set; }
         public int Exp { get; set; }
         public List<InventoryItemViewData> Items { get; } = new List<InventoryItemViewData>();
+        public List<InventoryStatUpgradeViewData> StatUpgrades { get; } = new List<InventoryStatUpgradeViewData>();
         public List<InventorySkillViewData> CombatSkills { get; } = new List<InventorySkillViewData>();
+    }
+
+    public sealed class InventoryStatUpgradeViewData
+    {
+        public string SkillId { get; set; }
+        public string StatType { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string IconKey { get; set; }
+        public int EffectValue { get; set; }
     }
 
     public sealed class InventorySkillViewData
@@ -33,10 +44,11 @@ namespace TinyDragon.Data
         public string Description { get; set; }
         public string IconKey { get; set; }
         public string SkillType { get; set; }
-        public int SkillLevel { get; set; } // 0 if locked
+        public int SkillLevel { get; set; }
         public int KiCost { get; set; }
         public float CooldownSec { get; set; }
         public float DamageMultiplier { get; set; }
+        public int EffectValue { get; set; }
     }
 
     public sealed class InventoryItemViewData
@@ -58,5 +70,6 @@ namespace TinyDragon.Data
         public int BonusCritDamagePercent { get; set; }
         public float BonusSpd { get; set; }
         public string SpritePath { get; set; }
+        public bool IsCarried { get; set; }
     }
 }

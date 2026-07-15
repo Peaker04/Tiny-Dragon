@@ -233,9 +233,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TinyDragon.UI.SettingsManager, Assembly-CSharp
-        m_MethodName: ToggleSettings
+      - m_Target: {fileID: 7669555169843259924}
+        m_TargetAssemblyTypeName: TinyDragon.UI.PlayerStatusHud, Assembly-CSharp
+        m_MethodName: OnSettingsClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -515,9 +515,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TinyDragon.UI.PauseManager, Assembly-CSharp
-        m_MethodName: TogglePause
+      - m_Target: {fileID: 7669555169843259924}
+        m_TargetAssemblyTypeName: TinyDragon.UI.PlayerStatusHud, Assembly-CSharp
+        m_MethodName: OnPauseClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

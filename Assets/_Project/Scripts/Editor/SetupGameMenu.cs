@@ -88,7 +88,7 @@ public class SetupGameMenu
             Debug.Log("Added GameMenuOverlay to " + path);
         }
 
-        // Apply only Settings to Level_01_Origin
+        // Apply the same overlay to Level_01_Origin so Settings/Pause stay available there too.
         Scene menuScene = EditorSceneManager.OpenScene("Assets/_Project/Scenes/Level_01_Origin.unity", OpenSceneMode.Single);
         foreach (GameObject root in menuScene.GetRootGameObjects())
         {
@@ -97,8 +97,7 @@ public class SetupGameMenu
                 GameObject.DestroyImmediate(root);
             }
         }
-        GameObject settingsOnlyPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/UI/Settings.prefab");
-        PrefabUtility.InstantiatePrefab(settingsOnlyPrefab);
+        PrefabUtility.InstantiatePrefab(savedPrefab);
         EditorSceneManager.SaveScene(menuScene);
 
         Debug.Log("Game Menu Overlay Setup Complete!");
