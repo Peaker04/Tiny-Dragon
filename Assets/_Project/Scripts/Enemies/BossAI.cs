@@ -71,12 +71,14 @@ public class BossAI : MonoBehaviour
     private float arenaAwarenessMaxX;
     private float arenaAwarenessMinY;
     private float arenaAwarenessMaxY;
+    private float detectionVerticalTolerance;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        detectionVerticalTolerance = Mathf.Max(verticalTolerance, 0f);
         if (projectileShooter == null)
         {
             projectileShooter = GetComponent<EnemyProjectileShooter>();
@@ -192,7 +194,7 @@ public class BossAI : MonoBehaviour
         float horizontalDistance = Mathf.Abs(player.position.x - transform.position.x);
         float verticalDistance = Mathf.Abs(player.position.y - transform.position.y);
 
-        if (horizontalDistance > detectRange || verticalDistance > verticalTolerance)
+        if (horizontalDistance > detectRange || verticalDistance > detectionVerticalTolerance)
         {
             SetMoving(false);
             StopMoving();
@@ -200,20 +202,24 @@ public class BossAI : MonoBehaviour
         }
 
         FacePlayer();
+        bool isWithinAttackHeight = verticalDistance <= verticalTolerance;
 
-        if (horizontalDistance <= meleeRange && Time.time >= nextMeleeTime)
+        if (isWithinAttackHeight && horizontalDistance <= meleeRange && Time.time >= nextMeleeTime)
         {
             DoMeleeAttack();
             return;
         }
 
-        if (useComboAttack && horizontalDistance <= comboRange && Time.time >= nextComboTime)
+        if (isWithinAttackHeight && useComboAttack && horizontalDistance <= comboRange && Time.time >= nextComboTime)
         {
             DoComboAttack();
             return;
         }
 
-        if (horizontalDistance <= energyRange && horizontalDistance > meleeRange && Time.time >= nextEnergyTime)
+        if (isWithinAttackHeight
+            && horizontalDistance <= energyRange
+            && horizontalDistance > meleeRange
+            && Time.time >= nextEnergyTime)
         {
             DoEnergyAttack();
             return;
@@ -278,13 +284,14 @@ public class BossAI : MonoBehaviour
         detectRange = Mathf.Max(detectRange, horizontalRange);
         energyRange = Mathf.Max(energyRange, horizontalRange);
         verticalTolerance = Mathf.Max(verticalTolerance, verticalRange);
+        detectionVerticalTolerance = Mathf.Max(detectionVerticalTolerance, verticalRange);
         hasArenaAwarenessBounds = false;
     }
 
     public void SetDetectionAwareness(float horizontalRange, float verticalRange)
     {
         detectRange = Mathf.Max(detectRange, horizontalRange);
-        verticalTolerance = Mathf.Max(verticalTolerance, verticalRange);
+        detectionVerticalTolerance = Mathf.Max(detectionVerticalTolerance, verticalRange);
         hasArenaAwarenessBounds = false;
     }
 
@@ -293,6 +300,9 @@ public class BossAI : MonoBehaviour
         detectRange = Mathf.Max(detectRange, groundBounds.size.x + horizontalPadding * 2f);
         energyRange = Mathf.Max(energyRange, groundBounds.size.x + horizontalPadding * 2f);
         verticalTolerance = Mathf.Max(verticalTolerance, belowGroundTolerance + aboveGroundTolerance);
+        detectionVerticalTolerance = Mathf.Max(
+            detectionVerticalTolerance,
+            belowGroundTolerance + aboveGroundTolerance);
 
         arenaAwarenessMinX = groundBounds.min.x - horizontalPadding;
         arenaAwarenessMaxX = groundBounds.max.x + horizontalPadding;
@@ -332,7 +342,10 @@ public class BossAI : MonoBehaviour
 
     public void ShootEnergyProjectile()
     {
-        if (projectileShooter == null || player == null || !IsPlayerInsideArenaAwareness())
+        if (projectileShooter == null
+            || player == null
+            || !IsPlayerInsideArenaAwareness()
+            || Mathf.Abs(player.position.y - transform.position.y) > verticalTolerance)
         {
             return;
         }

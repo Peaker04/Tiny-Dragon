@@ -37,6 +37,8 @@ namespace TinyDragon.Data
             }
         }
 
+        public static TinyDragonSaveManager ExistingInstance => instance;
+
         public bool IsReady => isReady && database != null && database.IsOpen;
 
         public string DatabasePath => Path.Combine(Application.persistentDataPath, databaseFileName);
@@ -363,11 +365,14 @@ namespace TinyDragon.Data
                 return;
             }
 
-            playerHealth.transform.position = new Vector3(
-                snapshot.Position.x,
-                snapshot.Position.y,
-                playerHealth.transform.position.z
-            );
+            if (SceneManager.GetActiveScene().name != "Level_03")
+            {
+                playerHealth.transform.position = new Vector3(
+                    snapshot.Position.x,
+                    snapshot.Position.y,
+                    playerHealth.transform.position.z
+                );
+            }
 
             playerHealth.transform.localScale = new Vector3(
                 Mathf.Abs(playerHealth.transform.localScale.x) * snapshot.FacingDirection,

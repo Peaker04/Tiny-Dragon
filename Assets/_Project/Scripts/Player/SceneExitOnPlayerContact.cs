@@ -9,16 +9,31 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
     [SerializeField] private Vector3 targetSpawnPosition;
     [SerializeField] private float targetFacingDirection = 1f;
     [SerializeField] private bool healOnExit;
+    [SerializeField] private bool enableDebugLogging;
 
     private bool isLoadingScene;
+    private bool hasLoggedContact;
 
     private void OnCollisionEnter2D(Collision2D collision)
+    {
+        LogContact(collision.collider);
+        TryLoadTargetScene(collision.collider);
+        TryLoadTargetScene(collision.otherCollider);
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
     {
         TryLoadTargetScene(collision.collider);
         TryLoadTargetScene(collision.otherCollider);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
+    {
+        LogContact(other);
+        TryLoadTargetScene(other);
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
     {
         TryLoadTargetScene(other);
     }
@@ -43,12 +58,13 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
 
     private void TryLoadTargetScene(Collider2D playerCollider)
     {
-        if (isLoadingScene || string.IsNullOrWhiteSpace(targetSceneName))
+        if (isLoadingScene || string.IsNullOrWhiteSpace(targetSceneName) || playerCollider == null)
         {
             return;
         }
 
-        if (playerCollider.GetComponentInParent<PlayerController>() == null)
+        PlayerController playerController = playerCollider.GetComponentInParent<PlayerController>();
+        if (playerController == null)
         {
             return;
         }
@@ -72,6 +88,15 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
 
         isLoadingScene = true;
 
+        if (enableDebugLogging)
+        {
+            Debug.Log(
+                $"[SceneExitOnPlayerContact] Player detected on '{name}'. " +
+                $"Loading '{targetSceneName}' from exit position {transform.position}.",
+                this
+            );
+        }
+
         if (healOnExit)
         {
             PlayerHealth playerHealth = playerCollider.GetComponentInParent<PlayerHealth>();
@@ -92,5 +117,22 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
         }
 
         SceneNavigator.LoadSceneIfSet(targetSceneName);
+    }
+
+    private void LogContact(Collider2D other)
+    {
+        if (!enableDebugLogging || hasLoggedContact || other == null)
+        {
+            return;
+        }
+
+        hasLoggedContact = true;
+        PlayerController playerController = other.GetComponentInParent<PlayerController>();
+        Debug.Log(
+            $"[SceneExitOnPlayerContact] '{name}' received collision/trigger from " +
+            $"'{other.name}'. PlayerDetected={playerController != null}, " +
+            $"exitWorldPosition={transform.position}, exitBounds={GetComponent<Collider2D>().bounds}.",
+            this
+        );
     }
 }

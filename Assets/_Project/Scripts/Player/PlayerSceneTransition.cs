@@ -42,11 +42,12 @@ public class PlayerSceneTransition : MonoBehaviour
     {
         movement = GetComponent<PlayerMovement>();
         rb = GetComponent<Rigidbody2D>();
-        ApplyPendingSpawn();
     }
 
     private void Start()
     {
+        // Apply after sceneLoaded handlers so the explicit transition spawn wins over saved coordinates.
+        ApplyPendingSpawn();
         RestoreSceneCamera();
 
         // [SceneRule] Auto-clear các màn trước khi vào Level_03 (chế độ test)

@@ -201,7 +201,11 @@ namespace TinyDragon.UI
             if (Application.isPlaying)
             {
                 SceneManager.sceneLoaded -= HandleSceneLoaded;
-                TinyDragonSaveManager.Instance.GoldChanged -= HandleGoldChanged;
+                TinyDragonSaveManager manager = TinyDragonSaveManager.ExistingInstance;
+                if (manager != null)
+                {
+                    manager.GoldChanged -= HandleGoldChanged;
+                }
             }
         }
 
