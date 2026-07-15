@@ -13,6 +13,7 @@ public class Level03BossShield : MonoBehaviour, IEnemyDamageFilter
 
     private EnemyHealth health;
     private EnemyPatrol patrol;
+    private BossAI bossAI;
     private SpriteRenderer rootRenderer;
     private Level03Manager manager;
     private Coroutine colorRoutine;
@@ -24,6 +25,7 @@ public class Level03BossShield : MonoBehaviour, IEnemyDamageFilter
     {
         health = GetComponent<EnemyHealth>();
         patrol = GetComponent<EnemyPatrol>();
+        bossAI = GetComponent<BossAI>();
         rootRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -60,7 +62,13 @@ public class Level03BossShield : MonoBehaviour, IEnemyDamageFilter
         }
 
         IsShielded = false;
+        if (bossAI == null)
+        {
+            bossAI = GetComponent<BossAI>();
+        }
+
         patrol?.ApplyPhaseMultipliers(phaseTwoMovementMultiplier, phaseTwoAttackIntervalMultiplier);
+        bossAI?.ApplyPhaseMultipliers(phaseTwoMovementMultiplier, phaseTwoAttackIntervalMultiplier);
         StartColorRoutine(PlayPhaseTwoRage());
     }
 

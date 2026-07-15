@@ -29,6 +29,8 @@ MonoBehaviour:
     damagePopupPrefabPath: Combat/DamagePopup
     playerProjectilePrefabPath: Combat/PlayerProjectile
     enemyProjectilePrefabPath: Combat/EnemyProjectile
+    inventoryCanvasPrefabPath: UI/InventoryCanvas
+    goldCoinSpritePath: UI/Currency/coin_stack
     hudPanelSpritePath: res/x4/mainimage/myTexture2dpanel
     hudPanelSpriteName: myTexture2dpanel_0
     hudHealthSpritePath: res/x4/mainimage/myTexture2dHP
@@ -61,6 +63,7 @@ MonoBehaviour:
     hideCompleteGemDelay: 1.5
     platformFadeDelay: 0.15
     platformTransitionDuration: 0.25
+    fragmentMoveDuration: 0.32
     fragmentPixelsPerUnit: 512
     mergePoint: {x: 0, y: 15, z: 0}
     fragmentStandOffset: {x: 0, y: 0.06, z: 0}
@@ -68,14 +71,34 @@ MonoBehaviour:
     platformColliderOffset: {x: 0, y: -0.075}
     platformVisualScale: {x: 1.35, y: 0.22, z: 1}
     platformGroupA:
-    - {x: -3.5, y: -2.5, z: 0}
-    - {x: 3, y: 1, z: 0}
-    - {x: -4, y: 5, z: 0}
-    - {x: 3.5, y: 9, z: 0}
-    - {x: -2.5, y: 13, z: 0}
+    - {x: -6, y: -2.5, z: 0}
+    - {x: 0, y: -2.5, z: 0}
+    - {x: 6, y: -2.5, z: 0}
+    - {x: -6, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 6, y: 1, z: 0}
+    - {x: -6, y: 5, z: 0}
+    - {x: 0, y: 5, z: 0}
+    - {x: 6, y: 5, z: 0}
+    - {x: -6, y: 9, z: 0}
+    - {x: 0, y: 9, z: 0}
+    - {x: 6, y: 9, z: 0}
+    - {x: -6, y: 13, z: 0}
+    - {x: 0, y: 13, z: 0}
+    - {x: 6, y: 13, z: 0}
     platformGroupB:
-    - {x: 0, y: -1, z: 0}
-    - {x: -1, y: 3, z: 0}
-    - {x: 0, y: 7, z: 0}
-    - {x: 1, y: 11, z: 0}
-    - {x: 1, y: 15, z: 0}
+    - {x: -4, y: -1, z: 0}
+    - {x: 2, y: -1, z: 0}
+    - {x: 8, y: -1, z: 0}
+    - {x: -8, y: 3, z: 0}
+    - {x: -2, y: 3, z: 0}
+    - {x: 4, y: 3, z: 0}
+    - {x: -4, y: 7, z: 0}
+    - {x: 2, y: 7, z: 0}
+    - {x: 8, y: 7, z: 0}
+    - {x: -8, y: 11, z: 0}
+    - {x: -2, y: 11, z: 0}
+    - {x: 4, y: 11, z: 0}
+    - {x: -4, y: 14.5, z: 0}
+    - {x: 2, y: 14.5, z: 0}
+    - {x: 8, y: 14.5, z: 0}

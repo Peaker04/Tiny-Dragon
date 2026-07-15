@@ -41,6 +41,8 @@ namespace TinyDragon.Config
         public string damagePopupPrefabPath = "Combat/DamagePopup";
         public string playerProjectilePrefabPath = "Combat/PlayerProjectile";
         public string enemyProjectilePrefabPath = "Combat/EnemyProjectile";
+        public string inventoryCanvasPrefabPath = "UI/InventoryCanvas";
+        public string goldCoinSpritePath = "UI/Currency/coin_stack";
 
         public string hudPanelSpritePath = "res/x4/mainimage/myTexture2dpanel";
         public string hudPanelSpriteName = "myTexture2dpanel_0";
@@ -86,6 +88,7 @@ namespace TinyDragon.Config
         public float hideCompleteGemDelay = 1.5f;
         public float platformFadeDelay = 0.15f;
         public float platformTransitionDuration = 0.25f;
+        public float fragmentMoveDuration = 0.32f;
         public float fragmentPixelsPerUnit = 512f;
         public Vector3 mergePoint = new Vector3(0f, 15f, 0f);
         public Vector3 fragmentStandOffset = new Vector3(0f, 0.06f, 0f);
@@ -94,19 +97,39 @@ namespace TinyDragon.Config
         public Vector3 platformVisualScale = new Vector3(1.35f, 0.22f, 1f);
         public Vector3[] platformGroupA =
         {
-            new Vector3(-3.5f, -2.5f, 0f),
-            new Vector3(3f, 1f, 0f),
-            new Vector3(-4f, 5f, 0f),
-            new Vector3(3.5f, 9f, 0f),
-            new Vector3(-2.5f, 13f, 0f)
+            new Vector3(-6f, -2.5f, 0f),
+            new Vector3(0f, -2.5f, 0f),
+            new Vector3(6f, -2.5f, 0f),
+            new Vector3(-6f, 1f, 0f),
+            new Vector3(0f, 1f, 0f),
+            new Vector3(6f, 1f, 0f),
+            new Vector3(-6f, 5f, 0f),
+            new Vector3(0f, 5f, 0f),
+            new Vector3(6f, 5f, 0f),
+            new Vector3(-6f, 9f, 0f),
+            new Vector3(0f, 9f, 0f),
+            new Vector3(6f, 9f, 0f),
+            new Vector3(-6f, 13f, 0f),
+            new Vector3(0f, 13f, 0f),
+            new Vector3(6f, 13f, 0f)
         };
         public Vector3[] platformGroupB =
         {
-            new Vector3(0f, -1f, 0f),
-            new Vector3(-1f, 3f, 0f),
-            new Vector3(0f, 7f, 0f),
-            new Vector3(1f, 11f, 0f),
-            new Vector3(1f, 15f, 0f)
+            new Vector3(-4f, -1f, 0f),
+            new Vector3(2f, -1f, 0f),
+            new Vector3(8f, -1f, 0f),
+            new Vector3(-8f, 3f, 0f),
+            new Vector3(-2f, 3f, 0f),
+            new Vector3(4f, 3f, 0f),
+            new Vector3(-4f, 7f, 0f),
+            new Vector3(2f, 7f, 0f),
+            new Vector3(8f, 7f, 0f),
+            new Vector3(-8f, 11f, 0f),
+            new Vector3(-2f, 11f, 0f),
+            new Vector3(4f, 11f, 0f),
+            new Vector3(-4f, 14.5f, 0f),
+            new Vector3(2f, 14.5f, 0f),
+            new Vector3(8f, 14.5f, 0f)
         };
     }
 }

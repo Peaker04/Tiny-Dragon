@@ -32,9 +32,18 @@ public class PlayerHealth : MonoBehaviour
 
     private void Awake()
     {
+        EnsureDeathSceneHandler();
         currentHealth = maxHealth;
         isDead = false;
         EnsureDamagePopupPool();
+    }
+
+    private void EnsureDeathSceneHandler()
+    {
+        if (GetComponent<PlayerDeathSceneHandler>() == null)
+        {
+            gameObject.AddComponent<PlayerDeathSceneHandler>();
+        }
     }
 
     private void OnEnable()

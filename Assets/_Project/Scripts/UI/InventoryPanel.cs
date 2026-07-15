@@ -22,6 +22,54 @@ namespace TinyDragon.UI
         private static InventoryPanel instance;
         public static bool IsVisible => instance != null && instance.panel != null && instance.panel.activeSelf;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void BootstrapRuntimeInventory()
+        {
+            SceneManager.sceneLoaded -= HandleGlobalSceneLoaded;
+            SceneManager.sceneLoaded += HandleGlobalSceneLoaded;
+            EnsureRuntimeInstance();
+        }
+
+        private static void HandleGlobalSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            EnsureRuntimeInstance();
+        }
+
+        private static InventoryPanel EnsureRuntimeInstance()
+        {
+            if (instance != null)
+            {
+                return instance;
+            }
+
+            if (!ShouldSceneHaveRuntimeInventory())
+            {
+                return null;
+            }
+
+            TinyDragonRuntimeConfig config = TinyDragonRuntimeConfigProvider.Resolve(null);
+            GameObject prefab = ResourceLoader.Load<GameObject>(config.Resources.inventoryCanvasPrefabPath);
+            if (prefab == null)
+            {
+                Debug.LogWarning($"InventoryPanel could not load prefab at Resources/{config.Resources.inventoryCanvasPrefabPath}.");
+                return null;
+            }
+
+            GameObject created = Instantiate(prefab);
+            created.name = prefab.name;
+            return created.GetComponentInChildren<InventoryPanel>(true);
+        }
+
+        private static bool ShouldSceneHaveRuntimeInventory()
+        {
+            if (SceneManager.GetActiveScene().name == "Level_01_Original")
+            {
+                return false;
+            }
+
+            return ObjectLookup.Any<PlayerHealth>() != null;
+        }
+
         /// <summary>Ẩn inventory nếu đang mở. Dùng khi mở Pause / Settings.</summary>
         public static void HideIfVisible()
         {
@@ -31,6 +79,7 @@ namespace TinyDragon.UI
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatic()
         {
+            SceneManager.sceneLoaded -= HandleGlobalSceneLoaded;
             instance = null;
         }
 
@@ -140,12 +189,20 @@ namespace TinyDragon.UI
 
         private void OnEnable()
         {
-            if (Application.isPlaying) SceneManager.sceneLoaded += HandleSceneLoaded;
+            if (Application.isPlaying)
+            {
+                SceneManager.sceneLoaded += HandleSceneLoaded;
+                TinyDragonSaveManager.Instance.GoldChanged += HandleGoldChanged;
+            }
         }
 
         private void OnDisable()
         {
-            if (Application.isPlaying) SceneManager.sceneLoaded -= HandleSceneLoaded;
+            if (Application.isPlaying)
+            {
+                SceneManager.sceneLoaded -= HandleSceneLoaded;
+                TinyDragonSaveManager.Instance.GoldChanged -= HandleGoldChanged;
+            }
         }
 
         private void Update()
@@ -258,6 +315,14 @@ namespace TinyDragon.UI
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (!ShouldInventoryBeOpenable()) SetVisible(false);
+        }
+
+        private void HandleGoldChanged(int totalGold)
+        {
+            if (goldText != null)
+            {
+                goldText.text = totalGold.ToString();
+            }
         }
 
         private bool ShouldInventoryBeOpenable()
