@@ -48,6 +48,29 @@ public class PlayerSceneTransition : MonoBehaviour
     private void Start()
     {
         RestoreSceneCamera();
+
+        // [SceneRule] Kiểm tra scene hiện tại đã được clear trước đó chưa
+        // - SceneClearTracker.IsSceneCleared(): kiểm tra HashSet<string> clearedScenes
+        // - Nếu scene đã clear: dùng Invoke("DelayedEnemyCleanup", 0f) để dọn quái sau tất cả Start()
+        //     Lý do: spawners có thể spawn quái trong Start() của chúng, cần đợi chúng chạy xong
+        //     Invoke(0f) chạy vào đầu Update frame kế tiếp, sau tất cả Start()
+        // - Cleanup: Destroy toàn bộ EnemyHealth + disable EnemySpawner / FixedMobRespawner / Encounter
+        if (SceneClearTracker.IsSceneCleared(gameObject.scene.name))
+        {
+            Invoke(nameof(DelayedEnemyCleanup), 0f);
+        }
+    }
+
+    // [SceneRule] Dọn quái khi vào scene đã clear — chạy sau tất cả Start() hoàn tất
+    // - Được gọi bởi Invoke("DelayedEnemyCleanup", 0f) trong Start()
+    // - SceneClearTracker.DisableEnemiesInScene():
+    //     FindObjectsByType<EnemyHealth> → Destroy gameObject
+    //     FindObjectsByType<EnemySpawner> → Destroy gameObject
+    //     FindObjectsByType<FixedMobRespawner> → Destroy gameObject
+    //     FindObjectsByType<VoDaiXenBoHungEncounter> → Destroy gameObject
+    private void DelayedEnemyCleanup()
+    {
+        SceneClearTracker.DisableEnemiesInScene();
     }
 
     private void Update()

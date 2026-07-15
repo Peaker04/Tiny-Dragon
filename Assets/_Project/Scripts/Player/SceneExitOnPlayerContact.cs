@@ -56,12 +56,18 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
         // [SceneRule] Chặn nếu còn quái sống trong scene
         // - Kiểm tra AnyAliveEnemyInScene() mỗi lần player chạm exit
         // - Vẫn còn quái: isLoadingScene giữ nguyên false để player có thể trigger lại sau
-        // - Hết quái: cho phép đi tiếp
+        // - Hết quái: cho phép đi tiếp + đánh dấu scene hiện tại đã clear
         if (AnyAliveEnemyInScene())
         {
             Debug.Log("Scene locked: defeat all enemies before proceeding!");
             return;
         }
+
+        // [SceneRule] Khi tất cả quái đã chết và player rời scene → đánh dấu scene này đã clear
+        // - SceneClearTracker.MarkSceneCleared() lưu tên scene vào HashSet<string>
+        // - Lần sau vào lại scene này, PlayerSceneTransition.Start() sẽ dọn sạch quái
+        // - gameObject.scene.name: tên scene hiện tại (của trigger exit collider)
+        SceneClearTracker.MarkSceneCleared(gameObject.scene.name);
 
         isLoadingScene = true;
 
