@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TinyDragon.Audio;
+using TinyDragon.Shared.Unity;
 namespace TinyDragon.UI
 {
     [System.Serializable]
@@ -26,6 +27,7 @@ namespace TinyDragon.UI
         [SerializeField] private SliderSettingElement[] sliderSettings;
 
         public static float GlobalSFXVolume { get; private set; } = 1f;
+        private PlayerInputReader inputReader;
 
         private void Awake()
         {
@@ -36,6 +38,7 @@ namespace TinyDragon.UI
             }
 
             instance = this;
+            DontDestroyOnLoad(transform.root.gameObject);
         }
 
         private void Start()
@@ -43,7 +46,7 @@ namespace TinyDragon.UI
             if (settingsCanvas == null) settingsCanvas = GetComponent<Canvas>();
             if (pauseCanvas == null)
             {
-                PauseManager pm = FindFirstObjectByType<PauseManager>();
+                PauseManager pm = ObjectLookup.Any<PauseManager>();
                 if (pm != null) pauseCanvas = pm.GetComponent<Canvas>();
             }
 
@@ -56,7 +59,10 @@ namespace TinyDragon.UI
 
         private void Update()
         {
-            PlayerInputReader inputReader = FindAnyObjectByType<PlayerInputReader>();
+            if (inputReader == null)
+            {
+                inputReader = ObjectLookup.Any<PlayerInputReader>();
+            }
 
             if (inputReader != null && inputReader.ConsumeSettingsPressed())
             {
@@ -162,7 +168,7 @@ namespace TinyDragon.UI
 
         private void ApplyBGMVolume(float volume)
         {
-            GameObject bgmPlayer = GameObject.Find("BackgroundMusicPlayer");
+            GameObject bgmPlayer = ObjectLookup.SceneObject("BackgroundMusicPlayer");
             if (bgmPlayer != null)
             {
                 AudioSource source = bgmPlayer.GetComponent<AudioSource>();
@@ -176,7 +182,7 @@ namespace TinyDragon.UI
         private void ApplySFXVolume(float volume)
         {
             GlobalSFXVolume = Mathf.Clamp01(volume);
-            AudioSource[] allSources = Object.FindObjectsByType<AudioSource>(FindObjectsInactive.Include);
+            AudioSource[] allSources = ObjectLookup.AllIncludingInactive<AudioSource>();
             foreach (var source in allSources)
             {
                 if (source.gameObject.name == "BackgroundMusicPlayer") continue;

@@ -1,4 +1,5 @@
 using TinyDragon.Data;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -61,7 +62,7 @@ namespace TinyDragon.UI
 
             if (activeHud == null)
             {
-                activeHud = FindAnyObjectByType<PlayerStatusHud>();
+                activeHud = ObjectLookup.Any<PlayerStatusHud>();
             }
 
             if (activeHud == null)
@@ -93,7 +94,7 @@ namespace TinyDragon.UI
         {
             PlayerHealth.PlayerAvailable += HandlePlayerAvailable;
             SceneManager.sceneLoaded += HandleSceneLoaded;
-            Bind(FindAnyObjectByType<PlayerHealth>());
+            Bind(ObjectLookup.Any<PlayerHealth>());
             ApplySceneVisibility(SceneManager.GetActiveScene());
         }
 
@@ -106,7 +107,7 @@ namespace TinyDragon.UI
 
         private void Start()
         {
-            Bind(FindAnyObjectByType<PlayerHealth>());
+            Bind(ObjectLookup.Any<PlayerHealth>());
             ApplySceneVisibility(SceneManager.GetActiveScene());
         }
 
@@ -509,7 +510,7 @@ namespace TinyDragon.UI
                 return;
             }
 
-            Bind(FindAnyObjectByType<PlayerHealth>());
+            Bind(ObjectLookup.Any<PlayerHealth>());
 
             if (playerAttack == null && playerHealth != null)
             {
@@ -540,7 +541,7 @@ namespace TinyDragon.UI
 
         private void ForceRefreshVitalBars()
         {
-            Bind(FindAnyObjectByType<PlayerHealth>());
+            Bind(ObjectLookup.Any<PlayerHealth>());
             if (playerHealth != null)
             {
                 playerAttack = playerHealth.GetComponent<PlayerAttack>();
@@ -548,7 +549,7 @@ namespace TinyDragon.UI
 
             if (playerAttack == null)
             {
-                playerAttack = FindAnyObjectByType<PlayerAttack>();
+                playerAttack = ObjectLookup.Any<PlayerAttack>();
             }
 
             UpdateBars();
@@ -664,7 +665,7 @@ namespace TinyDragon.UI
 
             if (playerAttack == null)
             {
-                playerAttack = FindAnyObjectByType<PlayerAttack>();
+                playerAttack = ObjectLookup.Any<PlayerAttack>();
             }
 
             float manaPercent = 1f;

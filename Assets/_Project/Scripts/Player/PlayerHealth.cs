@@ -1,19 +1,20 @@
 using System;
+using TinyDragon.Config;
 using TinyDragon.Data;
 using TinyDragon.Audio;
-using TinyDragon.UI;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
-    private const string DefaultDamagePopupPrefabPath = "Combat/DamagePopup";
-
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private int maxHealth = GameplayBalanceDefaults.PlayerBaseHealth;
     [SerializeField] private FloatingDamageText damagePopupPrefab;
     [SerializeField] private int damagePopupPoolPrewarmCount = 4;
     [SerializeField] private Vector3 damagePopupOffset = new Vector3(0f, 1.1f, 0f);
     [SerializeField] private Color damagePopupColor = new Color(1f, 0.15f, 0.05f);
+    [SerializeField] private float invincibilityDuration = 0.5f;
 
     [Header("Guide Scene Logic")]
     [SerializeField] private string guideSceneName = "LangAru";
@@ -23,7 +24,9 @@ public class PlayerHealth : MonoBehaviour
     private int flatDamageReduction;
     private int damageReductionPercent;
     private bool isDead;
+    private float immuneUntil;
     private ComponentPool<FloatingDamageText> damagePopupPool;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     public static event Action<PlayerHealth> PlayerAvailable;
 
@@ -36,8 +39,10 @@ public class PlayerHealth : MonoBehaviour
 
     private void Awake()
     {
+        EnsureDeathSceneHandler();
         currentHealth = maxHealth;
         isDead = false;
+        immuneUntil = 0f;
         EnsureDamagePopupPool();
         EnsurePlayerAudioComponents();
     }
@@ -55,6 +60,12 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
+        if (Time.time < immuneUntil)
+        {
+            return;
+        }
+
+        immuneUntil = Time.time + invincibilityDuration;
         int effectiveDamage = CalculateIncomingDamage(damage);
         currentHealth -= effectiveDamage;
         if (currentHealth <= 0)
@@ -79,11 +90,6 @@ public class PlayerHealth : MonoBehaviour
         {
             isDead = true;
             Died?.Invoke(this);
-            GameOver foundGameOver = FindAnyObjectByType<GameOver>(FindObjectsInactive.Include);
-            if (foundGameOver != null)
-            {
-                foundGameOver.GameOverActive();
-            }
         }
     }
 
@@ -140,7 +146,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (damagePopupPrefab == null)
         {
-            GameObject damagePopupPrefabObject = Resources.Load<GameObject>(DefaultDamagePopupPrefabPath);
+            GameObject damagePopupPrefabObject = ResourceLoader.Load<GameObject>(Config.Resources.damagePopupPrefabPath);
             if (damagePopupPrefabObject != null)
             {
                 damagePopupPrefab = damagePopupPrefabObject.GetComponent<FloatingDamageText>();
@@ -154,6 +160,14 @@ public class PlayerHealth : MonoBehaviour
                 RuntimeSceneRoot.GetChild("DamagePopupPool"),
                 damagePopupPoolPrewarmCount
             );
+        }
+    }
+
+    private void EnsureDeathSceneHandler()
+    {
+        if (GetComponent<PlayerDeathSceneHandler>() == null)
+        {
+            gameObject.AddComponent<PlayerDeathSceneHandler>();
         }
     }
 

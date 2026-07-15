@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,12 +19,16 @@ namespace TinyDragon.Data
 
         [SerializeField] private TextAsset schemaSql;
         [SerializeField] private TextAsset seedSql;
+        [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
         [SerializeField] private string databaseFileName = "tiny_dragon.db";
         [SerializeField] private bool saveOnSceneChange = true;
         [SerializeField] private bool saveOnApplicationQuit = true;
 
         private SqliteDatabase database;
         private bool isReady;
+        private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
+
+        public event Action<int> GoldChanged;
 
         public static TinyDragonSaveManager Instance
         {
@@ -33,7 +39,9 @@ namespace TinyDragon.Data
             }
         }
 
-        public bool IsReady => isReady;
+        public static TinyDragonSaveManager ExistingInstance => instance;
+
+        public bool IsReady => isReady && database != null && database.IsOpen;
 
         public string DatabasePath => Path.Combine(Application.persistentDataPath, databaseFileName);
 
@@ -56,7 +64,7 @@ namespace TinyDragon.Data
                 return;
             }
 
-            instance = FindAnyObjectByType<TinyDragonSaveManager>();
+            instance = ObjectLookup.Any<TinyDragonSaveManager>();
             if (instance != null)
             {
                 return;
@@ -104,20 +112,25 @@ namespace TinyDragon.Data
         {
             database?.Dispose();
             database = null;
+            isReady = false;
         }
 
         public void Initialize()
         {
-            if (isReady)
+            if (isReady && database != null && database.IsOpen)
             {
                 return;
             }
 
+            isReady = false;
             LoadSqlAssetsIfNeeded();
 
+            database?.Dispose();
             database = new SqliteDatabase(DatabasePath);
             if (!database.Open())
             {
+                database.Dispose();
+                database = null;
                 return;
             }
 
@@ -147,7 +160,7 @@ namespace TinyDragon.Data
                 return;
             }
 
-            PlayerHealth playerHealth = FindAnyObjectByType<PlayerHealth>();
+            PlayerHealth playerHealth = ObjectLookup.Any<PlayerHealth>();
             if (playerHealth == null)
             {
                 return;
@@ -304,6 +317,8 @@ namespace TinyDragon.Data
                     SqliteDatabase.AddParameter(command, "@playerId", DefaultPlayerId);
                 }
             );
+
+            GoldChanged?.Invoke(Mathf.Max(gold, 0));
         }
 
         public bool TryAddGold(int amount, out int totalGold)
@@ -332,6 +347,7 @@ namespace TinyDragon.Data
                 totalGold = value == null || value == DBNull.Value ? 0 : Convert.ToInt32(value);
             }
 
+            GoldChanged?.Invoke(totalGold);
             return true;
         }
 
@@ -375,7 +391,7 @@ namespace TinyDragon.Data
 
         private bool IsValidLoadedPosition(Vector3 position)
         {
-            TinyDragon.Camera.MapBounds2D mapBounds = FindAnyObjectByType<TinyDragon.Camera.MapBounds2D>();
+            TinyDragon.Camera.MapBounds2D mapBounds = ObjectLookup.Any<TinyDragon.Camera.MapBounds2D>();
             if (mapBounds != null)
             {
                 Bounds bounds = mapBounds.GetBounds();
@@ -455,6 +471,12 @@ namespace TinyDragon.Data
                 );
                 playerAttack.RestoreMana(inventory.CurrentKi, totalMaxKi);
             }
+
+            PlayerComboAttack comboAttack = playerObject.GetComponent<PlayerComboAttack>();
+            if (comboAttack != null)
+            {
+                comboAttack.ApplyBaseDamage(totalAtk);
+            }
         }
 
         public bool TryLoadEnemyBalance(string enemyId, out EnemyBalanceData balance)
@@ -496,7 +518,7 @@ namespace TinyDragon.Data
 
         private void SavePlayer(PlayerSaveSnapshot snapshot)
         {
-            string stageId = GetStageIdForScene(snapshot.SceneName);
+            string stageId = GetOrCreateStageIdForScene(snapshot.SceneName);
 
             using (IDbCommand command = database.CreateCommand(
                 "UPDATE Player SET currentStageId = @stageId, currentSceneName = @sceneName, " +
@@ -531,7 +553,7 @@ namespace TinyDragon.Data
                 sceneName = "Level_01_guide";
             }
 
-            string stageId = GetStageIdForScene(sceneName) ?? "stage_guide";
+            string stageId = GetOrCreateStageIdForScene(sceneName) ?? "stage_guide";
             using (IDbCommand command = database.CreateCommand(
                 "INSERT OR IGNORE INTO Player (id, displayName, currentStageId, currentSceneName) " +
                 "VALUES (@playerId, @displayName, @stageId, @sceneName);"
@@ -1451,7 +1473,7 @@ namespace TinyDragon.Data
 
         public void ReapplyRuntimeStatsToCurrentPlayer()
         {
-            PlayerHealth playerHealth = FindAnyObjectByType<PlayerHealth>();
+            PlayerHealth playerHealth = ObjectLookup.Any<PlayerHealth>();
             if (playerHealth == null)
             {
                 return;
@@ -1763,16 +1785,72 @@ namespace TinyDragon.Data
 
         private bool EnsureReady()
         {
-            if (!isReady)
+            if (!IsReady)
             {
                 Initialize();
             }
 
-            return isReady;
+            return IsReady;
+        }
+
+        private string GetOrCreateStageIdForScene(string sceneName)
+        {
+            if (database == null || !database.IsOpen || string.IsNullOrWhiteSpace(sceneName))
+            {
+                return null;
+            }
+
+            string existingStageId = GetStageIdForScene(sceneName);
+            if (!string.IsNullOrWhiteSpace(existingStageId))
+            {
+                return existingStageId;
+            }
+
+            string generatedStageId = $"stage_{SanitizeId(sceneName)}";
+            ExecuteNonQuery(
+                "INSERT OR IGNORE INTO Stage " +
+                "(id, zoneId, stageType, name, description, sceneName, orderIndex, minLevelRequired, rewardExp, rewardGold) " +
+                "VALUES (@id, @zoneId, @stageType, @name, @description, @sceneName, @orderIndex, @minLevelRequired, @rewardExp, @rewardGold);",
+                command =>
+                {
+                    SqliteDatabase.AddParameter(command, "@id", generatedStageId);
+                    SqliteDatabase.AddParameter(command, "@zoneId", "zone_earth");
+                    SqliteDatabase.AddParameter(command, "@stageType", "STORY");
+                    SqliteDatabase.AddParameter(command, "@name", sceneName);
+                    SqliteDatabase.AddParameter(command, "@description", $"Runtime stage entry for {sceneName}.");
+                    SqliteDatabase.AddParameter(command, "@sceneName", sceneName);
+                    SqliteDatabase.AddParameter(command, "@orderIndex", 999);
+                    SqliteDatabase.AddParameter(command, "@minLevelRequired", 1);
+                    SqliteDatabase.AddParameter(command, "@rewardExp", 0);
+                    SqliteDatabase.AddParameter(command, "@rewardGold", 0);
+                }
+            );
+
+            return GetStageIdForScene(sceneName) ?? generatedStageId;
+        }
+
+        private static string SanitizeId(string value)
+        {
+            char[] chars = value.ToLowerInvariant().ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                bool valid = (chars[i] >= 'a' && chars[i] <= 'z') || (chars[i] >= '0' && chars[i] <= '9');
+                if (!valid)
+                {
+                    chars[i] = '_';
+                }
+            }
+
+            return new string(chars).Trim('_');
         }
 
         private string GetStageIdForScene(string sceneName)
         {
+            if (database == null || !database.IsOpen || string.IsNullOrWhiteSpace(sceneName))
+            {
+                return null;
+            }
+
             using (IDbCommand command = database.CreateCommand(
                 "SELECT id FROM Stage WHERE sceneName = @sceneName LIMIT 1;"
             ))
@@ -1804,12 +1882,14 @@ namespace TinyDragon.Data
         {
             if (schemaSql == null)
             {
-                schemaSql = Resources.Load<TextAsset>("Database/tiny_dragon_schema");
+                schemaSql = ResourceLoader.Load<TextAsset>(Config.Resources.databaseSchemaPath)
+                    ?? Resources.Load<TextAsset>("Database/tiny_dragon_schema");
             }
 
             if (seedSql == null)
             {
-                seedSql = Resources.Load<TextAsset>("Database/tiny_dragon_seed");
+                seedSql = ResourceLoader.Load<TextAsset>(Config.Resources.databaseSeedPath)
+                    ?? Resources.Load<TextAsset>("Database/tiny_dragon_seed");
             }
 
             if (schemaSql == null)

@@ -1,39 +1,60 @@
 using TinyDragon.Combat;
+using TinyDragon.Config;
 using TinyDragon.Data;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 
+/// <summary>
+/// Manages player projectile spawning and pooling using ProjectileSpec while
+/// preserving the bool-returning API used by PlayerController.
+/// </summary>
 public class ProjectileShooter : MonoBehaviour
 {
-    private const string DefaultProjectilePrefabPath = "Combat/PlayerProjectile";
-
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private PlayerProjectile projectilePrefab;
     [SerializeField] private int projectilePoolPrewarmCount = 4;
-    [SerializeField] private int projectileDamage = GameplayBalanceDefaults.PlayerBaseAttack;
-    [SerializeField] private float projectileSpeed = 8f;
-    [SerializeField] private float projectileLifetime = 2f;
-    [SerializeField] private float projectileScale = 1.2f;
-    [SerializeField] private Vector2 projectileSpawnOffset = new Vector2(0.6f, 0.15f);
-    [SerializeField] private Sprite projectileSprite;
-    [SerializeField] private bool projectileFacesRightByDefault = true;
-    [SerializeField] private string projectileSortingLayerName = "Default";
-    [SerializeField] private int projectileSortingOrder = 100;
+
+    [Header("Normal Shot")]
+    [SerializeField] private ProjectileSpec normalShot = new ProjectileSpec
+    {
+        damage = GameplayBalanceDefaults.PlayerBaseAttack,
+        damageSource = PlayerDamageSource.NormalShot,
+        speed = 8f,
+        lifetime = 2f,
+        scale = 1.2f,
+        spawnOffset = new Vector2(0.6f, 0.15f),
+        facesRightByDefault = true,
+        sortingLayerName = "Default",
+        sortingOrder = 100
+    };
+
     [Header("Power Shot")]
-    [SerializeField] private int powerShotDamage = GameplayBalanceDefaults.PlayerPowerShotDamage;
-    [SerializeField] private float powerShotSpeed = 6f;
-    [SerializeField] private float powerShotLifetime = 3f;
-    [SerializeField] private float powerShotScale = 1f;
-    [SerializeField] private Vector2 powerShotSpawnOffset = new Vector2(0.8f, 0.2f);
-    [SerializeField] private Sprite powerShotSprite;
-    [SerializeField] private bool powerShotFacesRightByDefault = true;
-    [SerializeField] private string powerShotSortingLayerName = "Default";
-    [SerializeField] private int powerShotSortingOrder = 100;
+    [SerializeField] private ProjectileSpec powerShot = new ProjectileSpec
+    {
+        damage = GameplayBalanceDefaults.PlayerPowerShotDamage,
+        damageSource = PlayerDamageSource.PowerShot,
+        speed = 6f,
+        lifetime = 3f,
+        scale = 1f,
+        spawnOffset = new Vector2(0.8f, 0.2f),
+        facesRightByDefault = true,
+        sortingLayerName = "Default",
+        sortingOrder = 100
+    };
 
     private ComponentPool<PlayerProjectile> projectilePool;
     private bool suppressNextShot;
     private float suppressNextShotUntil;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
+
+    private void OnValidate()
+    {
+        EnsureDamageSources();
+    }
 
     private void Awake()
     {
+        EnsureDamageSources();
         EnsurePool();
     }
 
@@ -44,36 +65,14 @@ public class ProjectileShooter : MonoBehaviour
             return false;
         }
 
-        return ShootProjectile(
-            projectileDamage,
-            PlayerDamageSource.NormalShot,
-            projectileSpeed,
-            projectileLifetime,
-            projectileScale,
-            projectileSpawnOffset,
-            projectileSprite,
-            projectileFacesRightByDefault,
-            projectileSortingLayerName,
-            projectileSortingOrder,
-            true
-        );
+        return ShootProjectile(normalShot, true);
     }
 
     public bool ShootPower()
     {
-        return ShootProjectile(
-            powerShotDamage,
-            PlayerDamageSource.PowerShot,
-            powerShotSpeed,
-            powerShotLifetime,
-            powerShotScale,
-            powerShotSpawnOffset,
-            powerShotSprite != null ? powerShotSprite : projectileSprite,
-            powerShotFacesRightByDefault,
-            powerShotSortingLayerName,
-            powerShotSortingOrder,
-            false
-        );
+        ProjectileSpec resolved = powerShot;
+        resolved.sprite = powerShot.sprite != null ? powerShot.sprite : normalShot.sprite;
+        return ShootProjectile(resolved, false);
     }
 
     public void SuppressNextShot(float duration)
@@ -84,35 +83,29 @@ public class ProjectileShooter : MonoBehaviour
 
     public void ApplyProjectileDamage(int damage)
     {
-        projectileDamage = Mathf.Max(damage, 1);
+        normalShot.damage = Mathf.Max(damage, 1);
     }
 
     public void ApplyPowerShotDamage(int damage)
     {
-        powerShotDamage = Mathf.Max(damage, 1);
+        powerShot.damage = Mathf.Max(damage, 1);
     }
 
-    private bool ShootProjectile(
-        int damage,
-        PlayerDamageSource damageSource,
-        float speed,
-        float lifetime,
-        float scale,
-        Vector2 spawnOffset,
-        Sprite sprite,
-        bool facesRightByDefault,
-        string sortingLayerName,
-        int sortingOrder,
-        bool warnIfSpriteMissing
-    )
+    private void EnsureDamageSources()
     {
-        if (sprite == null && warnIfSpriteMissing)
+        normalShot.damageSource = PlayerDamageSource.NormalShot;
+        powerShot.damageSource = PlayerDamageSource.PowerShot;
+    }
+
+    private bool ShootProjectile(ProjectileSpec spec, bool warnIfSpriteMissing)
+    {
+        if (spec.sprite == null && warnIfSpriteMissing)
         {
             Debug.LogWarning("Player projectile sprite is missing. Assign a sprite to ProjectileShooter.", this);
         }
 
         float facingDirection = transform.localScale.x >= 0f ? 1f : -1f;
-        Vector3 scaledSpawnOffset = new Vector3(spawnOffset.x * facingDirection, spawnOffset.y, 0f);
+        Vector3 scaledSpawnOffset = new Vector3(spec.spawnOffset.x * facingDirection, spec.spawnOffset.y, 0f);
         Vector3 spawnPosition = transform.position + scaledSpawnOffset;
         Vector2 projectileDirection = new Vector2(facingDirection, 0f);
 
@@ -126,15 +119,15 @@ public class ProjectileShooter : MonoBehaviour
         PlayerProjectile projectile = projectilePool.Get(spawnPosition, Quaternion.identity);
         projectile.Initialize(
             projectileDirection,
-            speed,
-            damage,
-            damageSource,
-            lifetime,
-            sprite,
-            scale,
-            facesRightByDefault,
-            sortingLayerName,
-            sortingOrder,
+            spec.speed,
+            spec.damage,
+            spec.damageSource,
+            spec.lifetime,
+            spec.sprite,
+            spec.scale,
+            spec.facesRightByDefault,
+            spec.sortingLayerName,
+            spec.sortingOrder,
             projectilePool.Release
         );
 
@@ -161,7 +154,7 @@ public class ProjectileShooter : MonoBehaviour
 
         if (projectilePrefab == null)
         {
-            GameObject projectilePrefabObject = Resources.Load<GameObject>(DefaultProjectilePrefabPath);
+            GameObject projectilePrefabObject = ResourceLoader.Load<GameObject>(Config.Resources.playerProjectilePrefabPath);
             if (projectilePrefabObject != null)
             {
                 projectilePrefab = projectilePrefabObject.GetComponent<PlayerProjectile>();

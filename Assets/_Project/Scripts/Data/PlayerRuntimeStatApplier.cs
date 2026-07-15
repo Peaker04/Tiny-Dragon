@@ -44,6 +44,11 @@ namespace TinyDragon.Data
 
             foreach (InventoryItemViewData item in inventory.Items)
             {
+                if (!ShouldApplyItemStats(item))
+                {
+                    continue;
+                }
+
                 maxHealth += item.BonusHP;
                 maxKi += item.BonusKi;
                 attack += item.BonusAtk;
@@ -61,6 +66,14 @@ namespace TinyDragon.Data
                 speed,
                 inventory.CurrentKi,
                 inventory.BaseAttackSpeed);
+        }
+
+        private static bool ShouldApplyItemStats(InventoryItemViewData item)
+        {
+            return item != null
+                && item.IsCarried
+                && !string.IsNullOrWhiteSpace(item.SlotType)
+                && !string.Equals(item.ItemType, "CONSUMABLE", System.StringComparison.OrdinalIgnoreCase);
         }
     }
 

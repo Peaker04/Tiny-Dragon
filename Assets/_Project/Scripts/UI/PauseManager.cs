@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 
 namespace TinyDragon.UI
 {
@@ -10,6 +11,7 @@ namespace TinyDragon.UI
         [SerializeField] private Canvas settingsCanvas;
 
         [Header("Navigation")]
+        [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
         [SerializeField] private string mainMenuSceneName = "MainMenu";
 
         private bool isPaused = false;
@@ -28,6 +30,7 @@ namespace TinyDragon.UI
             }
 
             instance = this;
+            DontDestroyOnLoad(transform.root.gameObject);
         }
 
         private void Start()
@@ -35,7 +38,7 @@ namespace TinyDragon.UI
             if (pauseCanvas == null) pauseCanvas = GetComponent<Canvas>();
             if (settingsCanvas == null)
             {
-                SettingsManager sm = FindFirstObjectByType<SettingsManager>();
+                SettingsManager sm = ObjectLookup.Any<SettingsManager>();
                 if (sm != null) settingsCanvas = sm.GetComponent<Canvas>();
             }
 
@@ -47,7 +50,7 @@ namespace TinyDragon.UI
 
         private void Update()
         {
-            PlayerInputReader inputReader = FindAnyObjectByType<PlayerInputReader>();
+            PlayerInputReader inputReader = ObjectLookup.Any<PlayerInputReader>();
             
             if (inputReader != null && inputReader.ConsumePausePressed())
             {
@@ -111,14 +114,8 @@ namespace TinyDragon.UI
         {
             Time.timeScale = 1f;
             
-            if (!string.IsNullOrWhiteSpace(mainMenuSceneName))
-            {
-                SceneManager.LoadScene(mainMenuSceneName);
-            }
-            else
-            {
-                Debug.LogWarning("Main Menu Scene Name is not set in PauseManager!");
-            }
+            string configuredScene = TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig).Scenes.mainMenuSceneName;
+            SceneNavigator.LoadSceneIfSet(string.IsNullOrWhiteSpace(configuredScene) ? mainMenuSceneName : configuredScene);
         }
     }
 }

@@ -2,7 +2,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
+using TinyDragon.Config;
+using TinyDragon.Shared.Unity;
 
 [System.Serializable]
 public struct StorySceneData
@@ -35,6 +36,7 @@ public class IntroManager : MonoBehaviour
     [SerializeField] private float maxAudioVolume = 0.7f;
 
     [Header("Story Data")]
+    [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
     [SerializeField] private StorySceneData[] introScenes;
     [SerializeField] private string nextLevelName = "Level_01_Origin";
 
@@ -44,6 +46,7 @@ public class IntroManager : MonoBehaviour
     private int currentIndex = 0;
     private bool isTransitioning = false;
     private AudioSource globalBgmSource;
+    private TinyDragonRuntimeConfig Config => TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig);
 
     private void Start()
     {
@@ -51,7 +54,7 @@ public class IntroManager : MonoBehaviour
 
         bool hasSeenIntro = !forceShowIntro && PlayerPrefs.GetInt("HasSeenIntro", 0) == 1;
 
-        GameObject bgmPlayer = GameObject.Find("BackgroundMusicPlayer");
+        GameObject bgmPlayer = ObjectLookup.SceneObject("BackgroundMusicPlayer");
         if (bgmPlayer != null)
         {
             globalBgmSource = bgmPlayer.GetComponent<AudioSource>();
@@ -328,10 +331,8 @@ public class IntroManager : MonoBehaviour
 
     private void LoadNextLevel()
     {
-        if (!string.IsNullOrWhiteSpace(nextLevelName))
-        {
-            SceneManager.LoadScene(nextLevelName);
-        }
+        string configuredScene = Config.Scenes.introNextSceneName;
+        SceneNavigator.LoadSceneIfSet(string.IsNullOrWhiteSpace(configuredScene) ? nextLevelName : configuredScene);
     }
 
     private float GetScaledIntroVolume()

@@ -2,30 +2,28 @@ using System;
 using TinyDragon.Data;
 using UnityEngine;
 
+/// <summary>
+/// Routes player attack input to mana, combo, melee, and projectile subsystems
+/// while preserving the public events used by the audio/HUD systems.
+/// </summary>
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private PlayerInputReader inputReader;
     [SerializeField] private PlayerAnimatorDriver animatorDriver;
     [SerializeField] private ProjectileShooter projectileShooter;
+    [SerializeField] private PlayerMana mana;
+    [SerializeField] private PlayerComboAttack comboAttack;
     [SerializeField] private float attackCooldown = 0.2f;
+
     [Header("Power Shot")]
     [SerializeField] private float powerShotCooldown = GameplayBalanceDefaults.PowerShotCooldown;
     [SerializeField] private float powerShotManaCostRatio = GameplayBalanceDefaults.PowerShotManaCostRatio;
-    [SerializeField] private float maxMana = GameplayBalanceDefaults.PlayerBaseKi;
-    [SerializeField] private float manaRegenRate = 10f;
+
+    [Header("Aura")]
     [SerializeField] private GameObject auraEffect;
+
     private float nextAttackTime;
     private float nextPowerShotTime;
-    private float currentMana;
-    
-    private int punchComboStep = 0;
-    private float lastPunchTime = 0f;
-    private int kickComboStep = 0;
-    private float lastKickTime = 0f;
-    [SerializeField] private float comboWindow = 0.5f;
-
-    private static bool hasSyncedMana;
-    private static float syncedMana;
     private bool isAuraActive;
 
     public event Action<int> PunchExecuted;
@@ -34,123 +32,105 @@ public class PlayerAttack : MonoBehaviour
     public event Action PowerShotExecuted;
     public event Action<bool> AuraStateChanged;
 
-    public float CurrentMana => currentMana;
-    public float MaxMana => maxMana;
+    public float CurrentMana => mana != null ? mana.CurrentMana : 0f;
+    public float MaxMana => mana != null ? mana.MaxMana : 0f;
     public bool IsAuraActive => isAuraActive;
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetSyncedManaState()
-    {
-        hasSyncedMana = false;
-        syncedMana = 0f;
-    }
 
     public static void ResetManaForNewRun()
     {
-        hasSyncedMana = false;
-        syncedMana = 0f;
+        PlayerMana.ResetManaForNewRun();
     }
 
     private void Awake()
     {
-        if (inputReader == null)
-        {
-            inputReader = GetComponent<PlayerInputReader>();
-        }
-
-        if (animatorDriver == null)
-        {
-            animatorDriver = GetComponent<PlayerAnimatorDriver>();
-        }
-
-        if (projectileShooter == null)
-        {
-            projectileShooter = GetComponent<ProjectileShooter>();
-        }
+        if (inputReader == null) inputReader = GetComponent<PlayerInputReader>();
+        if (animatorDriver == null) animatorDriver = GetComponent<PlayerAnimatorDriver>();
+        if (projectileShooter == null) projectileShooter = GetComponent<ProjectileShooter>();
+        if (mana == null) mana = GetComponent<PlayerMana>();
+        if (mana == null) mana = gameObject.AddComponent<PlayerMana>();
+        if (comboAttack == null) comboAttack = GetComponent<PlayerComboAttack>();
+        if (comboAttack == null) comboAttack = gameObject.AddComponent<PlayerComboAttack>();
 
         CacheAuraEffect();
-        InitializeMana();
+    }
+
+    private void OnEnable()
+    {
+        if (mana != null)
+        {
+            mana.ManaChanged += HandleManaChanged;
+            HandleManaChanged(mana);
+        }
+
+        if (comboAttack != null)
+        {
+            comboAttack.PunchExecuted += HandlePunchExecuted;
+            comboAttack.KickExecuted += HandleKickExecuted;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (mana != null)
+        {
+            mana.ManaChanged -= HandleManaChanged;
+        }
+
+        if (comboAttack != null)
+        {
+            comboAttack.PunchExecuted -= HandlePunchExecuted;
+            comboAttack.KickExecuted -= HandleKickExecuted;
+        }
     }
 
     private void Update()
     {
-        RegenerateMana();
+        mana?.Regenerate(Time.deltaTime);
 
         if (inputReader == null)
         {
             return;
         }
 
-        if (!TryHandlePowerShot())
-        {
-            if (!TryHandlePunch() && !TryHandleKick())
-            {
-                HandleNormalAttack();
-            }
-        }
+        TryExecuteAttackCommand();
     }
 
-    private bool TryHandlePunch()
+    private void TryExecuteAttackCommand()
     {
-        if (!inputReader.ConsumePunchPressed()) return false;
-        if (Time.time < nextAttackTime) return false;
+        if (TryHandlePowerShot()) return;
+        if (comboAttack != null && comboAttack.TryExecutePunch()) return;
+        if (comboAttack != null && comboAttack.TryExecuteKick()) return;
+        HandleNormalAttack();
+    }
 
-        if (Time.time - lastPunchTime > comboWindow)
+    private bool TryHandlePowerShot()
+    {
+        if (!inputReader.ConsumePowerShotPressed() || mana == null)
         {
-            punchComboStep = 1;
-        }
-        else
-        {
-            punchComboStep = punchComboStep == 1 ? 2 : 1;
+            return false;
         }
 
-        animatorDriver?.TriggerPunch(punchComboStep);
-        DealMeleeDamage();
-        PunchExecuted?.Invoke(punchComboStep);
-        nextAttackTime = Time.time + attackCooldown;
-        lastPunchTime = Time.time;
+        float manaCost = mana.GetPowerShotManaCost(powerShotManaCostRatio);
+        if (!mana.CanSpend(manaCost) || Time.time < nextPowerShotTime)
+        {
+            return false;
+        }
+
+        bool usedAttackFallback = animatorDriver != null && animatorDriver.TriggerPowerAttackOrFallback();
+        if (usedAttackFallback)
+        {
+            projectileShooter?.SuppressNextShot(attackCooldown + 0.25f);
+        }
+
+        projectileShooter?.ShootPower();
+        if (!mana.TrySpend(manaCost))
+        {
+            return false;
+        }
+
+        PowerShotExecuted?.Invoke();
+        nextPowerShotTime = Time.time + powerShotCooldown;
         return true;
-    }
-
-    private bool TryHandleKick()
-    {
-        if (!inputReader.ConsumeKickPressed()) return false;
-        if (Time.time < nextAttackTime) return false;
-
-        if (Time.time - lastKickTime > comboWindow)
-        {
-            kickComboStep = 1;
-        }
-        else
-        {
-            kickComboStep = kickComboStep == 1 ? 2 : 1;
-        }
-
-        animatorDriver?.TriggerKick(kickComboStep);
-        DealMeleeDamage();
-        KickExecuted?.Invoke(kickComboStep);
-        nextAttackTime = Time.time + attackCooldown;
-        lastKickTime = Time.time;
-        return true;
-    }
-
-    private void DealMeleeDamage()
-    {
-        int damage = GameplayBalanceDefaults.PlayerBaseAttack;
-        float facingDirection = transform.localScale.x >= 0f ? 1f : -1f;
-        Vector2 hitOffset = new Vector2(0.8f * facingDirection, 0.2f);
-        Vector2 hitPosition = (Vector2)transform.position + hitOffset;
-        float hitRadius = 0.8f;
-
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(hitPosition, hitRadius);
-        foreach (Collider2D enemy in hitEnemies)
-        {
-            EnemyHealth enemyHealth = enemy.GetComponentInParent<EnemyHealth>();
-            if (enemyHealth != null)
-            {
-                enemyHealth.TakeDamage(damage);
-            }
-        }
     }
 
     private void HandleNormalAttack()
@@ -166,6 +146,7 @@ public class PlayerAttack : MonoBehaviour
         }
 
         animatorDriver?.TriggerAttack();
+        projectileShooter?.Shoot();
         AttackExecuted?.Invoke();
         nextAttackTime = Time.time + attackCooldown;
     }
@@ -177,8 +158,12 @@ public class PlayerAttack : MonoBehaviour
 
     public void RestoreMana(float savedCurrentMana, float savedMaxMana)
     {
-        maxMana = Mathf.Max(savedMaxMana, 0f);
-        SetCurrentMana(savedCurrentMana);
+        if (mana == null)
+        {
+            mana = GetComponent<PlayerMana>();
+        }
+
+        mana?.RestoreMana(savedCurrentMana, savedMaxMana);
     }
 
     public void ApplyPowerShotTuning(float cooldown, float manaCostRatio)
@@ -187,80 +172,19 @@ public class PlayerAttack : MonoBehaviour
         powerShotManaCostRatio = Mathf.Clamp01(manaCostRatio);
     }
 
-    private bool TryHandlePowerShot()
+    private void HandlePunchExecuted(int comboStep)
     {
-        if (!inputReader.ConsumePowerShotPressed())
-        {
-            return false;
-        }
-
-        float manaCost = GetPowerShotManaCost();
-        if (maxMana <= 0f || currentMana < manaCost || Time.time < nextPowerShotTime)
-        {
-            return false;
-        }
-
-        bool usedAttackFallback = animatorDriver != null && animatorDriver.TriggerPowerAttackOrFallback();
-        if (usedAttackFallback)
-        {
-            projectileShooter?.SuppressNextShot(attackCooldown + 0.25f);
-        }
-
-        if (projectileShooter == null)
-        {
-            return false;
-        }
-
-        if (projectileShooter != null && !projectileShooter.ShootPower())
-        {
-            return false;
-        }
-
-        SetCurrentMana(currentMana - manaCost);
-        PowerShotExecuted?.Invoke();
-        nextPowerShotTime = Time.time + powerShotCooldown;
-        return true;
+        PunchExecuted?.Invoke(comboStep);
     }
 
-    private void RegenerateMana()
+    private void HandleKickExecuted(int comboStep)
     {
-        if (maxMana <= 0f)
-        {
-            SyncMana(0f);
-            SetAuraActive(false);
-            return;
-        }
-
-        SetCurrentMana(currentMana + manaRegenRate * Time.deltaTime);
+        KickExecuted?.Invoke(comboStep);
     }
 
-    private void InitializeMana()
+    private void HandleManaChanged(PlayerMana playerMana)
     {
-        if (maxMana <= 0f)
-        {
-            SetCurrentMana(0f);
-            return;
-        }
-
-        SetCurrentMana(hasSyncedMana ? syncedMana : maxMana);
-    }
-
-    private void SetCurrentMana(float value)
-    {
-        currentMana = Mathf.Clamp(value, 0f, maxMana);
-        SyncMana(currentMana);
-        SetAuraActive(currentMana >= maxMana);
-    }
-
-    private float GetPowerShotManaCost()
-    {
-        return maxMana * Mathf.Clamp01(powerShotManaCostRatio);
-    }
-
-    private static void SyncMana(float value)
-    {
-        syncedMana = value;
-        hasSyncedMana = true;
+        SetAuraActive(playerMana != null && playerMana.IsFull());
     }
 
     private void CacheAuraEffect()
@@ -290,7 +214,6 @@ public class PlayerAttack : MonoBehaviour
         }
 
         isAuraActive = active;
-
         if (auraEffect != null && auraEffect.activeSelf != active)
         {
             auraEffect.SetActive(active);

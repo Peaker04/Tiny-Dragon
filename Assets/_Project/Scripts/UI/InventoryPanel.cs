@@ -2,6 +2,7 @@
 using System.Collections;
 using TinyDragon.Audio;
 using TinyDragon.Data;
+using TinyDragon.Shared.Unity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -180,7 +181,7 @@ namespace TinyDragon.UI
                 return;
             }
 
-            PlayerInputReader inputReader = FindAnyObjectByType<PlayerInputReader>();
+            PlayerInputReader inputReader = ObjectLookup.Any<PlayerInputReader>();
             bool inventoryPressed = inputReader != null
                 ? inputReader.ConsumeInventoryPressed()
                 : Input.GetKeyDown(KeyCode.B);
@@ -353,7 +354,7 @@ namespace TinyDragon.UI
                 return false;
             }
 
-            return FindAnyObjectByType<PlayerHealth>(FindObjectsInactive.Include) != null;
+            return ObjectLookup.InactiveAny<PlayerHealth>() != null;
         }
 
         private void Refresh()
@@ -745,13 +746,13 @@ namespace TinyDragon.UI
             int currentKi = data.CurrentKi;
             if (Application.isPlaying)
             {
-                PlayerHealth playerHealth = FindAnyObjectByType<PlayerHealth>();
+                PlayerHealth playerHealth = ObjectLookup.Any<PlayerHealth>();
                 if (playerHealth != null)
                 {
                     currentHP = playerHealth.CurrentHealth;
                 }
 
-                PlayerAttack playerAttack = FindAnyObjectByType<PlayerAttack>();
+                PlayerAttack playerAttack = ObjectLookup.Any<PlayerAttack>();
                 if (playerAttack != null)
                 {
                     currentKi = Mathf.RoundToInt(playerAttack.CurrentMana);
