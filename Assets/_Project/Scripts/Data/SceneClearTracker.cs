@@ -30,25 +30,25 @@ public static class SceneClearTracker
     // - Dùng Destroy (cuối frame) thay vì DestroyImmediate để tránh lỗi trong vòng lặp
     public static void DisableEnemiesInScene()
     {
-        foreach (EnemyHealth enemy in FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None))
+        foreach (EnemyHealth enemy in Object.FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None))
         {
             if (enemy != null)
                 Object.Destroy(enemy.gameObject);
         }
 
-        foreach (EnemySpawner spawner in FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None))
+        foreach (EnemySpawner spawner in Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None))
         {
             if (spawner != null)
                 Object.Destroy(spawner.gameObject);
         }
 
-        foreach (FixedMobRespawner respawner in FindObjectsByType<FixedMobRespawner>(FindObjectsSortMode.None))
+        foreach (FixedMobRespawner respawner in Object.FindObjectsByType<FixedMobRespawner>(FindObjectsSortMode.None))
         {
             if (respawner != null)
                 Object.Destroy(respawner.gameObject);
         }
 
-        foreach (VoDaiXenBoHungEncounter encounter in FindObjectsByType<VoDaiXenBoHungEncounter>(FindObjectsSortMode.None))
+        foreach (VoDaiXenBoHungEncounter encounter in Object.FindObjectsByType<VoDaiXenBoHungEncounter>(FindObjectsSortMode.None))
         {
             if (encounter != null)
                 Object.Destroy(encounter.gameObject);

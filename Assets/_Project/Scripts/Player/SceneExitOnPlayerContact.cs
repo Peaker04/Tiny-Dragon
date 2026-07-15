@@ -30,7 +30,7 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
     // - Nếu hết quái: cho phép chuyển scene
     private static bool AnyAliveEnemyInScene()
     {
-        EnemyHealth[] enemies = FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None);
+        EnemyHealth[] enemies = Object.FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None);
         foreach (EnemyHealth enemy in enemies)
         {
             if (enemy != null && enemy.isActiveAndEnabled && enemy.CurrentHealth > 0)
