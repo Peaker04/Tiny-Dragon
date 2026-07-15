@@ -407,76 +407,7 @@ namespace TinyDragon.Data
 
         private void ApplyRuntimeStats(GameObject playerObject, InventoryViewData inventory)
         {
-            if (playerObject == null || inventory == null || string.IsNullOrWhiteSpace(inventory.DisplayName))
-            {
-                return;
-            }
-
-            int totalMaxHealth = inventory.BaseHP;
-            int totalMaxKi = inventory.BaseKi;
-            int totalAtk = inventory.BaseAtk;
-            int totalDefense = inventory.BaseDef;
-            int totalDamageReduction = inventory.BaseDamageReductionPercent;
-            float totalSpeed = inventory.BaseSpd;
-            foreach (InventoryItemViewData item in inventory.Items)
-            {
-                if (!ShouldApplyItemStats(item))
-                {
-                    continue;
-                }
-
-                totalMaxHealth += item.BonusHP;
-                totalMaxKi += item.BonusKi;
-                totalAtk += item.BonusAtk;
-                totalDefense += item.BonusDef;
-                totalDamageReduction += item.BonusDamageReductionPercent;
-                totalSpeed += item.BonusSpd;
-            }
-            foreach (InventorySkillViewData skill in inventory.CombatSkills)
-            {
-                if (skill.SkillLevel > 0)
-                {
-                    totalAtk += Mathf.Max(skill.EffectValue, 0) * skill.SkillLevel;
-                }
-            }
-
-            PlayerHealth playerHealth = playerObject.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                playerHealth.ApplyRuntimeStats(totalMaxHealth, totalDefense, totalDamageReduction);
-            }
-
-            PlayerMovement movement = playerObject.GetComponent<PlayerMovement>();
-            if (movement != null)
-            {
-                movement.ApplyMoveSpeed(totalSpeed);
-            }
-
-            ProjectileShooter projectileShooter = playerObject.GetComponent<ProjectileShooter>();
-            if (projectileShooter != null)
-            {
-                projectileShooter.ApplyProjectileDamage(totalAtk);
-                projectileShooter.ApplyPowerShotDamage(
-                    Mathf.RoundToInt(totalAtk * GameplayBalanceDefaults.PowerShotDamageMultiplier)
-                );
-            }
-
-            PlayerAttack playerAttack = playerObject.GetComponent<PlayerAttack>();
-            if (playerAttack != null)
-            {
-                playerAttack.ApplyAttackCooldown(1f / Mathf.Max(inventory.BaseAttackSpeed, 0.1f));
-                playerAttack.ApplyPowerShotTuning(
-                    GameplayBalanceDefaults.PowerShotCooldown,
-                    GameplayBalanceDefaults.PowerShotManaCostRatio
-                );
-                playerAttack.RestoreMana(inventory.CurrentKi, totalMaxKi);
-            }
-
-            PlayerComboAttack comboAttack = playerObject.GetComponent<PlayerComboAttack>();
-            if (comboAttack != null)
-            {
-                comboAttack.ApplyBaseDamage(totalAtk);
-            }
+            PlayerRuntimeStatApplier.Apply(playerObject, inventory);
         }
 
         public bool TryLoadEnemyBalance(string enemyId, out EnemyBalanceData balance)

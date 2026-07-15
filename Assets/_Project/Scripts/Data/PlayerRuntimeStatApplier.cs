@@ -57,6 +57,14 @@ namespace TinyDragon.Data
                 speed += item.BonusSpd;
             }
 
+            foreach (InventorySkillViewData skill in inventory.CombatSkills)
+            {
+                if (skill.SkillLevel > 0)
+                {
+                    attack += Mathf.Max(skill.EffectValue, 0) * skill.SkillLevel;
+                }
+            }
+
             return new PlayerRuntimeStats(
                 maxHealth,
                 maxKi,
