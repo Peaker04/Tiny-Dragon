@@ -22,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
     //     -> nếu không, nhận damage, set immuneUntil = Time.time + invincibilityDuration
     //     -> trong khoảng thời gian này mọi đòn tiếp theo đều bị bỏ qua
     [SerializeField] private float invincibilityDuration = 0.5f;
-    [SerializeField] private float knockbackForce = 3f;
+    [SerializeField] private float knockbackForce = 2f;
     private float immuneUntil;
 
     private int currentHealth;
