@@ -288,7 +288,7 @@ INSERT OR IGNORE INTO Item (
   (
     'item_senzu_bean_lv5',
     'Đậu thần cấp 5',
-    'Vật phẩm debug số lượng: HP, KI +8000.',
+    'Vật phẩm debug số lượng: HP +200, KI +100.',
     NULL,
     NULL,
     'CONSUMABLE',
@@ -387,12 +387,12 @@ WHERE id = 'item_senzu_bean_lv5';
 
 UPDATE Item
 SET name = 'Đậu thần cấp 5',
-    description = 'Vật phẩm debug số lượng: HP, KI +8000.',
+    description = 'Vật phẩm debug số lượng: HP +200, KI +100.',
     rarity = 'RARE',
     stackable = 1,
     maxStack = 99,
-    baseBonusHP = 8000,
-    baseBonusKi = 8000,
+    baseBonusHP = 200,
+    baseBonusKi = 100,
     spritePath = 'UI/Items/senzu_bean_lv5'
 WHERE id = 'item_senzu_bean_lv5';
 
