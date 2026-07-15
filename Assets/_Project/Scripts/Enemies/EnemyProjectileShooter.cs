@@ -1,5 +1,6 @@
 using TinyDragon.Data;
 using TinyDragon.Config;
+using TinyDragon.Combat.Projectiles;
 using TinyDragon.Shared.Unity;
 using UnityEngine;
 
@@ -53,6 +54,26 @@ public class EnemyProjectileShooter : MonoBehaviour
         projectileAnimationFrameRate = Mathf.Max(1f, frameRate);
         projectileScale = Mathf.Max(0.05f, scale);
         projectileSpawnOffset = spawnOffset;
+    }
+
+    public void ConfigureVisual(ProjectileVisualProfile profile)
+    {
+        if (profile == null)
+        {
+            return;
+        }
+
+        projectileSprite = profile.sprite;
+        projectileAnimationSprites = HasAnimationSprites(profile.animationSprites) ? profile.animationSprites : null;
+        if (projectileAnimationSprites != null && projectileSprite == null)
+        {
+            projectileSprite = projectileAnimationSprites[0];
+        }
+
+        projectileAnimationFrameRate = Mathf.Max(1f, profile.animationFrameRate);
+        projectileScale = Mathf.Max(0.05f, profile.scale);
+        projectileSpawnOffset = profile.spawnOffset;
+        projectileFacesRightByDefault = profile.facesRightByDefault;
     }
 
     /// <summary>

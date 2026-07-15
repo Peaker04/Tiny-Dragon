@@ -1,4 +1,6 @@
+using TinyDragon.Combat.Projectiles;
 using TinyDragon.Data;
+using TinyDragon.Shared.Animation;
 using TinyDragon.Shared.Unity;
 using UnityEngine;
 
@@ -28,15 +30,14 @@ public class BossAI : MonoBehaviour
     [SerializeField] private float energyCooldown = 2.4f;
     [SerializeField] private float energyProjectileDelay = 0.28f;
     [SerializeField] private int energyDamage = GameplayBalanceDefaults.BossEnergyDamage;
-    [SerializeField] private float projectileSpeed = 5f;
-    [SerializeField] private float projectileLifetime = 3f;
     [SerializeField] private float projectileScale = 0.45f;
     [SerializeField] private Vector2 projectileSpawnOffset = new Vector2(0.8f, 0.15f);
     [SerializeField] private Sprite projectileSprite;
     [SerializeField] private Sprite[] projectileAnimationSprites;
     [SerializeField] private float projectileAnimationFrameRate = 12f;
-    [SerializeField] private bool useMob77BridgeProjectileAnimation = true;
+    [SerializeField] private bool useAnimationBridgeProjectileEffect = true;
     [SerializeField] private bool projectileFacesRightByDefault = true;
+    [SerializeField] private EnemyProjectileShooter projectileShooter;
     [SerializeField] private string energyTriggerName = "EnergyBlast";
     [SerializeField] private string energyStateName = "Boss_energy_blast";
 
@@ -74,6 +75,15 @@ public class BossAI : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        if (projectileShooter == null)
+        {
+            projectileShooter = GetComponent<EnemyProjectileShooter>();
+        }
+
+        if (projectileShooter == null)
+        {
+            projectileShooter = gameObject.AddComponent<EnemyProjectileShooter>();
+        }
     }
 
     private void Start()
@@ -92,31 +102,63 @@ public class BossAI : MonoBehaviour
             playerHealth = player.GetComponent<PlayerHealth>();
         }
 
-        ConfigureMob77ProjectileAnimation();
+        ConfigureProjectileEffectFromSource();
+        ConfigureProjectileShooterVisual();
     }
 
-    private void ConfigureMob77ProjectileAnimation()
+    private void ConfigureProjectileEffectFromSource()
     {
-        if (!useMob77BridgeProjectileAnimation || HasAnimationSprites(projectileAnimationSprites))
+        if (!useAnimationBridgeProjectileEffect || HasAnimationSprites(projectileAnimationSprites))
         {
             return;
         }
 
-        Mob77JsonAnimationBridge bridge = GetComponent<Mob77JsonAnimationBridge>();
-        if (bridge == null)
+        IProjectileEffectSource effectSource = FindProjectileEffectSource();
+        if (effectSource == null)
         {
             return;
         }
 
-        Sprite[] bridgeSprites = bridge.CreateRangedAttackEffectSprites();
-        if (!HasAnimationSprites(bridgeSprites))
+        if (!effectSource.TryGetProjectileEffect(out Sprite[] effectSprites, out float effectFrameRate))
         {
             return;
         }
 
-        projectileAnimationSprites = bridgeSprites;
-        projectileAnimationFrameRate = Mathf.Max(1f, bridge.frameRate);
-        projectileSprite = bridgeSprites[0];
+        projectileAnimationSprites = effectSprites;
+        projectileAnimationFrameRate = Mathf.Max(1f, effectFrameRate);
+        projectileSprite = effectSprites[0];
+    }
+
+    private void ConfigureProjectileShooterVisual()
+    {
+        if (projectileShooter == null)
+        {
+            return;
+        }
+
+        projectileShooter.ConfigureVisual(new ProjectileVisualProfile
+        {
+            sprite = projectileSprite,
+            animationSprites = projectileAnimationSprites,
+            animationFrameRate = projectileAnimationFrameRate,
+            scale = projectileScale,
+            spawnOffset = projectileSpawnOffset,
+            facesRightByDefault = projectileFacesRightByDefault
+        });
+    }
+
+    private IProjectileEffectSource FindProjectileEffectSource()
+    {
+        MonoBehaviour[] components = GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour component in components)
+        {
+            if (component is IProjectileEffectSource effectSource)
+            {
+                return effectSource;
+            }
+        }
+
+        return null;
     }
 
     private void FixedUpdate()
@@ -249,31 +291,12 @@ public class BossAI : MonoBehaviour
 
     public void ShootEnergyProjectile()
     {
-        if (player == null || !IsPlayerInsideArenaAwareness())
+        if (projectileShooter == null || player == null || !IsPlayerInsideArenaAwareness())
         {
             return;
         }
 
-        float facingDirection = player.position.x >= transform.position.x ? 1f : -1f;
-        Vector3 spawnOffset = new Vector3(projectileSpawnOffset.x * facingDirection, projectileSpawnOffset.y, 0f);
-        Vector3 spawnPosition = transform.position + spawnOffset;
-        Vector2 projectileDirection = new Vector2(facingDirection, 0f);
-
-        GameObject projectileObject = new GameObject("Boss Energy Projectile");
-        projectileObject.transform.position = spawnPosition;
-
-        EnemyProjectile projectile = projectileObject.AddComponent<EnemyProjectile>();
-        projectile.Initialize(
-            projectileDirection,
-            projectileSpeed,
-            energyDamage,
-            projectileLifetime,
-            projectileSprite,
-            projectileAnimationSprites,
-            projectileAnimationFrameRate,
-            projectileScale,
-            projectileFacesRightByDefault
-        );
+        projectileShooter.ShootAt(player.position, energyDamage);
     }
 
     private static bool HasAnimationSprites(Sprite[] sprites)

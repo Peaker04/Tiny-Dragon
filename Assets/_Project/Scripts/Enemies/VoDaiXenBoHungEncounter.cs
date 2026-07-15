@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TinyDragon.Combat;
+using TinyDragon.Shared.Animation;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
@@ -280,7 +281,7 @@ public sealed class VoDaiXenBoHungEncounter : MonoBehaviour
 
     private void ConfigureMinibossBridge(EnemyPatrol miniboss, MinibossEntry entry)
     {
-        Mob77JsonAnimationBridge bridge = miniboss.GetComponent<Mob77JsonAnimationBridge>();
+        JsonMultipartAnimationBridge bridge = miniboss.GetComponent<JsonMultipartAnimationBridge>();
         if (bridge == null)
         {
             return;
@@ -294,7 +295,7 @@ public sealed class VoDaiXenBoHungEncounter : MonoBehaviour
 
     private void ConfigureMinibossProjectile(EnemyPatrol miniboss)
     {
-        Mob77JsonAnimationBridge bridge = miniboss.GetComponent<Mob77JsonAnimationBridge>();
+        JsonMultipartAnimationBridge bridge = miniboss.GetComponent<JsonMultipartAnimationBridge>();
         EnemyProjectileShooter shooter = miniboss.GetComponent<EnemyProjectileShooter>();
         if (bridge == null || shooter == null)
         {
@@ -496,7 +497,7 @@ public sealed class VoDaiXenBoHungEncounter : MonoBehaviour
 
         if (isActiveMiniboss)
         {
-            Mob77JsonAnimationBridge bridge = health.GetComponent<Mob77JsonAnimationBridge>();
+            JsonMultipartAnimationBridge bridge = health.GetComponent<JsonMultipartAnimationBridge>();
             if (bridge != null)
             {
                 bridge.SetRuntimeVisualOffsetY(0f);
@@ -516,7 +517,7 @@ public sealed class VoDaiXenBoHungEncounter : MonoBehaviour
                 continue;
             }
 
-            Mob77JsonAnimationBridge bridge = health.GetComponent<Mob77JsonAnimationBridge>();
+            JsonMultipartAnimationBridge bridge = health.GetComponent<JsonMultipartAnimationBridge>();
             if (bridge == null)
             {
                 continue;

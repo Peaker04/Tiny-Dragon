@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TinyDragon.Config;
+using TinyDragon.Shared.Animation;
 using TinyDragon.Shared.Unity;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -201,21 +202,21 @@ public class Level03Manager : MonoBehaviour
             playerInput = playerMovement.GetComponent<PlayerInputReader>();
         }
 
-        Mob77JsonAnimationBridge mob77 = ObjectLookup.Any<Mob77JsonAnimationBridge>();
-        if (mob77 != null)
+        JsonMultipartAnimationBridge animationBridge = ObjectLookup.Any<JsonMultipartAnimationBridge>();
+        if (animationBridge != null)
         {
-            bossHealth = mob77.GetComponent<EnemyHealth>();
-            bossPatrol = mob77.GetComponent<EnemyPatrol>();
-            bossShield = mob77.GetComponent<Level03BossShield>();
+            bossHealth = animationBridge.GetComponent<EnemyHealth>();
+            bossPatrol = animationBridge.GetComponent<EnemyPatrol>();
+            bossShield = animationBridge.GetComponent<Level03BossShield>();
             if (bossShield == null)
             {
-                bossShield = mob77.gameObject.AddComponent<Level03BossShield>();
+                bossShield = animationBridge.gameObject.AddComponent<Level03BossShield>();
             }
         }
 
         if (playerMovement == null || bossHealth == null || bossShield == null)
         {
-            Debug.LogError("Level03Manager requires PlayerMovement and the Mob77 boss in Level_03.", this);
+            Debug.LogError("Level03Manager requires PlayerMovement and a JSON multipart boss in Level_03.", this);
             return false;
         }
 
