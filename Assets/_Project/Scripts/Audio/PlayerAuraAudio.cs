@@ -4,33 +4,32 @@ using TinyDragon.UI;
 namespace TinyDragon.Audio
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(AudioSource))]
     public sealed class PlayerAuraAudio : MonoBehaviour
     {
         private const string AuraClipPath = "res/sound/aura";
+        private const string AuraAudioSourceName = "AuraAudioSource";
 
         [SerializeField] private PlayerAttack playerAttack;
         [SerializeField] private AudioClip auraClip;
+        [SerializeField] private AudioSource audioSource;
         [SerializeField, Range(0f, 1f)] private float volume = 0.45f;
         [SerializeField, Range(0f, 1f)] private float spatialBlend = 0f;
 
-        private AudioSource audioSource;
-
         private void Reset()
         {
-            ResolveReferences();
+            ResolveReferences(true);
             ResolveClip();
         }
 
         private void OnValidate()
         {
-            ResolveReferences();
+            ResolveReferences(false);
             ResolveClip();
         }
 
         private void Awake()
         {
-            ResolveReferences();
+            ResolveReferences(true);
             ResolveClip();
             ApplySourceDefaults();
         }
@@ -112,7 +111,7 @@ namespace TinyDragon.Audio
             }
         }
 
-        private void ResolveReferences()
+        private void ResolveReferences(bool createAudioSource)
         {
             if (playerAttack == null)
             {
@@ -121,7 +120,18 @@ namespace TinyDragon.Audio
 
             if (audioSource == null)
             {
-                audioSource = GetComponent<AudioSource>();
+                Transform existingSource = transform.Find(AuraAudioSourceName);
+                if (existingSource != null)
+                {
+                    audioSource = existingSource.GetComponent<AudioSource>();
+                }
+            }
+
+            if (audioSource == null && createAudioSource)
+            {
+                GameObject sourceObject = new GameObject(AuraAudioSourceName);
+                sourceObject.transform.SetParent(transform, false);
+                audioSource = sourceObject.AddComponent<AudioSource>();
             }
         }
 

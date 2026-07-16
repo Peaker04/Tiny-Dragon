@@ -116,6 +116,9 @@ GameObject:
   - component: {fileID: 956085419}
   - component: {fileID: 956085420}
   - component: {fileID: 956085406}
+  - component: {fileID: 8403135365558176509}
+  - component: {fileID: 6858786625260013197}
+  - component: {fileID: 1666558598271194901}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -225,9 +228,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 988c8045c17d5c949bf6350258fa7e25, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   projectileShooter: {fileID: 956085413}
+  _canMove: 1
+  _canJump: 1
+  _canAttack: 1
 --- !u!114 &956085407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,13 +244,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0d4c51f0e7543e5a26dbd83ec6e91b2, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  runtimeConfig: {fileID: 0}
   maxHealth: 230
   damagePopupPrefab: {fileID: 0}
   damagePopupPoolPrewarmCount: 4
   damagePopupOffset: {x: 0, y: 1.1, z: 0}
   damagePopupColor: {r: 1, g: 0.15, b: 0.05, a: 1}
+  invincibilityDuration: 0.5
+  guideSceneName: LangAru
+  immortalInGuideScene: 1
 --- !u!114 &956085410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,18 +265,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2158c9225acb4bf99f7ebfd4e21fd5c5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputReader
   attackKey: 106
   powerShotKey: 107
   punchKey: 108
   kickKey: 109
+  inventoryKey: 98
+  pauseKey: 112
+  settingsKey: 105
   movementInputEnabled: 1
   jumpInputEnabled: 1
   attackInputEnabled: 1
   powerShotInputEnabled: 1
   punchInputEnabled: 1
   kickInputEnabled: 1
+  inventoryInputEnabled: 1
+  pauseInputEnabled: 1
+  settingsInputEnabled: 1
+  inputBufferTime: 0.2
 --- !u!114 &956085411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,7 +294,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d91b6fdacde44a9b250c7f33c99897b, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   inputReader: {fileID: 956085410}
   moveSpeed: 5
@@ -297,7 +314,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53c2d033a2ce489b9b950f306ad6c819, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimatorDriver
   inputReader: {fileID: 956085410}
   movement: {fileID: 956085411}
@@ -312,28 +329,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 512fd064676f40e0a7ecc16d3c8f5071, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileShooter
+  runtimeConfig: {fileID: 0}
   projectilePrefab: {fileID: 0}
   projectilePoolPrewarmCount: 4
-  projectileDamage: 12
-  projectileSpeed: 8
-  projectileLifetime: 2
-  projectileScale: 1.2
-  projectileSpawnOffset: {x: 0.6, y: 0.37}
-  projectileSprite: {fileID: 21300000, guid: e9c32b8f30ada4b4e8876bdaf533f912, type: 3}
-  projectileFacesRightByDefault: 1
-  projectileSortingLayerName: Default
-  projectileSortingOrder: 100
-  powerShotDamage: 36
-  powerShotSpeed: 6
-  powerShotLifetime: 3
-  powerShotScale: 1
-  powerShotSpawnOffset: {x: 0.8, y: 0.42}
-  powerShotSprite: {fileID: 21300000, guid: 0b11dc408440d4440a3c4cfc6566c580, type: 3}
-  powerShotFacesRightByDefault: 1
-  powerShotSortingLayerName: Default
-  powerShotSortingOrder: 100
+  normalShot:
+    damage: 12
+    damageSource: 1
+    speed: 8
+    lifetime: 2
+    scale: 1.2
+    spawnOffset: {x: 0.6, y: 0.37}
+    sprite: {fileID: 21300000, guid: e9c32b8f30ada4b4e8876bdaf533f912, type: 3}
+    facesRightByDefault: 1
+    sortingLayerName: Default
+    sortingOrder: 100
+  powerShot:
+    damage: 36
+    damageSource: 2
+    speed: 6
+    lifetime: 3
+    scale: 1
+    spawnOffset: {x: 0.8, y: 0.42}
+    sprite: {fileID: 21300000, guid: 0b11dc408440d4440a3c4cfc6566c580, type: 3}
+    facesRightByDefault: 1
+    sortingLayerName: Default
+    sortingOrder: 100
 --- !u!114 &956085414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,13 +371,12 @@ MonoBehaviour:
   inputReader: {fileID: 956085410}
   animatorDriver: {fileID: 956085412}
   projectileShooter: {fileID: 956085413}
+  mana: {fileID: 0}
+  comboAttack: {fileID: 0}
   attackCooldown: 0.35
   powerShotCooldown: 1.2
   powerShotManaCostRatio: 0.5
-  maxMana: 100
-  manaRegenRate: 10
   auraEffect: {fileID: 1676606902}
-  comboWindow: 0.5
 --- !u!114 &956085415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,8 +390,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSceneTransition
   enableSceneTransitions: 1
-  level01SceneName: Level_01_guide
-  level02SceneName: Level_02
   transitionExitPadding: 0.35
   transitionEntryPadding: 1
   transitionCooldown: 0.75
@@ -392,6 +411,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd33263cd244f06a9f91642a6dda7a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDeathSceneHandler
+  runtimeConfig: {fileID: 0}
   guideSceneName: Level_01_guide
   immortalInGuideScene: 1
   showGameOverOutsideGuide: 1
@@ -406,7 +426,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d2fb0d9ed2f48f3b8d7f4098df55a91, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TinyDragon.Audio.PlayerActionAudio
   playerMovement: {fileID: 956085411}
   playerAttack: {fileID: 956085414}
@@ -429,7 +449,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f3b1a9b9f0d4b44a2d53efc41d8f5ae, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TinyDragon.Audio.CharacterFeedbackAudio
   playerHealth: {fileID: 956085407}
   enemyHealth: {fileID: 0}
@@ -438,28 +458,6 @@ MonoBehaviour:
   impactClip: {fileID: 0}
   deathClip: {fileID: 0}
   landingClip: {fileID: 0}
---- !u!95 &956085406
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 956085400}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 09d5f33085837f449bc4702f44397fa2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!82 &956085419
 AudioSource:
   m_ObjectHideFlags: 0
@@ -567,11 +565,84 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d6b86d2b8e8f4a53a09b3c7fca9b1d11, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TinyDragon.Audio.PlayerActionAudioEmitter
   audioSource: {fileID: 956085419}
   spatialBlend: 0
   ignoreListenerPause: 1
+--- !u!95 &956085406
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 09d5f33085837f449bc4702f44397fa2, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8403135365558176509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69ee35fe259546d18c28fa403e59f4b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMana
+  maxMana: 100
+  manaRegenRate: 10
+--- !u!114 &6858786625260013197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d0cc7dab6bc44e7887340bf9cc2080f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMeleeHitbox
+  hitRadius: 0.8
+  hitOffset: {x: 0.8, y: 0.2}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &1666558598271194901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956085400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff08bfb6a9d436686b0c4f654bfbf9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerComboAttack
+  inputReader: {fileID: 0}
+  animatorDriver: {fileID: 0}
+  meleeHitbox: {fileID: 0}
+  comboWindow: 0.5
+  comboInputLockout: 0.05
+  baseDamage: 12
+  audioSource: {fileID: 0}
+  attackSound: {fileID: 0}
 --- !u!1 &1432590104
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ namespace TinyDragon.Data
     {
         private const string DefaultPlayerId = "player_default";
         private const string DefaultSaveSlotId = "save_slot_1";
+        private const string DefaultZoneId = "zone_earth_start";
         private const int SkillPotentialCostPerLevel = 5000;
 
         private static TinyDragonSaveManager instance;
@@ -137,6 +138,7 @@ namespace TinyDragon.Data
             database.ExecuteScript(schemaSql != null ? schemaSql.text : string.Empty);
             EnsureDatabaseColumns();
             database.ExecuteScript(seedSql != null ? seedSql.text : string.Empty);
+            EnsureDefaultZone();
             EnsureDefaultPlayer();
             EnsureStarterInventory();
             ConsolidateDuplicatePlayerItems();
@@ -507,6 +509,21 @@ namespace TinyDragon.Data
                 SqliteDatabase.AddParameter(command, "@saveName", "Slot 1");
                 command.ExecuteNonQuery();
             }
+        }
+
+        private void EnsureDefaultZone()
+        {
+            ExecuteNonQuery(
+                "INSERT OR IGNORE INTO Zone (id, name, description, orderIndex, minLevelRequired, backgroundKey) " +
+                "VALUES (@zoneId, @name, @description, 0, 1, @backgroundKey);",
+                command =>
+                {
+                    SqliteDatabase.AddParameter(command, "@zoneId", DefaultZoneId);
+                    SqliteDatabase.AddParameter(command, "@name", "Earth Start");
+                    SqliteDatabase.AddParameter(command, "@description", "Starter area for Tiny-Dragon.");
+                    SqliteDatabase.AddParameter(command, "@backgroundKey", "DragonBall/Level_01/Backgrounds");
+                }
+            );
         }
 
         private void EnsureStarterInventory()
@@ -1745,8 +1762,8 @@ namespace TinyDragon.Data
                 command =>
                 {
                     SqliteDatabase.AddParameter(command, "@id", generatedStageId);
-                    SqliteDatabase.AddParameter(command, "@zoneId", "zone_earth");
-                    SqliteDatabase.AddParameter(command, "@stageType", "STORY");
+                    SqliteDatabase.AddParameter(command, "@zoneId", DefaultZoneId);
+                    SqliteDatabase.AddParameter(command, "@stageType", "NORMAL");
                     SqliteDatabase.AddParameter(command, "@name", sceneName);
                     SqliteDatabase.AddParameter(command, "@description", $"Runtime stage entry for {sceneName}.");
                     SqliteDatabase.AddParameter(command, "@sceneName", sceneName);
