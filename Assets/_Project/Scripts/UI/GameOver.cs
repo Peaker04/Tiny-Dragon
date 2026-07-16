@@ -8,6 +8,8 @@ namespace TinyDragon.UI
 {
     public class GameOver : MonoBehaviour
     {
+        private const string FinalBossSceneName = "ThanhPhoVegeta";
+
         private static GameOver instance;
 
         [SerializeField] private TinyDragonRuntimeConfig runtimeConfig;
@@ -231,6 +233,22 @@ namespace TinyDragon.UI
             if (playerHealth != null)
             {
                 playerHealth.Revive();
+            }
+
+            if (SceneNavigator.ActiveSceneName == FinalBossSceneName)
+            {
+                SceneClearTracker.ResetForNewGame();
+                PlayerAttack.ResetManaForNewRun();
+
+                PlayerAttack playerAttack = playerHealth != null ? playerHealth.GetComponent<PlayerAttack>() : null;
+                if (playerAttack != null)
+                {
+                    playerAttack.RestoreMana(playerAttack.MaxMana, playerAttack.MaxMana);
+                }
+
+                string configuredScene = TinyDragonRuntimeConfigProvider.Resolve(runtimeConfig).Scenes.newGameSceneName;
+                SceneNavigator.LoadSceneIfSet(string.IsNullOrWhiteSpace(configuredScene) ? "LangAru" : configuredScene);
+                return;
             }
 
             SceneNavigator.ReloadActiveScene();
