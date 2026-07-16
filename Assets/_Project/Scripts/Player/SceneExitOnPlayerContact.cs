@@ -4,11 +4,11 @@ using TinyDragon.Shared.Unity;
 [RequireComponent(typeof(Collider2D))]
 public sealed class SceneExitOnPlayerContact : MonoBehaviour
 {
-    private enum ExitDirection
+    private enum EnemyGateMode
     {
-        AutoDetect,
-        Forward,
-        Backward
+        Automatic,
+        RequireEnemyClear,
+        IgnoreEnemyClear
     }
 
     [SerializeField] private string targetSceneName;
@@ -16,7 +16,7 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
     [SerializeField] private Vector3 targetSpawnPosition;
     [SerializeField] private float targetFacingDirection = 1f;
     [SerializeField] private bool healOnExit;
-    [SerializeField] private ExitDirection exitDirection;
+    [SerializeField] private EnemyGateMode enemyGateMode;
     [SerializeField] private bool enableDebugLogging;
 
     private bool isLoadingScene;
@@ -77,10 +77,10 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
             return;
         }
 
-        bool requiresEnemyClear = exitDirection switch
+        bool requiresEnemyClear = enemyGateMode switch
         {
-            ExitDirection.Forward => true,
-            ExitDirection.Backward => false,
+            EnemyGateMode.RequireEnemyClear => true,
+            EnemyGateMode.IgnoreEnemyClear => false,
             _ => !SceneClearTracker.IsSceneCleared(targetSceneName)
         };
 
