@@ -214,6 +214,7 @@ namespace TinyDragon.UI
             GameObject eventSystemObject = new GameObject("EventSystem");
             eventSystemObject.AddComponent<EventSystem>();
             eventSystemObject.AddComponent<StandaloneInputModule>();
+            eventSystemObject.AddComponent<PersistentEventSystem>();
             DontDestroyOnLoad(eventSystemObject);
         }
 
