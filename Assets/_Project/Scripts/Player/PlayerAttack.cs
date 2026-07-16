@@ -146,7 +146,13 @@ public class PlayerAttack : MonoBehaviour
         }
 
         animatorDriver?.TriggerAttack();
-        projectileShooter?.Shoot();
+        bool projectileSpawned = projectileShooter != null && projectileShooter.Shoot();
+        if (projectileSpawned)
+        {
+            // Legacy attack clips also invoke Shoot/ShootProjectile via AnimationEvent.
+            projectileShooter.SuppressNextShot(attackCooldown + 0.25f);
+        }
+
         AttackExecuted?.Invoke();
         nextAttackTime = Time.time + attackCooldown;
     }
