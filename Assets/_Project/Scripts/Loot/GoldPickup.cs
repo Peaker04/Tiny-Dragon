@@ -10,6 +10,8 @@ public sealed class GoldPickup : MonoBehaviour
     private const float Lifetime = 20f;
     private const float WorldScale = 1.3f;
 
+    private static Material spriteDefaultMaterial;
+
     private int amount;
     private bool collected;
     private float age;
@@ -23,7 +25,9 @@ public sealed class GoldPickup : MonoBehaviour
 
         SpriteRenderer renderer = pickupObject.AddComponent<SpriteRenderer>();
         renderer.sprite = ResourceLoader.Load<Sprite>(spritePath);
+        renderer.color = Color.white;
         renderer.sortingOrder = 30;
+        SetUnlitSpriteMaterial(renderer);
 
         CircleCollider2D trigger = pickupObject.AddComponent<CircleCollider2D>();
         trigger.isTrigger = true;
@@ -117,5 +121,21 @@ public sealed class GoldPickup : MonoBehaviour
         {
             popup.Initialize($"+{amount} GOLD", new Color(1f, 0.82f, 0.05f));
         }
+    }
+
+    private static void SetUnlitSpriteMaterial(SpriteRenderer renderer)
+    {
+        if (spriteDefaultMaterial == null)
+        {
+            Shader spriteShader = Shader.Find("Sprites/Default");
+            if (spriteShader == null)
+            {
+                return;
+            }
+
+            spriteDefaultMaterial = new Material(spriteShader);
+        }
+
+        renderer.sharedMaterial = spriteDefaultMaterial;
     }
 }
