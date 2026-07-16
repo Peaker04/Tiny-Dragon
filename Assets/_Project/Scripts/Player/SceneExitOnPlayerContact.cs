@@ -4,11 +4,19 @@ using TinyDragon.Shared.Unity;
 [RequireComponent(typeof(Collider2D))]
 public sealed class SceneExitOnPlayerContact : MonoBehaviour
 {
+    private enum ExitDirection
+    {
+        AutoDetect,
+        Forward,
+        Backward
+    }
+
     [SerializeField] private string targetSceneName;
     [SerializeField] private bool useTargetSpawnPosition;
     [SerializeField] private Vector3 targetSpawnPosition;
     [SerializeField] private float targetFacingDirection = 1f;
     [SerializeField] private bool healOnExit;
+    [SerializeField] private ExitDirection exitDirection;
     [SerializeField] private bool enableDebugLogging;
 
     private bool isLoadingScene;
@@ -69,13 +77,14 @@ public sealed class SceneExitOnPlayerContact : MonoBehaviour
             return;
         }
 
-        // [SceneRule] Tự động nhận biết tiến/lùi dựa trên scene đích
-        // - Nếu targetSceneName đã clear → đây là exit lùi về map cũ:
-        //     bỏ qua kiểm tra quái, cho qua luôn, không mark scene hiện tại
-        // - Nếu targetSceneName chưa clear → đây là exit tiến sang map mới:
-        //     kiểm tra còn quái không, nếu hết thì mark scene hiện tại clear + cho qua
-        bool goingBack = SceneClearTracker.IsSceneCleared(targetSceneName);
-        if (!goingBack)
+        bool requiresEnemyClear = exitDirection switch
+        {
+            ExitDirection.Forward => true,
+            ExitDirection.Backward => false,
+            _ => !SceneClearTracker.IsSceneCleared(targetSceneName)
+        };
+
+        if (requiresEnemyClear)
         {
             if (AnyAliveEnemyInScene())
             {

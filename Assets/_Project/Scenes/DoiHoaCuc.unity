@@ -10632,6 +10632,7 @@ MonoBehaviour:
   targetSpawnPosition: {x: 31.2, y: -3.34, z: 0}
   targetFacingDirection: -1
   healOnExit: 0
+  exitDirection: 2
 --- !u!114 &320000007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10649,6 +10650,7 @@ MonoBehaviour:
   targetSpawnPosition: {x: 2.76, y: -14.83, z: 0}
   targetFacingDirection: 1
   healOnExit: 0
+  exitDirection: 1
 --- !u!213 &321784775
 Sprite:
   m_ObjectHideFlags: 0
