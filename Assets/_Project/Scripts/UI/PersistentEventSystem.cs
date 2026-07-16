@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 
 namespace TinyDragon.UI
@@ -12,6 +13,24 @@ namespace TinyDragon.UI
         private static void ResetStatic()
         {
             instance = null;
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void EnsureEventSystemExists()
+        {
+            EventSystem eventSystem = Object.FindAnyObjectByType<EventSystem>(FindObjectsInactive.Include);
+            if (eventSystem == null)
+            {
+                GameObject eventSystemObject = new GameObject("EventSystem");
+                eventSystem = eventSystemObject.AddComponent<EventSystem>();
+                InputSystemUIInputModule inputModule = eventSystemObject.AddComponent<InputSystemUIInputModule>();
+                inputModule.AssignDefaultActions();
+            }
+
+            if (eventSystem.GetComponent<PersistentEventSystem>() == null)
+            {
+                eventSystem.gameObject.AddComponent<PersistentEventSystem>();
+            }
         }
 
         private void Awake()
@@ -60,7 +79,7 @@ namespace TinyDragon.UI
                 Destroy(eventSystem.gameObject);
             }
 
-            if (ownEventSystem != null && EventSystem.current == null)
+            if (ownEventSystem != null && EventSystem.current != ownEventSystem)
             {
                 EventSystem.current = ownEventSystem;
             }
