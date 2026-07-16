@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3630473611606774840}
   - component: {fileID: 1374605525208279385}
   - component: {fileID: 1643841628117499446}
+  - component: {fileID: 1643841628117499447}
   - component: {fileID: 956085418}
   m_Layer: 0
   m_Name: monster_1_walk
@@ -108,8 +109,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f1de2930e846a94384adec8bdf19121, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPatrol
+  runtimeConfig: {fileID: 0}
   moveSpeed: 1.5
   leftDistance: 1.5
   rightDistance: 1.5
@@ -123,17 +125,34 @@ MonoBehaviour:
   rangeAttackRange: 4
   rangeAttackCooldown: 2
   rangeAttackDamage: 15
+  rangedAttackMode: 0
+  rangeAttackTriggerName: rangeAttack
+  rangeAttackStateName: rangeAttack
+  startMovingRight: 1
+  flipWithDirection: 1
+  facesRightByDefault: 1
+  projectileShooter: {fileID: 1643841628117499447}
+--- !u!114 &1643841628117499447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9157794562284501264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0dfa990530e42218ed6a329f21f7982, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectileShooter
+  runtimeConfig: {fileID: 0}
+  projectilePrefab: {fileID: 0}
+  projectilePoolPrewarmCount: 2
   projectileSpeed: 5
   projectileLifetime: 3
   projectileScale: 0.35
   projectileSpawnOffset: {x: 0.45, y: 0.1}
   projectileSprite: {fileID: 6344236997622909882, guid: 7bb8fa80d31daa245b8b2bea445dc42b, type: 3}
   projectileFacesRightByDefault: 1
-  rangeAttackTriggerName: rangeAttack
-  rangeAttackStateName: rangeAttack
-  startMovingRight: 1
-  flipWithDirection: 1
-  facesRightByDefault: 1
 --- !u!61 &6165571220526626709
 BoxCollider2D:
   m_ObjectHideFlags: 0
