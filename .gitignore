@@ -110,3 +110,9 @@ InitTestScene*.unity*
 
 Level03_Boss_DragonGem_Design.md
 MAP_CAMERA_SCENE_UI_FIX_PLAN.md
+
+# Local agent guidance and audit notes
+/.claude/skills/gitnexus/
+/AGENTS.md
+/CLAUDE.md
+/README_AUDIT_REFACTOR_MAJOR_UPDATE.md
