@@ -354,6 +354,35 @@ namespace TinyDragon.Data
             return true;
         }
 
+        public bool TryAddPotentialPoints(int amount, out int totalPotential)
+        {
+            totalPotential = 0;
+            if (amount <= 0 || !EnsureReady())
+            {
+                return false;
+            }
+
+            ExecuteNonQuery(
+                "UPDATE Player SET exp = MAX(exp + @amount, 0) WHERE id = @playerId;",
+                command =>
+                {
+                    SqliteDatabase.AddParameter(command, "@amount", amount);
+                    SqliteDatabase.AddParameter(command, "@playerId", DefaultPlayerId);
+                }
+            );
+
+            using (IDbCommand command = database.CreateCommand(
+                "SELECT exp FROM Player WHERE id = @playerId LIMIT 1;"
+            ))
+            {
+                SqliteDatabase.AddParameter(command, "@playerId", DefaultPlayerId);
+                object value = command.ExecuteScalar();
+                totalPotential = value == null || value == DBNull.Value ? 0 : Convert.ToInt32(value);
+            }
+
+            return true;
+        }
+
         public void ApplyLoadedPlayer(PlayerHealth playerHealth)
         {
             if (playerHealth == null || !TryLoadPlayer(out PlayerSaveSnapshot snapshot))

@@ -12,7 +12,7 @@ namespace TinyDragon.Audio
         [SerializeField] private PlayerAttack playerAttack;
         [SerializeField] private AudioClip auraClip;
         [SerializeField] private AudioSource audioSource;
-        [SerializeField, Range(0f, 1f)] private float volume = 0.45f;
+        [SerializeField, Range(0f, 1f)] private float volume = 0.1f;
         [SerializeField, Range(0f, 1f)] private float spatialBlend = 0f;
 
         private void Reset()

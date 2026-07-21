@@ -1,3 +1,4 @@
+using TinyDragon.Audio;
 using TinyDragon.Config;
 using TinyDragon.Data;
 using TinyDragon.Shared.Unity;
@@ -9,6 +10,7 @@ public sealed class GoldPickup : MonoBehaviour
     private const float DropDuration = 0.18f;
     private const float Lifetime = 20f;
     private const float WorldScale = 1.3f;
+    private const int PotentialPointsPerGold = 10;
 
     private static Material spriteDefaultMaterial;
 
@@ -88,6 +90,10 @@ public sealed class GoldPickup : MonoBehaviour
             return;
         }
 
+        int gainedPotential = amount * PotentialPointsPerGold;
+        TinyDragonSaveManager.Instance.TryAddPotentialPoints(gainedPotential, out _);
+        UiSoundPlayer.PlayCoinPickup();
+
         collected = true;
         Collider2D trigger = GetComponent<Collider2D>();
         if (trigger != null)
@@ -119,7 +125,7 @@ public sealed class GoldPickup : MonoBehaviour
         FloatingDamageText popup = popupObject.GetComponent<FloatingDamageText>();
         if (popup != null)
         {
-            popup.Initialize($"+{amount} GOLD", new Color(1f, 0.82f, 0.05f));
+            popup.Initialize($"+{amount} GOLD\n+{amount * PotentialPointsPerGold} tiềm năng", new Color(1f, 0.82f, 0.05f));
         }
     }
 

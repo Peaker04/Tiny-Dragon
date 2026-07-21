@@ -8,10 +8,12 @@ namespace TinyDragon.Audio
         private const string PlayerName = "UiSoundPlayer";
         private const string ClickClipPath = "Audio/UI/click";
         private const string InventoryClipPath = "Audio/UI/inventoryClick";
+        private const string CoinClipPath = "Audio/UI/coin";
 
         private static AudioSource audioSource;
         private static AudioClip clickClip;
         private static AudioClip inventoryClip;
+        private static AudioClip coinClip;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void EnsureReady()
@@ -27,6 +29,11 @@ namespace TinyDragon.Audio
         public static void PlayInventoryOpen()
         {
             Play(GetInventoryClip());
+        }
+
+        public static void PlayCoinPickup()
+        {
+            Play(GetCoinClip());
         }
 
         private static AudioClip GetClickClip()
@@ -47,6 +54,16 @@ namespace TinyDragon.Audio
             }
 
             return inventoryClip;
+        }
+
+        private static AudioClip GetCoinClip()
+        {
+            if (coinClip == null)
+            {
+                coinClip = Resources.Load<AudioClip>(CoinClipPath);
+            }
+
+            return coinClip;
         }
 
         private static void Play(AudioClip clip)

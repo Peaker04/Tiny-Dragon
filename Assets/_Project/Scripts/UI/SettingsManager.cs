@@ -123,6 +123,7 @@ namespace TinyDragon.UI
                 if (sliderSettings[i].slider != null)
                 {
                     int index = i;
+                    sliderSettings[index].slider.navigation = new Navigation { mode = Navigation.Mode.None };
                     sliderSettings[index].slider.onValueChanged.RemoveAllListeners();
                     sliderSettings[index].slider.onValueChanged.AddListener((val) => OnSliderValueChanged(index, val));
                 }
@@ -187,7 +188,7 @@ namespace TinyDragon.UI
             {
                 if (source.gameObject.name == "BackgroundMusicPlayer") continue;
 
-                PlayerAuraAudio auraAudio = source.GetComponent<PlayerAuraAudio>();
+                PlayerAuraAudio auraAudio = source.GetComponentInParent<PlayerAuraAudio>();
                 if (auraAudio != null)
                 {
                     auraAudio.RefreshVolumeFromSettings();
